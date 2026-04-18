@@ -4,18 +4,18 @@ import { useTranslation } from '../context/LanguageContext.jsx'
 const CONTACT_LINKS = [
   {
     labelKey: 'contact_email_label',
-    href: 'mailto:yanyu@example.com',
-    display: 'yanyu@example.com',
+    href: 'mailto:yc.yanyuchen@gmail.com',
+    display: 'yc.yanyuchen@gmail.com',
   },
   {
     labelKey: 'contact_linkedin_label',
-    href: 'https://linkedin.com/in/yanyuchen',
-    display: 'linkedin.com/in/yanyuchen',
+    href: 'https://www.linkedin.com/in/yanyu-c/',
+    display: 'www.linkedin.com/in/yanyu-c/',
   },
   {
     labelKey: 'contact_github_label',
-    href: 'https://github.com/yanyuc',
-    display: 'github.com/yanyuc',
+    href: 'https://github.com/yammmyu',
+    display: 'github.com/yammmyu',
   },
   {
     labelKey: 'contact_resume_label',
