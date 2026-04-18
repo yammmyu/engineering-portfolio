@@ -31,6 +31,8 @@ portfolio/
 │   │   └── Contact.jsx
 │   ├── context/
 │   │   └── LanguageContext.jsx
+│   ├── models/
+│   │   └── Project.js
 │   ├── translations.json
 │   ├── App.jsx
 │   └── main.jsx
@@ -39,6 +41,43 @@ portfolio/
 ├── tailwind.config.js
 └── package.json
 ```
+
+## Adding a Project
+
+Each project needs an entry in two files.
+
+**1. `src/components/Projects.jsx`** — append to the `PROJECTS` array:
+
+```js
+new Project({
+  id: 'my_new_project',                          // unique; used as translation key stem
+  tags: ['robotics', 'software'],                // see available tags below
+  github: 'https://github.com/user/repo',        // optional
+  demo: 'https://my-demo.example.com',           // optional
+}),
+```
+
+**2. `src/translations.json`** — add matching title and description keys (must be `<id>_title` and `<id>_desc`):
+
+```json
+"my_new_project_title": { "en": "My Project", "zh": "我的项目" },
+"my_new_project_desc": {
+  "en": "Short description in English.",
+  "zh": "中文简短描述。"
+}
+```
+
+### Available tags
+
+`robotics`, `mechanical`, `software`, `firmware`
+
+### Adding a new tag
+
+If you need a tag that doesn't exist yet, add it in three places:
+
+- `TAG_STYLES` in `src/components/Projects.jsx` — Tailwind classes for the pill
+- `TAG_LABEL_KEYS` in `src/components/Projects.jsx` — maps tag → translation key
+- `projects_tag_<name>` entry in `src/translations.json`
 
 ## Deployment
 

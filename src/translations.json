@@ -48,8 +48,8 @@
     "zh": "在 TurtleBot3 上使用 ROS2 和二维激光雷达实现了二维 SLAM 管线。调优 Nav2 导航栈以实现室内导航，并生成高质量占用栅格地图，用于自主路径规划。"
   },
 
-  "proj_balancer_title": { "en": "Self-Balancing Robot", "zh": "自平衡机器人" },
-  "proj_balancer_desc": {
+  "bloomcraft_title": { "en": "Bloomcraft", "zh": "Bloomcraft" },
+  "bloomcraft_desc": {
     "en": "Built a two-wheeled inverted pendulum robot using an STM32 microcontroller. Implemented a PID controller tuned with real-time serial feedback. Chassis designed in CAD and 3D-printed.",
     "zh": "使用 STM32 微控制器搭建了一款两轮倒立摆机器人，通过实时串口反馈调优 PID 控制器。底盘在 CAD 中设计并通过 3D 打印制造。"
   },

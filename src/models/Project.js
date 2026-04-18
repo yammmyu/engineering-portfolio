@@ -1,11 +1,17 @@
 export class Project {
-  constructor({ id, titleKey, descKey, tags = [], github = null, demo = null }) {
+  constructor({ id, tags = [], github = null, demo = null }) {
     this.id = id
-    this.titleKey = titleKey
-    this.descKey = descKey
     this.tags = tags
     this.github = github
     this.demo = demo
+  }
+
+  get titleKey() {
+    return `${this.id}_title`
+  }
+
+  get descKey() {
+    return `${this.id}_desc`
   }
 
   get hasLinks() {

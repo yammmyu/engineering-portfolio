@@ -19,29 +19,21 @@ const TAG_LABEL_KEYS = {
 const PROJECTS = [
   new Project({
     id: 'proj_arm',
-    titleKey: 'proj_arm_title',
-    descKey: 'proj_arm_desc',
     tags: ['robotics', 'mechanical', 'firmware'],
     github: 'https://github.com/yanyuc/robotic-arm',
   }),
   new Project({
     id: 'proj_slam',
-    titleKey: 'proj_slam_title',
-    descKey: 'proj_slam_desc',
     tags: ['robotics', 'software'],
     github: 'https://github.com/yanyuc/slam-ws',
   }),
   new Project({
-    id: 'proj_balancer',
-    titleKey: 'proj_balancer_title',
-    descKey: 'proj_balancer_desc',
-    tags: ['firmware', 'mechanical'],
-    github: 'https://github.com/yanyuc/self-balancing-bot',
+    id: 'bloomcraft',
+    tags: ['software'],
+    github: 'https://github.com/yammmyu/bloomcraft',
   }),
   new Project({
     id: 'proj_portfolio',
-    titleKey: 'proj_portfolio_title',
-    descKey: 'proj_portfolio_desc',
     tags: ['software'],
     github: 'https://github.com/yanyuc/engineering-portfolio',
   }),
