@@ -1,16 +1,16 @@
 {
   "nav_about":          { "en": "About",    "zh": "关于我" },
   "nav_projects":       { "en": "Projects", "zh": "项目" },
-  "nav_contact":        { "en": "Contact",  "zh": "联系" },
+  "nav_contact":        { "en": "Contact",  "zh": "联系方式" },
   "nav_lang_toggle":    { "en": "中文",      "zh": "EN" },
 
   "hero_greeting":      { "en": "Hi, I'm",  "zh": "你好，我是" },
-  "hero_name":          { "en": "Yanyu Chen", "zh": "陈燕宇" },
+  "hero_name":          { "en": "Yanyu Chen", "zh": "陈彦宇" },
   "hero_tagline": {
-    "en": "Robotics Engineering student — building things that move.",
-    "zh": "机器人工程在读学生 — 让机器运动起来。"
+    "en": "Robotics Maschine and Intelligence",
+    "zh": "机器人及机器学习，机甲大师（Robomaster）"
   },
-  "hero_cta_projects":  { "en": "View Projects", "zh": "查看项目" },
+  "hero_cta_projects":  { "en": "View Projects", "zh": "了解更多" },
   "hero_cta_contact":   { "en": "Get in Touch",  "zh": "联系我" },
 
   "about_heading":      { "en": "About Me", "zh": "关于我" },
@@ -19,20 +19,20 @@
     "zh": "我是一名机器人工程专业的学生，热衷于设计机械系统，并编写让它们运转的软件。我在硬件与软件的交叉领域工作——从 CAD 模型到嵌入式固件，再到 ROS 节点。"
   },
   "about_body_2": {
-    "en": "Outside of engineering, I enjoy photography, hiking, and tinkering with single-board computers.",
-    "zh": "工程之外，我喜欢摄影、徒步，以及摆弄各种单板计算机。"
+    "en": "Outside of engineering, I enjoy photography and running",
+    "zh": "摄影、徒步"
   },
-  "about_skills_heading": { "en": "Skills", "zh": "技能" },
+  "about_skills_heading": { "en": "Tech Stack", "zh": "技能栈" },
 
   "projects_heading": { "en": "Projects", "zh": "项目" },
   "projects_subheading": {
     "en": "A selection of academic, personal, and team projects.",
-    "zh": "部分学术、个人与团队项目。"
+    "zh": "学术、个人及团队项目。"
   },
   "projects_tag_mechanical": { "en": "Mechanical", "zh": "机械" },
   "projects_tag_software":   { "en": "Software",   "zh": "软件" },
   "projects_tag_robotics":   { "en": "Robotics",   "zh": "机器人" },
-  "projects_tag_embedded":   { "en": "Embedded",   "zh": "嵌入式" },
+  "projects_tag_firmware":   { "en": "Firmware",   "zh": "嵌入式" },
   "projects_link_github":    { "en": "GitHub",     "zh": "GitHub" },
   "projects_link_demo":      { "en": "Demo",       "zh": "演示" },
 
@@ -63,7 +63,7 @@
   "contact_heading": { "en": "Contact", "zh": "联系" },
   "contact_subheading": {
     "en": "I'm open to internships, research collaborations, and interesting side projects.",
-    "zh": "我欢迎实习机会、科研合作以及有趣的项目合作。"
+    "zh": "随时欢迎实习、科研以及有趣项目"
   },
   "contact_email_label":    { "en": "Email",    "zh": "邮件" },
   "contact_linkedin_label": { "en": "LinkedIn", "zh": "领英" },
@@ -72,6 +72,6 @@
 
   "footer_built": {
     "en": "Built with React & Tailwind CSS",
-    "zh": "使用 React 与 Tailwind CSS 构建"
+    "zh": "Built with React & Tailwind CSS"
   }
 }

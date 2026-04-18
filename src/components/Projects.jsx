@@ -1,53 +1,50 @@
 import React from 'react'
 import { useTranslation } from '../context/LanguageContext.jsx'
+import { Project } from '../models/Project.js'
 
 const TAG_STYLES = {
   robotics:   'bg-blue-50   border-blue-200   text-blue-700',
   mechanical: 'bg-amber-50  border-amber-200  text-amber-700',
   software:   'bg-green-50  border-green-200  text-green-700',
-  embedded:   'bg-purple-50 border-purple-200 text-purple-700',
+  firmware:   'bg-purple-50 border-purple-200 text-purple-700',
 }
 
 const TAG_LABEL_KEYS = {
   robotics:   'projects_tag_robotics',
   mechanical: 'projects_tag_mechanical',
   software:   'projects_tag_software',
-  embedded:   'projects_tag_embedded',
+  firmware:   'projects_tag_firmware',
 }
 
 const PROJECTS = [
-  {
+  new Project({
     id: 'proj_arm',
     titleKey: 'proj_arm_title',
     descKey: 'proj_arm_desc',
-    tags: ['robotics', 'mechanical'],
+    tags: ['robotics', 'mechanical', 'firmware'],
     github: 'https://github.com/yanyuc/robotic-arm',
-    demo: null,
-  },
-  {
+  }),
+  new Project({
     id: 'proj_slam',
     titleKey: 'proj_slam_title',
     descKey: 'proj_slam_desc',
     tags: ['robotics', 'software'],
     github: 'https://github.com/yanyuc/slam-ws',
-    demo: null,
-  },
-  {
+  }),
+  new Project({
     id: 'proj_balancer',
     titleKey: 'proj_balancer_title',
     descKey: 'proj_balancer_desc',
-    tags: ['embedded', 'mechanical'],
+    tags: ['firmware', 'mechanical'],
     github: 'https://github.com/yanyuc/self-balancing-bot',
-    demo: null,
-  },
-  {
+  }),
+  new Project({
     id: 'proj_portfolio',
     titleKey: 'proj_portfolio_title',
     descKey: 'proj_portfolio_desc',
     tags: ['software'],
     github: 'https://github.com/yanyuc/engineering-portfolio',
-    demo: null,
-  },
+  }),
 ]
 
 function ProjectCard({ project }) {
@@ -74,7 +71,7 @@ function ProjectCard({ project }) {
         ))}
       </div>
 
-      {(project.github || project.demo) && (
+      {project.hasLinks && (
         <div className="flex gap-4 pt-1 border-t border-gray-100">
           {project.github && (
             <a
