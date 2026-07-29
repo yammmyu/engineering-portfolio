@@ -1,3 +1,189 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  /* Light sheet: drafting film. Neutrals carry a slight green bias so they
+     sit under the amber accent instead of fighting it. */
+  :root {
+    --c-paper: #e8e9e4;
+    --c-surface: #f4f5f1;
+    --c-ink: #15181a;
+    --c-ink-2: #4c534f;
+    --c-ink-3: #7b827c;
+    --c-rule: #cfd2ca;
+    --c-rule-strong: #a9aea4;
+    --c-accent: #e0a80b;
+    --c-accent-wash: #f0e6c6;
+    --c-grid: rgba(21, 24, 26, 0.05);
+
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+    --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  }
+
+  /* Dark sheet: instrument panel at night. Not an inversion — the accent
+     brightens and the wash goes to a dim amber glow. */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --c-paper: #101312;
+      --c-surface: #171a18;
+      --c-ink: #e7eae4;
+      --c-ink-2: #a2a99f;
+      --c-ink-3: #6f766e;
+      --c-rule: #2b312d;
+      --c-rule-strong: #444b45;
+      --c-accent: #f5c542;
+      --c-accent-wash: #26200f;
+      --c-grid: rgba(231, 234, 228, 0.045);
+    }
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+  }
+
+  body {
+    background-color: var(--c-paper);
+    /* The drafting grid the whole sheet sits on. */
+    background-image:
+      linear-gradient(to right, var(--c-grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--c-grid) 1px, transparent 1px);
+    background-size: 34px 34px;
+    color: var(--c-ink);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Clears the fixed navbar when jumping to an anchor. */
+  section[id] {
+    scroll-margin-top: 4rem;
+  }
+
+  ::selection {
+    background: var(--c-accent);
+    color: #15181a;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--c-accent);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* Mono caption used for every label, code, and column header on the sheet. */
+  .label {
+    @apply font-mono text-[10px] uppercase tracking-label text-ink-3;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Links read as ink with an amber rule under them; on hover the rule goes
+     to ink so the accent never has to carry contrast on its own. */
+  .link-ink {
+    color: var(--c-ink);
+    text-decoration: underline;
+    text-decoration-color: var(--c-accent);
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    transition: text-decoration-color 160ms var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .link-ink:hover {
+      text-decoration-color: var(--c-ink);
+    }
+  }
+
+  /* Hover-only nudges, gated so a tap on a touch device doesn't strand them
+     in the hovered state. */
+  .arrow-slide,
+  .row-mark {
+    transition: transform 200ms var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .group:hover .arrow-slide {
+      transform: translateX(4px);
+    }
+
+    .group:hover .row-mark {
+      transform: translateX(3px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .arrow-slide,
+    .row-mark {
+      transition: none;
+      transform: none;
+    }
+  }
+
+  .btn-press {
+    transition:
+      transform 160ms var(--ease-out),
+      background-color 160ms var(--ease-out),
+      border-color 160ms var(--ease-out),
+      color 160ms var(--ease-out);
+  }
+
+  .btn-press:active {
+    transform: scale(0.97);
+  }
+}
+
+@layer utilities {
+  /* Archivo's width axis — the display face is set expanded. */
+  .font-expanded {
+    font-stretch: 125%;
+  }
+
+  .font-wide {
+    font-stretch: 112%;
+  }
+
+  .tnum {
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Scroll reveal. Entrance motion, so it runs longer than the 300ms
+     interaction budget. */
+  .reveal {
+    opacity: 0;
+    transform: translateY(10px);
+    transition:
+      opacity 450ms var(--ease-out),
+      transform 450ms var(--ease-out);
+  }
+
+  .reveal-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* Section rules draw across rather than fading in. */
+  .rule-draw {
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 700ms var(--ease-out);
+  }
+
+  .rule-draw-in {
+    transform: scaleX(1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .reveal,
+    .rule-draw {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+}

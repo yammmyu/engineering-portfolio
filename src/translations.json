@@ -2,16 +2,33 @@
   "nav_about":          { "en": "About",    "zh": "关于我" },
   "nav_projects":       { "en": "Projects", "zh": "项目" },
   "nav_contact":        { "en": "Contact",  "zh": "联系方式" },
-  "nav_lang_toggle":    { "en": "中文",      "zh": "EN" },
+  "nav_lang_aria":      { "en": "Switch language", "zh": "切换语言" },
+
+  "sheet_label":        { "en": "Sheet", "zh": "图纸" },
 
   "hero_greeting":      { "en": "Hi, I'm",  "zh": "你好，我是" },
   "hero_name":          { "en": "Yanyu Chen", "zh": "陈彦宇" },
   "hero_tagline": {
-    "en": "Robotics Maschine and Intelligence",
+    "en": "Robotics, Machines and Intelligence",
     "zh": "机器人及机器学习，机甲大师（Robomaster）"
   },
   "hero_cta_projects":  { "en": "View Projects", "zh": "了解更多" },
   "hero_cta_contact":   { "en": "Get in Touch",  "zh": "联系我" },
+  "hero_fig_label":     { "en": "Fig. 01 · N-Link Planar IK", "zh": "图 01 · 多连杆平面逆运动学" },
+  "hero_fig_hint":      { "en": "Move pointer to drive", "zh": "移动指针驱动" },
+  "hero_fig_joints":    { "en": "Joints", "zh": "关节" },
+  "hero_fig_add_joint": { "en": "Add a joint", "zh": "增加关节" },
+  "hero_fig_remove_joint": { "en": "Remove a joint", "zh": "减少关节" },
+  "hero_fig_collision": { "en": "Self-collision", "zh": "自碰撞" },
+
+  "tb_role":            { "en": "Role", "zh": "身份" },
+  "tb_role_value":      { "en": "Robotics Engineering Student", "zh": "机器人工程在读" },
+  "tb_focus":           { "en": "Focus", "zh": "方向" },
+  "tb_focus_value":     { "en": "Mechanical · Firmware · Software", "zh": "机械 · 嵌入式 · 软件" },
+  "tb_status":          { "en": "Status", "zh": "状态" },
+  "tb_status_value":    { "en": "Open to internships", "zh": "开放实习机会" },
+  "tb_lang":            { "en": "Languages", "zh": "语言" },
+  "tb_lang_value":      { "en": "EN · 中文", "zh": "EN · 中文" },
 
   "about_heading":      { "en": "About Me", "zh": "关于我" },
   "about_body_1": {
@@ -22,13 +39,18 @@
     "en": "Outside of engineering, I enjoy photography and running",
     "zh": "摄影、徒步"
   },
+  "about_notes_heading":  { "en": "Notes", "zh": "说明" },
   "about_skills_heading": { "en": "Tech Stack", "zh": "技能栈" },
+  "bom_col_item":         { "en": "Item", "zh": "编号" },
+  "bom_col_designation":  { "en": "Designation", "zh": "名称" },
+  "bom_col_category":     { "en": "Category", "zh": "类别" },
 
   "projects_heading": { "en": "Projects", "zh": "项目" },
   "projects_subheading": {
     "en": "A selection of academic, personal, and team projects.",
     "zh": "学术、个人及团队项目。"
   },
+  "projects_items_label":    { "en": "Items",      "zh": "项" },
   "projects_tag_mechanical": { "en": "Mechanical", "zh": "机械" },
   "projects_tag_software":   { "en": "Software",   "zh": "软件" },
   "projects_tag_robotics":   { "en": "Robotics",   "zh": "机器人" },
@@ -42,16 +64,16 @@
     "zh": "从零设计并制作了一款六自由度机械臂。机械结构在 SolidWorks 中建模，由业余伺服舵机驱动，并通过自编写的 Python 逆运动学求解器进行控制。"
   },
 
-  "proj_slam_title": { "en": "LiDAR SLAM on TurtleBot3", "zh": "TurtleBot3 激光雷达 SLAM" },
+  "proj_slam_title": { "en": "Simulate automatic navigation and visual detection payload delivery system", "zh": "模拟仓库自主导航侦测货物运送机器人" },
   "proj_slam_desc": {
-    "en": "Implemented a 2D SLAM pipeline on a TurtleBot3 using ROS2 and a 2D LiDAR. Tuned the Nav2 stack for indoor navigation and generated high-quality occupancy grid maps for autonomous path planning.",
-    "zh": "在 TurtleBot3 上使用 ROS2 和二维激光雷达实现了二维 SLAM 管线。调优 Nav2 导航栈以实现室内导航，并生成高质量占用栅格地图，用于自主路径规划。"
+    "en": "An autonomous TurtleBot3 tasked with navigating a maze-like environment, locating two ArUco markers, and executing specific tasks at each marker without human intervention.",
+    "zh": "完全自主运行的TurtleBot3，可达成迷宫般的环境中自主导航，定位两个ArUco标记点，并在每个标记点处执行特定任务."
   },
 
   "bloomcraft_title": { "en": "Bloomcraft", "zh": "Bloomcraft" },
   "bloomcraft_desc": {
-    "en": "Built a two-wheeled inverted pendulum robot using an STM32 microcontroller. Implemented a PID controller tuned with real-time serial feedback. Chassis designed in CAD and 3D-printed.",
-    "zh": "使用 STM32 微控制器搭建了一款两轮倒立摆机器人，通过实时串口反馈调优 PID 控制器。底盘在 CAD 中设计并通过 3D 打印制造。"
+    "en": "Designed and trained an image generation model on a transformer architecture, producing varied floral images from an input prompt. Applied data augmentation and regularisation to improve generalisation, and deployed a simple web interface for interaction.",
+    "zh": "使用 transformer 架构设计并训练了一个图片生成模型，能够根据输入提示生成多样化的花卉图像。使用了数据增强和正则化技术来提升模型的泛化能力，并部署了一个简单的 Web 界面供用户交互。"
   },
 
   "proj_portfolio_title": { "en": "This Portfolio", "zh": "本作品集网站" },
@@ -68,7 +90,8 @@
   "contact_email_label":    { "en": "Email",    "zh": "邮件" },
   "contact_linkedin_label": { "en": "LinkedIn", "zh": "领英" },
   "contact_github_label":   { "en": "GitHub",   "zh": "GitHub" },
-  "contact_resume_label":   { "en": "Résumé",   "zh": "简历" },
+  "contact_resume_en_label": { "en": "Résumé (EN)", "zh": "简历 (EN)" },
+  "contact_resume_zh_label": { "en": "Résumé (中文)", "zh": "简历 (中文)" },
 
   "footer_built": {
     "en": "Built with React & Tailwind CSS",
