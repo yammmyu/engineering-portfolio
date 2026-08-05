@@ -29,7 +29,7 @@ const PROJECTS = [
   new Project({
     id: 'proj_portfolio',
     tags: ['software'],
-    github: 'https://github.com/yanyuc/engineering-portfolio',
+    github: 'https://github.com/yammmyu/engineering-portfolio',
   }),
 ]
 

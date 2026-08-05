@@ -2,6 +2,10 @@
 
 A personal engineering portfolio website for a Robotics Engineering student, showcasing a mix of mechanical and software projects.
 
+> **Working on this repo — human or AI?** Start with [AGENTS.md](AGENTS.md) for the coding
+> conventions and [docs/PRODUCT.md](docs/PRODUCT.md) for what the site is and the lines not
+> to cross. [docs/JOURNAL.md](docs/JOURNAL.md) has the running log of where things stand.
+
 ## Stack
 
 - **React + Vite** — fast development and optimized builds
@@ -110,6 +114,13 @@ Both solvers are pure and dependency-free, so they can be exercised directly wit
 
 ```
 portfolio/
+├── AGENTS.md                     # conventions for anyone (or anything) writing code here
+├── CLAUDE.md                     # imports AGENTS.md, for Claude Code
+├── docs/
+│   ├── PRODUCT.md                # audience, invariants, voice
+│   └── JOURNAL.md                # running work log, newest first
+├── scripts/
+│   └── check.mjs                 # `npm run check` — conventions the build can't catch
 ├── public/
 │   ├── resume-en.pdf
 │   └── resume-zh.pdf
@@ -191,5 +202,12 @@ npm run dev
 ```
 
 ```bash
+npm run check   # translations, tags, colour tokens — run this before you call it done
 npm run build   # outputs to dist/
 ```
+
+`npm run check` catches the things the build happily compiles: a string that only exists in
+English, a project row whose title would render as `proj_foo_title`, a hardcoded colour
+that ignores the dark sheet, or a `bg-paper/50` that silently paints nothing. Missing
+project images are reported as warnings, not errors — a row without its screenshot is a
+supported state.

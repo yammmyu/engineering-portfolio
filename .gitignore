@@ -19,6 +19,9 @@ pnpm-debug.log*
 # Editor
 .vscode/
 .idea/
+
+# Agent tooling — .claude/settings.json is shared and tracked; this one is per-user
+.claude/settings.local.json
 *.suo
 *.ntvs*
 *.njsproj
