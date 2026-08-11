@@ -54,7 +54,7 @@ export default function Contact() {
                     key={link.labelKey}
                     className="flex flex-wrap items-baseline gap-x-4 gap-y-1 border-b border-rule py-4"
                   >
-                    <span className="label w-24 shrink-0">{t(link.labelKey)}</span>
+                    <span className="label w-28 shrink-0">{t(link.labelKey)}</span>
                     <span
                       aria-hidden="true"
                       className="hidden h-px flex-1 border-b border-dotted border-rule-strong sm:block"

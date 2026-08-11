@@ -1,18 +1,25 @@
 import React from 'react'
 import { useTranslation } from '../context/LanguageContext.jsx'
 import { SectionHeader, Reveal, Sheet } from './Section.jsx'
+import { PROJECT_REFS } from './Projects.jsx'
 
-// Bill of materials. Categories reuse the project tag keys so the two
-// sections stay described in the same vocabulary.
+// Bill of materials. A real BOM says where each part is used, and that is the
+// column this table was missing: it previously repeated the project tags, so a
+// reader learned that MATLAB is "software" and nothing else. Citing the rows
+// turns a list of claims into an index into the evidence — and a skill with no
+// row against it is a question worth being asked.
+//
+// `usedIn` holds project ids; the P-NN reference comes from the registry order
+// in Projects.jsx so it can never disagree with the list itself.
 const SKILLS = [
-  { name: 'SolidWorks / CAD', categoryKey: 'projects_tag_mechanical' },
-  { name: 'FEA & Simulation', categoryKey: 'projects_tag_mechanical' },
-  { name: 'ROS / ROS2', categoryKey: 'projects_tag_robotics' },
-  { name: 'Arduino / STM32', categoryKey: 'projects_tag_firmware' },
-  { name: 'Python', categoryKey: 'projects_tag_software' },
-  { name: 'C / C++', categoryKey: 'projects_tag_software' },
-  { name: 'MATLAB', categoryKey: 'projects_tag_software' },
-  { name: 'Git', categoryKey: 'projects_tag_software' },
+  { name: 'SolidWorks / CAD', usedIn: ['proj_slam', 'proj_aimbot', 'proj_arm'] },
+  { name: 'FEA & Simulation', usedIn: [] },
+  { name: 'ROS / ROS2', usedIn: ['proj_humanoid', 'proj_slam'] },
+  { name: 'Arduino / STM32', usedIn: ['proj_controller', 'proj_arm'] },
+  { name: 'Python', usedIn: ['proj_humanoid', 'proj_arm', 'bloomcraft'] },
+  { name: 'C / C++', usedIn: ['proj_controller'] },
+  { name: 'MATLAB', usedIn: [] },
+  { name: 'Git', usedIn: [] },
 ]
 
 export default function About() {
@@ -44,8 +51,10 @@ export default function About() {
                     <th scope="col" className="label py-2.5 pr-4 font-normal">
                       {t('bom_col_designation')}
                     </th>
-                    <th scope="col" className="label py-2.5 font-normal">
-                      {t('bom_col_category')}
+                    {/* Right-aligned so the column reads against the sheet edge
+                        instead of floating in the gap the wide table leaves. */}
+                    <th scope="col" className="label py-2.5 text-right font-normal">
+                      {t('bom_col_used_in')}
                     </th>
                   </tr>
                 </thead>
@@ -56,8 +65,12 @@ export default function About() {
                         {String(i + 1).padStart(2, '0')}
                       </td>
                       <td className="py-3 pr-4 text-sm text-ink">{skill.name}</td>
-                      <td className="py-3 font-mono text-[10px] uppercase tracking-label text-ink-2">
-                        {t(skill.categoryKey)}
+                      {/* An em dash rather than an empty cell: on a drawing a
+                          blank field is an omission, a dash is a statement. */}
+                      <td className="tnum py-3 text-right font-mono text-[11px] text-ink-2">
+                        {skill.usedIn.length
+                          ? skill.usedIn.map(id => PROJECT_REFS[id]).join(', ')
+                          : '—'}
                       </td>
                     </tr>
                   ))}

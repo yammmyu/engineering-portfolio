@@ -28,10 +28,15 @@ export default {
         rule: 'var(--c-rule)',
         'rule-strong': 'var(--c-rule-strong)',
         accent: 'var(--c-accent)',
+        // The accent as an ink. Use this whenever the accent has to set text;
+        // `accent` itself is for marks, rules, and fills only.
+        'accent-ink': 'var(--c-accent-ink)',
         'accent-wash': 'var(--c-accent-wash)',
       },
       letterSpacing: {
-        label: '0.14em',
+        // Tracking is size-specific. This pairs with the 11px .label — the
+        // labels grew a step, so the tracking comes down to hold the set width.
+        label: '0.1em',
         display: '-0.03em',
       },
       maxWidth: {

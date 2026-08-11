@@ -18,6 +18,280 @@ Template:
 
 ---
 
+## 2026-08-11 — Kinematic sketch: two modes with a handover between them
+
+**Did:** The figure was one continuous thing that blended the pick-and-place cycle and the
+pointer together. It is now two states with a deliberate handover, which is what it was
+always trying to be.
+
+`attract` still blends, but the cycle clock is gated on it
+([KinematicSketch.jsx](../src/components/KinematicSketch.jsx)):
+
+- above `CYCLE_REWIND` (0.97) the clock is wound back to zero,
+- below `CYCLE_RESUME` (0.08) it runs,
+- between them it is parked, and that band *is* the transition.
+
+So letting go returns the arm to the program's first frame and starts the job from the
+top, rather than dropping it into the middle of a move nobody watched it begin.
+
+**The rewind threshold is the whole trick and it is worth not "simplifying".** The cycle
+contributes `(1 - attract)` of the goal, so rewinding at 0.97 moves the blended goal by
+**1.81px** on the frame it happens — measured, with a clock jump of 5.02s, against an
+ordinary 5.6px step elsewhere in the same run. Rewinding when the pointer *arrives*, when
+attract is still ~0, whips the arm across the figure instead.
+
+It also gives brush-past behaviour for free: 0.25s of hover peaks at attract 0.65, never
+rewinds, and resumes mid-cycle. Only a real interaction restarts the program.
+
+`ATTRACT_TAU.release` 0.5 → 0.7s, so giving the arm back reads as the machine returning to
+work rather than being dropped. Measured end to end: readout flips to MANUAL 0.15s after
+the pointer arrives, the cycle rewinds at 0.83s; on release the readout returns to AUTO at
+0.48s and the program starts at 1.77s. Worst joint movement per frame during the handover
+in is 3.3px — *less* than the 4.3px the cycle itself uses.
+
+Added an `Auto` / `Manual` readout to the footer (`hero_fig_mode_auto` / `_manual`). The
+handover is already legible in the motion — the cell fades, the program stops — but naming
+it in the vocabulary a machine would use is what tells a visitor the running arm was never
+just a loop.
+
+**Why:** Requested: normally an arm doing pick and place, smoothly; pointer in, smooth
+transition to interactive; pointer away, smooth transition back and start the motion again
+from the beginning.
+
+**Open:**
+- The mode readout is deliberately **not** an `aria-live` region: it only changes in
+  response to a pointer, so announcing it reaches exactly the people who cannot have caused
+  it.
+- Driving the arm hard with the cursor still peaks at ~49px of joint movement per frame.
+  That is the rate cap saturating through a posture flip, unchanged by this work, and is
+  the same figure as before.
+- The footer now carries three readouts. It fits at 320px, but a fourth would not.
+
+## 2026-08-05 — Kinematic sketch: slower cycle
+
+**Did:** Retimed the pick-and-place cycle to 1.7× its original length — 4.66s → 7.9s — via
+a single `PACE` constant in [pickPlace.js](../src/lib/pickPlace.js). The segment times
+there are the *proportions* of the program, how a move weighs against a dwell; `PACE` is
+the one dial for the speed of the whole thing, so retiming can't reshape it.
+
+`TRAIL_MAX` went 64 → 104 frames with it. The trail is a duration, not a distance, so at
+the slower pace the same 64 frames drew a much shorter stub of the path the arm is working.
+It now covers ~1.7s, about a fifth of a cycle.
+
+Re-measured, since the `JOINT_RATE` comment quotes the cycle's peak: peak joint speed
+**350°/s → 205°/s**, so the 450°/s cap has more headroom than before and still never bites
+the program. Worst joint movement per frame in the cycle 7.1px → 4.3px. Tip still tracks
+its path to 0.25px, zero limit or link-length violations, no self-collision during the
+cycle. Pointer-driven behaviour is untouched by design.
+
+**Why:** Requested — the motion read as too quick.
+
+**Open:** Only the idle cycle slowed. The pointer's own follow constant
+(`TARGET_TAU.active`, 0.07s) is deliberately still quick: lag there reads as the figure
+being unresponsive rather than as the arm being deliberate. If the hand-driven motion also
+wants calming, that is the knob, and a different judgement call.
+
+## 2026-08-05 — README split: showcase vs. maintenance
+
+**Did:** The `proj_portfolio` row links to this repo, so the README is the landing page a
+recruiter hits — but it was written as a maintenance manual. Split it:
+
+- **README.md** is now reader-facing. Leads with what the site is, then the two things worth
+  a stranger's attention: the hero being a real solver, and the drawing-set metaphor being
+  structural. The IK writeup stays — it is the strongest evidence in the repo — but sits in
+  `<details>` so the page skims in thirty seconds and still rewards opening.
+- **docs/CONTENT.md** is new and takes the procedures: adding a project, rows with no link,
+  project images, tags, and the repo tree. Plus a table for the content that lives outside
+  the projects list (title block, skills BOM, contact links) which was previously nowhere.
+- Screenshots at `docs/img/hero-{light,dark}.png`, captured from the production build in
+  headless Chrome at 2× and downscaled to 1400px. The pair doubles as evidence for the token
+  system — same markup, no `dark:` variant anywhere.
+
+Fixed the cross-references this broke: AGENTS.md pointed at `README.md#adding-a-project`,
+PRODUCT.md at `README.md#the-hero-sketch`. Both anchors were gone. There is now a link
+checker step in the method below — every internal doc link and anchor resolves as of this
+entry.
+
+**Why:** Requested. The README functions as part of the portfolio, not just as docs for
+whoever maintains it.
+
+**Open:**
+- **The live URL is a `TODO` at the top of the README.** It is not recorded anywhere in the
+  repo and not in either résumé PDF (only LinkedIn is), so it could not be filled in.
+- The figure caption truncates at 1440px wide: `FIG. 01 · 3R PLANAR IK · PICK & …`. The
+  `.label` is `truncate` and the hint next to it is `shrink-0`, so the title loses. Visible
+  in `docs/img/hero-light.png`. Either shorten the label or let the hint drop first.
+- Screenshots are of the hero only. Headless Chrome would not scroll to `#projects` —
+  neither the hash nor a scripted `scrollIntoView` took, and a tall viewport just stretches
+  the `min-h-[100svh]` hero. A projects-section shot would be worth having; it needs real
+  CDP rather than `--screenshot`.
+- The screenshots will drift as the site changes. Worth regenerating whenever the hero or
+  the palette moves.
+
+## 2026-08-05 — Kinematic sketch: joint limits, rate limiting, pick-and-place
+
+**Did:** Two asks — make the arm hold poses a real one could, and give it a job instead of
+a wander.
+
+**Poses.** FABRIK was already a real iterative IK; what it had no model of was a machine.
+Added to [ik.js](../src/lib/ik.js): per-joint angular limits (±90° shoulder from its
+support, ±150° elbow, ±135° wrist), applied in **both** passes via `walkOut`/`walkIn`, and
+`limitJointRate`. Three things I got wrong on the way, all recorded in comments where they
+bite:
+
+- Constraining only the forward pass. Looks equivalent — the forward pass is what gets
+  drawn — but the backward pass then proposes headings that are clipped rather than
+  followed, the outer joints saturate on their stops, and the tip stalls up to 93px short
+  before snapping to a mirrored pose.
+- Reading each pass's headings up front instead of deriving them from the joint just
+  placed. That silently costs the pass its entire corrective effect (392px snaps).
+- Rate-limiting by feeding the capped pose back to the solver. It re-solves from a halfway
+  pose belonging to neither posture, changes its mind, and oscillates 141px short of a
+  reachable target. Command and actual are now separate poses: the solver works from its
+  own last answer and converges exactly (0.25px settled, same as unconstrained), and the
+  drawn arm chases it.
+
+The rate limit is the load-bearing idea and I didn't expect it to be. Joint limits *cut the
+configuration space up*, and where a cut runs between two postures there is no continuous
+path — a local solver arrives at the far one in one frame, and no amount of iteration or
+limit-loosening changes that (±170° limits snap exactly as hard as ±150°). A joint with a
+top speed can't. Pointer sweep across the workspace: **163px of joint movement in one frame
+→ 20px**, and 20px *is* the cap. Self-intersecting poses **14% of frames → 8%**. Zero limit
+or link-length violations anywhere.
+
+**The cycle.** New [pickPlace.js](../src/lib/pickPlace.js) — keyframed, pure, smoothstep
+per segment so every move starts and ends at rest. Two station pads, `ST 01`/`ST 02`, and a
+part that is carried between them; the whole cell fades out as the pointer takes over, and
+the cycle clock runs down with it so the program is paused rather than abandoned.
+
+**Why:** Requested: "the arm can sometimes be in a very weird position that actual robot
+arms would not have", and a pick-and-place motion.
+
+**Open:**
+- **Traverses are swung about the base, not ruled straight.** A straight traverse asks the
+  tip to hold constant height across the middle of the workspace, which is where the arm
+  must fold up tight — it jammed on its stops and fell 54px short of its own path. Arcs are
+  also what a revolute arm actually does. Don't "fix" this back to a straight line.
+- Stations sit at 0.62 of reach, not the 0.56 first tried: closer in means more folding,
+  and at 0.56 the tip stopped 14px short of the bench. Both numbers are measured, not
+  guessed — [tune/limit sweeps in the scratchpad were the method](../src/lib/pickPlace.js).
+- The arm still self-intersects in ~8% of pointer-driven frames. That is what the
+  `Self-collision` readout is for, and it is half what it was, but link-collision limits
+  would be the next step if it bothers anyone.
+- `JOINT_RATE` is 450°/s against a cycle that peaks at 350°/s. Speed the cycle up much and
+  the cap will start rate-limiting the program itself, which shows up as the tip missing
+  the stations. *(Superseded — the cycle was retimed the same day and now peaks at 205°/s.
+  See the entry above.)*
+
+## 2026-08-05 — Projects: drone out, MUJIN humanoid in
+
+**Did:** Replaced `proj_drone` (autonomous frontier-exploration drone) with `proj_humanoid`,
+the MUJIN internship work: a diffusion policy on an AgiBot Genie G1 dual-arm humanoid that
+picks a parcel, judges whether the shipping label is showing, flips it if not, and places it
+label-up. Written from `documenation/` in the source repo (note the folder is spelled without
+the second `t`) — the KNOWHOW handover doc and the PoC report.
+
+It goes **first** in the list: by the ordering rule it is the most robotics-dense entry here.
+
+It is also **the first row with no link at all** — the code is on MUJIN's internal GitLab,
+which would 404 for any visitor. That turned out to need three changes beyond the entry
+itself:
+
+- `ProjectRow` gated its hover affordances on `primary`. The row wash and the `P-NN` nudge
+  fired regardless, so a row with nothing to click still lit up on hover — the same broken
+  promise as the corner-only link the comment above it describes, pointing the other way.
+- `projects_subheading` said "Each row links to the repository", which stopped being true.
+  Now "Most rows link to the repository".
+- README gained a *Rows with no link* section, since this is now a supported state rather
+  than an oversight.
+
+Deliberately left out of the description: the internal GitLab URL, the policy server's IP,
+and the safety-invariant internals. Kept the shape of the claim to what the PoC report itself
+states.
+
+**Why:** Requested. The humanoid work is the strongest robotics entry on the list and the
+drone was the weaker of the two autonomy projects.
+
+**Open:**
+- **No figure yet** — `/projects/proj_humanoid.jpg` is referenced and missing, so the row
+  renders text-only. The PoC report's cover photo (the robot orienting a parcel, embedded as
+  `word/media/image1.jpg` in `Humanoid_PoC_Report.docx`) would suit it, but it is MUJIN
+  material and wasn't copied in without a decision on clearance.
+- If a shareable demo video or a public PDF of the PoC report exists, that would give the row
+  a `demo` link and put the hover affordances back.
+- The `~90%` task success / `~53%` first-grasp / `~12 s` cycle numbers are in the report over
+  38 trials, which it flags as an uncontrolled experiment. Left out of the one-liner; worth
+  reconsidering if the row ever gets a longer treatment.
+
+**Caution for next time:** `translations.json` is hand-aligned. I rewrote it with `json.dump`
+and blew away the formatting across the whole file — a 2-key change became a 235-line diff,
+on top of uncommitted work that had no committed copy to fall back on. Recovered by
+rebuilding from HEAD's bytes and re-applying only the semantic deltas, down to 55 lines. Rule
+added to AGENTS.md; don't repeat it.
+
+## 2026-08-05 — Kinematic sketch: fixed at three links, envelope jitter
+
+**Did:** The joint stepper is gone; `LINK_RATIOS` is three long and `JOINT_COUNT` derives
+from it. The footer states the count as a figure of the drawing rather than offering it as
+a control, and `hero_fig_add_joint` / `hero_fig_remove_joint` are out of translations.json.
+The `groundLevel` guard for two-link chains went with it — the note about why a two-link
+arm must not get it is kept where the constraint is passed, since that is the thing a
+future shortening of the chain would break.
+
+Fixed the jitter outside the reach envelope. `clampTarget` was pulling an out-of-range goal
+onto the envelope, which puts it exactly where the only solution is the fully straight arm
+— and full stretch is a singularity: the far joint can sit ~5° off straight while moving
+the tip only 0.25px, which is `solveFabrik`'s tolerance. So it stopped a different few
+degrees short each frame and the outer joint sawtoothed over ~6° the whole time the pointer
+was outside. `clampTarget`'s outer limit is now optional and the caller passes only the
+inner one, so an out-of-range goal takes solveFabrik's exact straight-line branch. Measured
+over a sweep outside the envelope: θ3 worst frame-to-frame 6.07° → 0.00°, and the tip still
+lands exactly on the drawn envelope, because the chain sums to `maxReach`.
+
+**Why:** Reported as "very jittery when my cursor is outside that half circle, especially
+j3". The inner clamp stays — inside `minReach` there is no pose at all and FABRIK flails.
+
+**Open:** Crossing the envelope *inward* the wrist unfolds ~30° in a few frames. That is
+the singularity itself (dθ/ds is unbounded at full stretch), not the tolerance bug: it is
+monotonic, not oscillating, and it is left alone deliberately. Tightening `tolerance` to
+0.02 was tried and rejected — it only removed 0.06° of reversal in a thin band just inside
+the envelope, invisible, for more iterations per frame.
+
+## 2026-08-05 — Kinematic sketch: angle dead zone, pointer handover
+
+**Did:** Three motion defects in [KinematicSketch.jsx](../src/components/KinematicSketch.jsx).
+
+The angle arc strobed across its own limb at 180°. `jointSweep` returns (-π, π], so a
+straight joint reports +180° or -180° on solver noise alone, and that sign picks the side
+the arc sweeps and the side the label sits on — and the label's bisector is degenerate
+there too, so it swung a full 180° as the joint crossed over. Added `stableSweepSign` in
+[ik.js](../src/lib/ik.js): a 6° dead zone around straight inside which the previous side is
+held. Inside it the label falls back to the limb's normal on the latched side, which is
+what the bisector converges to on either approach — checked in node, they agree to 0.01 at
+178.9°, so the swap is invisible.
+
+The goal no longer *switches* between the pointer and the idle sweep at the canvas edge;
+it's a blend weighted by an eased `attract` (0.22s taking hold, 0.5s letting go), and
+`TARGET_TAU` interpolates with it so responsiveness doesn't step partway through. The
+pointer's last position is kept after it leaves, so the arm eases out of where the cursor
+was. Dropped the trail-clear on leave — nothing jumps now, and blanking it was the most
+visible part of leaving.
+
+Pointer capture on pointerdown, so a held drag past the edge keeps the arm reaching for the
+cursor instead of ending the gesture mid-stroke with the button still down. The envelope
+stops it, not the canvas border.
+
+Also switched the idle orbit from wall-clock `elapsed` to a per-frame accumulated
+`idlePhase`. The loop pauses off-screen and in a hidden tab, but the clock didn't, so
+coming back teleported the orbit — a latent version of the same jump.
+
+**Why:** All three read as the figure snapping rather than moving. Reported by the user as
+"it launches itself back" and "jittery angle indicator".
+
+**Open:** `ATTRACT_TAU` values are judged, not measured — if the handover feels sluggish on
+the way in, `grab` is the knob. The dead zone is fixed at 6°; a much longer link chain
+could want it wider, since the same angular noise moves the tip further.
+
 ## 2026-08-05 — Agent scaffolding
 
 **Did:** Added [AGENTS.md](../AGENTS.md) (conventions, architecture, styling, motion, i18n,

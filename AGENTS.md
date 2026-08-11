@@ -4,8 +4,10 @@ Operating guide for any AI agent working in this repo. Read this before touching
 
 - **What this is:** a personal engineering portfolio for Yanyu Chen, a Robotics Engineering
   student. React + Vite + Tailwind, static, deployed on Vercel.
-- **How it works:** [README.md](README.md) — stack, design system, the IK solver writeup,
-  and the procedures for adding a project or a tag.
+- **How it works:** [README.md](README.md) — the showcase page a visitor lands on: stack,
+  design system, and the IK solver writeup. It is reader-facing, so keep it that way.
+- **Adding or editing content:** [docs/CONTENT.md](docs/CONTENT.md) — projects, tags,
+  images, repo layout.
 - **What it's for and what it must never become:** [docs/PRODUCT.md](docs/PRODUCT.md).
   Read it before any design, copy, or content change.
 - **Where the last agent left off:** [docs/JOURNAL.md](docs/JOURNAL.md). Read the top entry
@@ -137,8 +139,13 @@ src/
   **both `en` and `zh`.** No exceptions, and no English fallback left as a TODO. `npm run
   check` fails on a missing language.
 - Keys are flat snake_case, grouped by section in file order.
+- **`translations.json` is hand-aligned — never rewrite it with a JSON serializer.** Short
+  entries sit on one line with the `{` and the `"zh"` column aligned across their group;
+  long ones expand to a block; blank lines separate sections. `json.dump` / `JSON.stringify`
+  destroys all of it and turns a two-key change into a 300-line diff. Edit the text
+  directly, and match the shape of the neighbouring entries.
 - Project entries need matching `<id>_title` and `<id>_desc` keys. The full procedure for
-  adding a project or a tag is in [README.md](README.md#adding-a-project).
+  adding a project or a tag is in [docs/CONTENT.md](docs/CONTENT.md#adding-a-project).
 - Chinese is not a machine translation of the English — it is written to read naturally in
   Chinese. If you are not confident writing it, say so rather than guessing.
 - **Never invent a project, a skill, a date, or a credential.** This page represents a real

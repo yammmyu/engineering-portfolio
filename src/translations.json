@@ -6,20 +6,21 @@
 
   "sheet_label":        { "en": "Sheet", "zh": "图纸" },
 
-  "hero_greeting":      { "en": "Hi, I'm",  "zh": "你好，我是" },
-  "hero_name":          { "en": "Yanyu Chen", "zh": "陈彦宇" },
+  "hero_greeting": { "en": "Hi, I'm",    "zh": "你好，我是" },
+  "hero_name":     { "en": "Yanyu Chen", "zh": "陈彦宇" },
   "hero_tagline": {
     "en": "Robotics, Machines and Intelligence",
     "zh": "机器人及机器学习，机甲大师（Robomaster）"
   },
-  "hero_cta_projects":  { "en": "View Projects", "zh": "了解更多" },
-  "hero_cta_contact":   { "en": "Get in Touch",  "zh": "联系我" },
-  "hero_fig_label":     { "en": "Fig. 01 · N-Link Planar IK", "zh": "图 01 · 多连杆平面逆运动学" },
-  "hero_fig_hint":      { "en": "Move pointer to drive", "zh": "移动指针驱动" },
-  "hero_fig_joints":    { "en": "Joints", "zh": "关节" },
-  "hero_fig_add_joint": { "en": "Add a joint", "zh": "增加关节" },
-  "hero_fig_remove_joint": { "en": "Remove a joint", "zh": "减少关节" },
-  "hero_fig_collision": { "en": "Self-collision", "zh": "自碰撞" },
+  "hero_cta_projects":   { "en": "View Projects",                         "zh": "了解更多" },
+  "hero_cta_contact":    { "en": "Get in Touch",                          "zh": "联系我" },
+  "hero_fig_label":      { "en": "Fig. 01 · 3R Planar IK",                "zh": "图 01 · 3R 平面逆运动学" },
+  "hero_fig_hint":       { "en": "Move pointer to drive",                 "zh": "移动指针驱动" },
+  "hero_fig_hint_touch": { "en": "Drag",                                  "zh": "拖动" },
+  "hero_fig_joints":     { "en": "Joints",                                "zh": "关节" },
+  "hero_fig_mode_auto":   { "en": "Auto",                                 "zh": "自动" },
+  "hero_fig_mode_manual": { "en": "Manual",                               "zh": "手动" },
+  "hero_fig_collision":  { "en": "Self-collision",                        "zh": "自碰撞" },
 
   "tb_role":            { "en": "Role", "zh": "身份" },
   "tb_role_value":      { "en": "Robotics Engineering Student", "zh": "机器人工程在读" },
@@ -32,8 +33,8 @@
 
   "about_heading":      { "en": "About Me", "zh": "关于我" },
   "about_body_1": {
-    "en": "I'm a Robotics Engineering student with a passion for designing mechanical systems and writing the software that brings them to life. I work at the intersection of hardware and software — from CAD models to embedded firmware to ROS nodes.",
-    "zh": "我是一名机器人工程专业的学生，热衷于设计机械系统，并编写让它们运转的软件。我在硬件与软件的交叉领域工作——从 CAD 模型到嵌入式固件，再到 ROS 节点。"
+    "en": "I'm a Robotics Engineering student. I design the mechanical system and write the software that runs it — CAD and fabrication at one end, embedded firmware and ROS nodes at the other, and the control loop in between.",
+    "zh": "我是机器人工程专业的学生。机械结构和驱动它的软件都由我做——一端是 CAD 与加工，另一端是嵌入式固件与 ROS 节点，中间是控制环路。"
   },
   "about_body_2": {
     "en": "Outside of engineering, I enjoy photography and running",
@@ -43,43 +44,70 @@
   "about_skills_heading": { "en": "Tech Stack", "zh": "技能栈" },
   "bom_col_item":         { "en": "Item", "zh": "编号" },
   "bom_col_designation":  { "en": "Designation", "zh": "名称" },
-  "bom_col_category":     { "en": "Category", "zh": "类别" },
+  "bom_col_used_in":      { "en": "Used in", "zh": "应用于" },
 
   "projects_heading": { "en": "Projects", "zh": "项目" },
   "projects_subheading": {
-    "en": "A selection of academic, personal, and team projects.",
-    "zh": "学术、个人及团队项目。"
+    "en": "Autonomy, control, and the hardware underneath — plus a few things built for their own sake. Most rows link to the repository.",
+    "zh": "自主导航、运动控制及其底层硬件，以及一些纯粹出于兴趣的项目。多数条目可跳转至代码仓库。"
   },
-  "projects_items_label":    { "en": "Items",      "zh": "项" },
-  "projects_tag_mechanical": { "en": "Mechanical", "zh": "机械" },
-  "projects_tag_software":   { "en": "Software",   "zh": "软件" },
-  "projects_tag_robotics":   { "en": "Robotics",   "zh": "机器人" },
-  "projects_tag_firmware":   { "en": "Firmware",   "zh": "嵌入式" },
-  "projects_link_github":    { "en": "GitHub",     "zh": "GitHub" },
-  "projects_link_demo":      { "en": "Demo",       "zh": "演示" },
+  "projects_items_label":     { "en": "Items",       "zh": "项" },
+  "projects_further_heading": { "en": "Further work", "zh": "其他项目" },
+  "projects_tag_mechanical":  { "en": "Mechanical",  "zh": "机械" },
+  "projects_tag_electronics": { "en": "Electronics", "zh": "电子" },
+  "projects_tag_software":    { "en": "Software",    "zh": "软件" },
+  "projects_tag_robotics":    { "en": "Robotics",    "zh": "机器人" },
+  "projects_tag_firmware":    { "en": "Firmware",    "zh": "嵌入式" },
+  "projects_link_github":     { "en": "GitHub",      "zh": "GitHub" },
+  "projects_link_demo":       { "en": "Demo",        "zh": "演示" },
+  "projects_fig_label":       { "en": "Fig.",        "zh": "图" },
+
+  "proj_humanoid_title": { "en": "Imitation-Learned Dual-Arm Parcel Handling", "zh": "模仿学习双臂包裹处理" },
+  "proj_humanoid_desc": {
+    "en": "A dual-arm humanoid that picks a parcel, judges whether its shipping label is showing, and flips it if not — learned from 200 VR demonstrations rather than programmed. I built the deployment side: policy output becomes motion only through a transparent IK solver and a physics check.",
+    "zh": "双臂人形机器人从台面抓起包裹，判断快递单是否朝上，不朝上就将其翻转——这套动作由 200 组 VR 示教学习而来，而非编程写定。我负责 policy 之外的部署链路：自建 IK 求解器与下发前的仿真校验，是策略输出成为实际动作的唯一通路。"
+  },
+
+  "proj_slam_title": { "en": "Precision-Docking Delivery Robot", "zh": "精准对接货物运送机器人" },
+  "proj_slam_desc": {
+    "en": "A TurtleBot3 that explores a maze, finds ArUco markers, and launches balls into a receptacle unaided. I built the mechanics and the docking that squares it to the marker's normal.",
+    "zh": "自主探索迷宫、识别 ArUco 标记并将球射入接收装置的 TurtleBot3。我负责全部机械设计，以及使车身对正标记法线的精准对接。"
+  },
+
+  "proj_pcb_title": { "en": "Slip-Ring Interconnect Boards", "zh": "滑环互连电路板" },
+  "proj_pcb_desc": {
+    "en": "Three KiCad boards carrying two CAN buses and three power rails across the rotating yaw joint of a RoboMaster sentry, each rail paralleled over several slip-ring channels in poured copper.",
+    "zh": "三块 KiCad 电路板，在 RoboMaster 哨兵持续旋转的 yaw 关节两侧传递两路 CAN 总线与三路电源；每路电源以敷铜并联分摊到多个滑环通道。"
+  },
+
+  "proj_aimbot_title": { "en": "Portable Moving Target for Auto-Aim", "zh": "便携式自瞄测试移动靶" },
+  "proj_aimbot_desc": {
+    "en": "In design — a self-driving target so auto-aim testing no longer ties up a second robot and a driver. Holds a commanded speed, and packs into one checked bag.",
+    "zh": "设计阶段——可自行移动的靶标，使自瞄测试不再占用第二台机器人和一名操作手。可保持指定速度，并能装进一件托运行李。"
+  },
+
+  "proj_controller_title": { "en": "RoboMaster Engineer Arm Controller", "zh": "RoboMaster 工程机械臂控制器" },
+  "proj_controller_desc": {
+    "en": "Bare-metal STM32F407 firmware driving a six-motor RoboMaster Engineer arm over CAN at 1 Mbit/s, closing a cascaded position-to-velocity PID loop around each joint.",
+    "zh": "裸机 STM32F407 固件，通过 1 Mbit/s CAN 总线驱动 RoboMaster 工程机械臂的六个电机，并对每个关节闭合「位置—速度」串级 PID 环。"
+  },
 
   "proj_arm_title": { "en": "6-DOF Robotic Arm", "zh": "六自由度机械臂" },
   "proj_arm_desc": {
-    "en": "Designed and fabricated a 6-degree-of-freedom robotic arm from scratch. Mechanical structure modeled in SolidWorks, driven by hobby servos, and controlled via a custom inverse kinematics solver in Python.",
-    "zh": "从零设计并制作了一款六自由度机械臂。机械结构在 SolidWorks 中建模，由业余伺服舵机驱动，并通过自编写的 Python 逆运动学求解器进行控制。"
-  },
-
-  "proj_slam_title": { "en": "Simulate automatic navigation and visual detection payload delivery system", "zh": "模拟仓库自主导航侦测货物运送机器人" },
-  "proj_slam_desc": {
-    "en": "An autonomous TurtleBot3 tasked with navigating a maze-like environment, locating two ArUco markers, and executing specific tasks at each marker without human intervention.",
-    "zh": "完全自主运行的TurtleBot3，可达成迷宫般的环境中自主导航，定位两个ArUco标记点，并在每个标记点处执行特定任务."
+    "en": "A 6-DOF arm built from scratch: structure modeled in SolidWorks, driven by hobby servos, and controlled by a Python inverse-kinematics solver.",
+    "zh": "从零设计并制作的六自由度机械臂：SolidWorks 建模、舵机驱动，由自编 Python 逆运动学求解器控制。"
   },
 
   "bloomcraft_title": { "en": "Bloomcraft", "zh": "Bloomcraft" },
   "bloomcraft_desc": {
-    "en": "Designed and trained an image generation model on a transformer architecture, producing varied floral images from an input prompt. Applied data augmentation and regularisation to improve generalisation, and deployed a simple web interface for interaction.",
-    "zh": "使用 transformer 架构设计并训练了一个图片生成模型，能够根据输入提示生成多样化的花卉图像。使用了数据增强和正则化技术来提升模型的泛化能力，并部署了一个简单的 Web 界面供用户交互。"
+    "en": "A florist assistant that turns an occasion into a costed bouquet. An LLM constrained to structured JSON picks from a priced catalogue, so the total is arithmetic rather than a guess.",
+    "zh": "将场合需求转化为带报价花束方案的花艺助手。LLM 的输出被约束为结构化 JSON，并从带价目的花材库中选配，使总价来自计算而非估测。"
   },
 
   "proj_portfolio_title": { "en": "This Portfolio", "zh": "本作品集网站" },
   "proj_portfolio_desc": {
-    "en": "A minimal bilingual portfolio built with React, Vite, and Tailwind CSS. Supports English/Chinese toggle with localStorage persistence. Deployed to Vercel with a custom domain via Cloudflare DNS.",
-    "zh": "使用 React、Vite 和 Tailwind CSS 构建的极简双语作品集网站，支持中英文切换并持久化存储语言偏好。通过 Cloudflare DNS 配置自定义域名并部署至 Vercel。"
+    "en": "A minimal bilingual portfolio in React, Vite, and Tailwind CSS, deployed to Vercel behind a custom domain.",
+    "zh": "使用 React、Vite 与 Tailwind CSS 构建的极简双语作品集，部署至 Vercel 并配置自定义域名。"
   },
 
   "contact_heading": { "en": "Contact", "zh": "联系" },

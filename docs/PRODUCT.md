@@ -69,7 +69,8 @@ why, and offer the nearest thing that doesn't — then do what the user decides.
 **Substance**
 
 - **The hero sketch stays real.** `src/lib/ik.js` is a genuine solver, ported and corrected
-  from the author's Math IA, with the bugs documented in [README.md](../README.md#the-hero-sketch).
+  from the author's Math IA, with the bugs documented in
+  [README.md](../README.md#the-hero-is-a-working-ik-solver-not-an-animation).
   It must never be swapped for a video, a Lottie file, or a canned animation. It being real
   is the entire point of it.
 - **Content is true.** Never invent a project, skill, metric, date, or credential. Never

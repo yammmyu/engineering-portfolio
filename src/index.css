@@ -10,12 +10,19 @@
     --c-surface: #f4f5f1;
     --c-ink: #15181a;
     --c-ink-2: #4c534f;
-    --c-ink-3: #7b827c;
+    /* Quiet ink. Held at >=4.5:1 on both --c-paper and --c-surface, because
+       .label is the only thing carrying most of the meta on this sheet. */
+    --c-ink-3: #636a64;
     --c-rule: #cfd2ca;
     --c-rule-strong: #a9aea4;
     --c-accent: #e0a80b;
+    /* The accent is a graphic colour — at 2:1 on paper it can't set text.
+       This is the same amber taken down to a legible ink. */
+    --c-accent-ink: #7a5a06;
     --c-accent-wash: #f0e6c6;
     --c-grid: rgba(21, 24, 26, 0.05);
+    /* Floating chrome. Content scrolls under it rather than past an opaque bar. */
+    --c-chrome: rgba(240, 241, 237, 0.72);
 
     --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
     --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
@@ -29,12 +36,15 @@
       --c-surface: #171a18;
       --c-ink: #e7eae4;
       --c-ink-2: #a2a99f;
-      --c-ink-3: #6f766e;
+      --c-ink-3: #828a80;
       --c-rule: #2b312d;
       --c-rule-strong: #444b45;
       --c-accent: #f5c542;
+      /* Bright enough on the night sheet to set text as-is. */
+      --c-accent-ink: #f5c542;
       --c-accent-wash: #26200f;
       --c-grid: rgba(231, 234, 228, 0.045);
+      --c-chrome: rgba(16, 19, 18, 0.72);
     }
   }
 
@@ -77,10 +87,58 @@
 }
 
 @layer components {
-  /* Mono caption used for every label, code, and column header on the sheet. */
+  /* Mono caption used for every label, code, and column header on the sheet.
+     Small text wants weight and a little more size, not less — at 10px/400 the
+     tracking was doing all the work and legibility was paying for it. The
+     tracking comes down as the size goes up so the set width is unchanged. */
   .label {
-    @apply font-mono text-[10px] uppercase tracking-label text-ink-3;
+    @apply font-mono text-[11px] font-medium uppercase tracking-label text-ink-3;
     font-variant-numeric: tabular-nums;
+  }
+
+  /* Floating chrome: a translucent layer the sheet scrolls under. */
+  .chrome {
+    background-color: var(--c-chrome);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+  }
+
+  /* Where the chrome overlaps the sheet, the material fades out instead of
+     ending on a rule. The mask fades the blur itself, not just a colour wash,
+     so it reads as the edge of a real surface. */
+  .chrome-edge {
+    background: linear-gradient(to bottom, var(--c-chrome), transparent);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    mask-image: linear-gradient(to bottom, #000, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, #000, transparent);
+    opacity: 0;
+    transition: opacity 200ms var(--ease-out);
+  }
+
+  .chrome-edge-in {
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-transparency: reduce) {
+    .chrome {
+      background-color: var(--c-paper);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+    }
+
+    .chrome-edge {
+      display: none;
+    }
+  }
+
+  @media (prefers-contrast: more) {
+    .chrome {
+      background-color: var(--c-paper);
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+      border-bottom-color: var(--c-ink);
+    }
   }
 
   /* Links read as ink with an amber rule under them; on hover the rule goes
@@ -117,9 +175,23 @@
     }
   }
 
+  /* The detail view answers the row hover too, so the frame reads as part of
+     the row rather than an image parked next to it. Kept small — this is a
+     drawing, not a card. */
+  .fig-zoom {
+    transition: transform 300ms var(--ease-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .group:hover .fig-zoom {
+      transform: scale(1.03);
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .arrow-slide,
-    .row-mark {
+    .row-mark,
+    .fig-zoom {
       transition: none;
       transform: none;
     }

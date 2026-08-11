@@ -1,59 +1,30 @@
-# Personal Engineering Portfolio
+# Yanyu Chen — Engineering Portfolio
 
-A personal engineering portfolio website for a Robotics Engineering student, showcasing a mix of mechanical and software projects.
+A bilingual single-page portfolio for a Robotics Engineering student, built as an
+**engineering drawing set**. React, Vite, Tailwind — no UI framework, no runtime dependency
+beyond React, ~60 kB gzipped.
 
-> **Working on this repo — human or AI?** Start with [AGENTS.md](AGENTS.md) for the coding
-> conventions and [docs/PRODUCT.md](docs/PRODUCT.md) for what the site is and the lines not
-> to cross. [docs/JOURNAL.md](docs/JOURNAL.md) has the running log of where things stand.
+<!-- TODO: replace with the deployed URL -->
+_Live site: add the deployed URL here._
 
-## Stack
+![The site in its light theme](docs/img/hero-light.png)
 
-- **React + Vite** — fast development and optimized builds
-- **Tailwind CSS** — utility-first styling
-- **Vercel** — hosting, with custom Cloudflare domain (DNS-only / grey cloud)
+## The hero is a working IK solver, not an animation
 
-## Features
+The arm in the corner is real inverse kinematics running every frame. Left alone it runs a
+pick-and-place cycle; move the pointer and it tracks it — inside joint limits and a joint
+speed limit, and it tells you when it has folded into itself.
 
-- Single-page layout: Navbar, Hero, About Me, Projects, Contact
-- Bilingual support (EN / 中文) — toggle in the navbar switches the entire site
-- All translatable strings live in `src/translations.json` (`{ "key": { "en": "...", "zh": "..." } }`)
-- Language state managed via React Context
-- Projects section as a drawing list — each row has title, description, tags (mechanical / software / robotics / firmware), and optional GitHub / demo links
-- Light and dark themes, following the OS preference
-- Interactive hero: an N-link planar arm solving inverse kinematics toward the pointer, drawn on canvas, with a control to add and remove joints
+`src/lib/ik.js` holds two planar N-link solvers plus the joint limits and rate limiting
+that keep the poses mechanical; `src/lib/pickPlace.js` holds the cycle;
+`src/components/KinematicSketch.jsx` is purely the drawing and interaction layer. The
+solvers are pure and dependency-free, so they can be exercised straight from Node — which
+is how every number below was measured.
 
-## Design System
+<details>
+<summary><strong>The solver, and why the first one was replaced</strong></summary>
 
-The UI is built as an **engineering drawing set**: hairline rules, sheet numbering, a
-title block, a bill of materials, and a drawing list. Structural devices map to real
-content — nav order is sheet order, the skills table is a BOM, projects are drawing-list
-rows.
-
-**Color** lives entirely in CSS custom properties in `src/index.css` (`--c-paper`,
-`--c-ink`, `--c-rule`, `--c-accent`, …) and is exposed to Tailwind as named colors in
-`tailwind.config.js`. The dark theme redefines the same tokens under
-`@media (prefers-color-scheme: dark)`, so components never branch on theme.
-
-> Because the Tailwind colors resolve to `var(...)`, **opacity modifiers like
-> `bg-paper/50` will not work.** Add a token instead.
-
-The amber accent is a *marking* color — washes, underlines, the end effector. It never
-carries text on its own; links are ink with an amber underline. This keeps contrast
-legible on both grounds.
-
-**Type** is Archivo (variable width axis, set to 125% via `.font-expanded`) for display,
-IBM Plex Sans for body, IBM Plex Mono for every label and data value. All three stacks
-append system CJK faces so 中文 falls back deliberately.
-
-**Motion** uses the custom curves `--ease-out` / `--ease-in-out`, animates only
-`transform` and `opacity`, gates hover nudges behind `(hover: hover) and (pointer: fine)`,
-and is fully disabled under `prefers-reduced-motion` (including the canvas, which drops to
-a single static frame).
-
-## The Hero Sketch
-
-`src/lib/ik.js` holds two planar N-link inverse kinematics solvers.
-`src/components/KinematicSketch.jsx` is purely the drawing and interaction layer.
+<br>
 
 **`resolveIk`** is ported from the pygame simulation in my Math IA. The chain is solved
 backwards from the end effector: each joint is placed where a circle of the current
@@ -74,10 +45,8 @@ Measuring each joint's movement against the tip's over a sweep:
 | `resolveIk` | 0.00 | 0.55 | 0.56 | 0.82 | 1.00 |
 | `solveFabrik` | 0.00 | 0.14 | 0.42 | 0.75 | 1.00 |
 
-FABRIK being incremental also makes it continuous for free, and lets the support plane be
-a positional constraint applied inside the forward pass. That constraint spends
-redundancy, so it is disabled for a 2-link arm, whose single elbow is fully determined by
-the goal and has none to spend.
+FABRIK being incremental also makes it continuous for free, and gives the constraints
+somewhere to live.
 
 Three things changed in the port of the IA solver:
 
@@ -93,7 +62,48 @@ Three things changed in the port of the IA solver:
 - The reachable region is an annulus, not a disc. Targets inside the inner dead zone are
   pushed back out to it, so a chain with one dominant link stays rigid near the base.
 
-### Keeping the motion smooth
+</details>
+
+<details>
+<summary><strong>Making it move like a mechanism</strong></summary>
+
+<br>
+
+A chain of line segments will happily fold a link back through the one before it or lay
+itself down through its own mount. Those are valid configurations of the maths and of
+nothing that has a motor at each joint, so the arm carries a model of one:
+
+- **Joint limits** — ±90° at the shoulder measured from its support, so the first link
+  never points below the bench it is bolted to; ±150° at the elbow and ±135° at the wrist.
+  Both FABRIK passes respect them. Constraining only the forward pass looks equivalent and
+  is not: the backward pass then proposes angles that get clipped rather than followed, the
+  outer joints saturate against their stops, and the tip stalls tens of pixels short.
+- **A joint speed limit**, 450°/s. Limits alone are not enough. They cut the configuration
+  space up, and a redundant arm tracking a target across one of those cuts has a pose
+  either side and no continuous path between — so a local solver arrives at the far one in
+  a single frame. A real joint cannot, and capping the rate turns each flip into a fast
+  swing. What the solver commands and what the arm shows are kept as separate poses: the
+  solver always works from its own last answer, so it still converges exactly, and the
+  drawn arm chases it.
+
+Measured over a pointer sweep across the whole workspace: 163px of joint movement in one
+frame without the speed limit, 20px with it — and 20px is the cap itself, which is to say
+the arm is moving rather than jumping. Self-intersecting poses fell from 14% of frames to
+8%. The support plane stays a positional preference rather than a limit, expressed in the
+backward pass where nothing it produces is drawn.
+
+When left alone the arm runs a pick-and-place cycle rather than wandering: down to the
+bench, close, lift, traverse, place, return. Its traverses are swung about the base instead
+of ruled straight across — a gantry moves in straight lines, a revolute arm does not, and a
+straight traverse asks the tip to hold a constant height across the middle of the
+workspace, which is the one place the arm has to fold up tight to reach.
+
+</details>
+
+<details>
+<summary><strong>Keeping the motion smooth</strong></summary>
+
+<br>
 
 Running `resolveIk` per frame also twitched badly, for a separate reason. Every step has
 two valid solutions — mirror images across the line joining the two circle centres — and
@@ -108,106 +118,75 @@ the arm is, so easing the joints on top of it just fights the solver. The easing
 time constant rather than a fixed fraction per frame, so the arm moves at the same rate
 on 60Hz and 120Hz displays.
 
-Both solvers are pure and dependency-free, so they can be exercised directly with Node.
+</details>
 
-## Project Structure
+## The whole page is a drawing set
 
-```
-portfolio/
-├── AGENTS.md                     # conventions for anyone (or anything) writing code here
-├── CLAUDE.md                     # imports AGENTS.md, for Claude Code
-├── docs/
-│   ├── PRODUCT.md                # audience, invariants, voice
-│   └── JOURNAL.md                # running work log, newest first
-├── scripts/
-│   └── check.mjs                 # `npm run check` — conventions the build can't catch
-├── public/
-│   ├── resume-en.pdf
-│   └── resume-zh.pdf
-├── src/
-│   ├── components/
-│   │   ├── Navbar.jsx
-│   │   ├── Hero.jsx
-│   │   ├── KinematicSketch.jsx   # canvas + controls for the hero sketch
-│   │   ├── About.jsx
-│   │   ├── Projects.jsx
-│   │   ├── Contact.jsx
-│   │   └── Section.jsx           # SectionHeader / Reveal / Sheet primitives
-│   ├── context/
-│   │   └── LanguageContext.jsx
-│   ├── hooks/
-│   │   └── useReveal.js          # scroll-reveal via IntersectionObserver
-│   ├── lib/
-│   │   └── ik.js                 # N-link IK solver (from the Math IA)
-│   ├── models/
-│   │   └── Project.js
-│   ├── index.css                 # design tokens, base styles, utilities
-│   ├── translations.json
-│   ├── App.jsx
-│   └── main.jsx
-├── index.html
-├── vite.config.js
-├── tailwind.config.js
-└── package.json
-```
+The metaphor is structural rather than decorative — every device carries real content:
 
-## Adding a Project
+| Drawing convention | What it actually is |
+| --- | --- |
+| Sheet numbers (01, 02, 03) | Nav order and section order |
+| Title block | Role, focus, status, languages |
+| Bill of materials | The skills table |
+| Drawing list | The projects list |
+| Detail view, `Fig. NN` | Project screenshots |
+| Registration marks | The sheet corners |
+| Dimension callouts | The end effector's live X/Y readout |
 
-Each project needs an entry in two files.
+Hairline rules and right angles throughout — there is not one `rounded-*` or `shadow-*` in
+the codebase.
 
-**1. `src/components/Projects.jsx`** — append to the `PROJECTS` array:
+![The same page in its dark theme](docs/img/hero-dark.png)
 
-```js
-new Project({
-  id: 'my_new_project',                          // unique; used as translation key stem
-  tags: ['robotics', 'software'],                // see available tags below
-  github: 'https://github.com/user/repo',        // optional
-  demo: 'https://my-demo.example.com',           // optional
-}),
-```
+**Colour** lives entirely in CSS custom properties in `src/index.css` (`--c-paper`,
+`--c-ink`, `--c-rule`, `--c-accent`, …), exposed to Tailwind as named colours in
+`tailwind.config.js`. The dark theme redefines the same tokens under
+`@media (prefers-color-scheme: dark)`, so no component branches on theme and there is no
+`dark:` variant anywhere. The amber accent is a *marking* colour — washes, underlines, the
+end effector. It never carries text on its own; links are ink with an amber underline, which
+keeps contrast legible on both grounds.
 
-**2. `src/translations.json`** — add matching title and description keys (must be `<id>_title` and `<id>_desc`):
+**Type** is Archivo (variable width axis, set to 125% via `.font-expanded`) for display,
+IBM Plex Sans for body, IBM Plex Mono for every label and data value. All three stacks
+append system CJK faces so 中文 falls back deliberately.
 
-```json
-"my_new_project_title": { "en": "My Project", "zh": "我的项目" },
-"my_new_project_desc": {
-  "en": "Short description in English.",
-  "zh": "中文简短描述。"
-}
-```
+**Motion** uses the custom curves `--ease-out` / `--ease-in-out`, animates only `transform`
+and `opacity`, gates hover nudges behind `(hover: hover) and (pointer: fine)` so a tap
+doesn't strand them, and is fully disabled under `prefers-reduced-motion` — including the
+canvas, which drops to a single static frame. `prefers-reduced-transparency` and
+`prefers-contrast` have paths too.
 
-### Available tags
+## Bilingual, both ways
 
-`robotics`, `mechanical`, `software`, `firmware`
+EN and 中文 are equal citizens rather than a translated afterthought. Every string lives in
+`src/translations.json` as `{ "key": { "en": …, "zh": … } }`, language state is React
+context, and the toggle switches the whole site and persists. `npm run check` fails if a
+string exists in only one language.
 
-### Adding a new tag
-
-Tags share one hairline chip style, so a new tag needs two additions:
-
-- `TAG_LABEL_KEYS` in `src/components/Projects.jsx` — maps tag → translation key
-- `projects_tag_<name>` entry in `src/translations.json`
-
-The About table reuses these same `projects_tag_*` keys as BOM categories, so a new tag
-is available there too.
-
-## Deployment
-
-Build output is standard Vite (`dist/` folder), deployable directly to Vercel. Domain is configured via Cloudflare in DNS-only mode (grey cloud).
-
-## Getting Started
+## Running it
 
 ```bash
 npm install
 npm run dev
-```
 
-```bash
-npm run check   # translations, tags, colour tokens — run this before you call it done
+npm run check   # translations, tags, colour tokens — run before calling it done
 npm run build   # outputs to dist/
 ```
 
-`npm run check` catches the things the build happily compiles: a string that only exists in
+`npm run check` catches what the build happily compiles: a string that only exists in
 English, a project row whose title would render as `proj_foo_title`, a hardcoded colour
-that ignores the dark sheet, or a `bg-paper/50` that silently paints nothing. Missing
-project images are reported as warnings, not errors — a row without its screenshot is a
-supported state.
+that ignores the dark sheet, or a `bg-paper/50` that silently paints nothing — the Tailwind
+colours resolve to `var(...)`, so opacity modifiers on them do nothing at all.
+
+Deployed on Vercel from `dist/`, with a custom domain via Cloudflare in DNS-only mode
+(grey cloud).
+
+## Working on this repo
+
+| | |
+| --- | --- |
+| [AGENTS.md](AGENTS.md) | Coding conventions — read first, human or AI |
+| [docs/PRODUCT.md](docs/PRODUCT.md) | Audience, invariants, voice |
+| [docs/CONTENT.md](docs/CONTENT.md) | Adding projects, tags, and images; repo layout |
+| [docs/JOURNAL.md](docs/JOURNAL.md) | Running work log, newest first |
