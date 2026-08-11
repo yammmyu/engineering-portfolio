@@ -4,8 +4,7 @@ A bilingual single-page portfolio for a Robotics Engineering student, built as a
 **engineering drawing set**. React, Vite, Tailwind — no UI framework, no runtime dependency
 beyond React, ~60 kB gzipped.
 
-<!-- TODO: replace with the deployed URL -->
-_Live site: add the deployed URL here._
+**Live at [yanyu-chen.com](https://yanyu-chen.com)**
 
 ![The site in its light theme](docs/img/hero-light.png)
 
@@ -179,8 +178,17 @@ English, a project row whose title would render as `proj_foo_title`, a hardcoded
 that ignores the dark sheet, or a `bg-paper/50` that silently paints nothing — the Tailwind
 colours resolve to `var(...)`, so opacity modifiers on them do nothing at all.
 
-Deployed on Vercel from `dist/`, with a custom domain via Cloudflare in DNS-only mode
-(grey cloud).
+Deployed on Cloudflare Workers as static assets, configured in
+[wrangler.jsonc](wrangler.jsonc). Cloudflare builds from `main` on push — `npm run build`,
+publish `dist/` — so a deploy is just a commit. Registrar, DNS, and hosting are all on
+Cloudflare, and the custom domain is the only entry point; `workers.dev` is off.
+
+Updating a résumé PDF is the same motion as any other change: overwrite the file in
+`public/` **keeping its filename**, commit, push. The name is what keeps it a one-file
+change — [Contact.jsx](src/components/Contact.jsx) hardcodes both the `href` and the
+filename it displays, and there are separate EN and ZH entries, so a rename means four
+fields to keep in sync. Workers' default `Cache-Control` revalidates on every request, so
+the new file is live immediately with no cache purge.
 
 ## Working on this repo
 

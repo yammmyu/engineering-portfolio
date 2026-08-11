@@ -67,6 +67,51 @@ from the beginning.
   the same figure as before.
 - The footer now carries three readouts. It fits at 320px, but a fourth would not.
 
+## 2026-08-11 — Hosting: Cloudflare Workers, not Vercel
+
+**Did:** Added [wrangler.jsonc](../wrangler.jsonc) and rewrote the deployment section of
+[README.md](../README.md), which described a Vercel setup that was never built.
+
+**Why:** The site is pure static — no router, no server code, no env vars — so every Vercel
+differentiator (ISR, image optimization, Next.js support) is worth nothing here, and the
+choice came down to limits and friction. Cloudflare wins on both: unlimited bandwidth
+against Vercel Hobby's 100 GB, static asset requests that don't count against the free-plan
+invocation cap, and no non-commercial clause to worry about on a page whose entire purpose
+is getting hired. The domain is already on Cloudflare Registrar, so registrar, DNS, and host
+collapse into one vendor — the old plan's grey-cloud DNS-only mode meant paying Cloudflare's
+overhead for none of its benefit.
+
+Deliberately **not** Cloudflare Pages: it is in maintenance mode, with its features being
+folded into Workers, and Cloudflare directs new projects to Workers static assets.
+
+Two config choices that look wrong at a glance and aren't, both commented in the file:
+`not_found_handling` is `404-page` rather than the reflexive `single-page-application`,
+because with no client-side router the SPA setting would answer every bogus URL with the
+whole portfolio and a 200; and `workers_dev` is `false` so the custom domain is the only
+live URL.
+
+No new dependency — Cloudflare's build environment supplies wrangler, so nothing was added
+to `package.json` to deploy this.
+
+The domain is **yanyu-chen.com**, bound in `routes` as a `custom_domain` rather than clicked
+into the dashboard, so the repo records where this deploys. Apex only — www is meant to be a
+Redirect Rule to it, not a second binding, for the same reason `workers_dev` is off.
+
+**Open:** Nothing in the repo is blocking. What remains is dashboard-side: connecting
+`yammmyu/engineering-portfolio` under Workers so the first build runs, and adding the
+www → apex Redirect Rule. The first deploy is what creates the DNS record and certificate.
+
+`not_found_handling` points at a `public/404.html` that doesn't exist, so unmatched paths
+currently get Cloudflare's default 404. A styled one needs its own en/zh strings and is a
+content decision, not a deploy fix.
+
+Unrelated to hosting but found while auditing what the page loads: [index.html](../index.html)
+pulls three font families from `fonts.googleapis.com` via a render-blocking stylesheet. It
+is the only third-party runtime dependency on a page that otherwise ships ~60 kB and no
+external calls, and `fonts.googleapis.com` is blocked in mainland China — a real cost given
+how much of the audience [PRODUCT.md](PRODUCT.md) says reads Chinese. Self-hosting the fonts
+would fix both. Descoped for now at the user's direction.
+
 ## 2026-08-05 — Kinematic sketch: slower cycle
 
 **Did:** Retimed the pick-and-place cycle to 1.7× its original length — 4.66s → 7.9s — via

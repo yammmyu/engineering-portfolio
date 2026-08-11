@@ -1,0 +1,46 @@
+// Cloudflare Workers static-asset deploy. There is no Worker script — no `main` entry —
+// because nothing on this page needs a server. Cloudflare serves `dist/` straight from the
+// edge, and requests that hit only static assets don't count against the Workers free-plan
+// invocation limit.
+//
+// Cloudflare's build runs `npm run build` and deploys the result, so the version that goes
+// live is the one Vite produced from a clean checkout — not whatever happened to be in a
+// local `dist/` (which is gitignored anyway).
+{
+  "name": "engineering-portfolio",
+  "compatibility_date": "2026-08-11",
+
+  "assets": {
+    "directory": "./dist",
+
+    // NOT "single-page-application", which is the reflexive choice for a Vite build and is
+    // wrong here. This page has no client-side router — the sections are anchors on one
+    // document — so there is no unmatched path that JS is supposed to resolve. The SPA
+    // setting would answer *every* bogus URL with the full portfolio and a 200 OK, which
+    // tells crawlers the site is infinite duplicates of itself and never reports a real
+    // broken link. "404-page" serves the nearest 404.html and a genuine 404 status.
+    //
+    // There is no public/404.html yet, so this currently falls back to Cloudflare's
+    // default 404. A styled one is a content decision, not a deploy fix — it would need
+    // its own en/zh strings like anything else user-visible.
+    "not_found_handling": "404-page"
+  },
+
+  // Keep the custom domain as the only way in. Left on, this would also publish the site
+  // at engineering-portfolio.<subdomain>.workers.dev — a second live URL with the same
+  // content, which splits SEO and invites the wrong link into a job application. Flip to
+  // true temporarily if you ever want to preview a deploy before pointing the domain at it.
+  "workers_dev": false,
+
+  // The domain binding lives here rather than being clicked into the dashboard, so the
+  // repo is the record of where this deploys. `custom_domain` needs no zone_id and no DNS
+  // record — the zone is in the same Cloudflare account as the registrar, so Cloudflare
+  // creates the record and issues the certificate on deploy.
+  //
+  // Apex only, on purpose. www is a Redirect Rule to this, not a second binding: two
+  // bindings would serve the same page at two URLs, which is the thing `workers_dev: false`
+  // above is already avoiding.
+  "routes": [
+    { "pattern": "yanyu-chen.com", "custom_domain": true },
+  ],
+}
