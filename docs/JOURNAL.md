@@ -18,6 +18,50 @@ Template:
 
 ---
 
+## 2026-09-22 — Project figures: photographs replace the diagrams
+
+**Did:** Swapped `public/projects/proj_humanoid.jpg` for a photo of the actual dual-arm
+humanoid mid-parcel-handling, supplied by the user. This closes the first half of the
+"figures undercut the work" item below.
+
+The source is 1206×907 (4:3) and the frame is 16:10 `object-cover`, so ~150px of height was
+going to be cropped either way. Chose the crop rather than leaving it to the browser, which
+would have taken it off both edges: cropped to 1026×641 at offset (0, 180), dropping the
+dead floor, power strip and stool on the left and keeping the head, both arms, the gripper,
+the parcel and the tote.
+
+Picked that framing by rendering both candidates at 272px — the figure's real width since
+the column was capped — rather than judging them full size. Full-width, the robot reduces to
+a pale shape on a busy floor; tighter, it still reads as a dual-arm humanoid handling a
+parcel. Worth repeating for any future figure: `docs/CONTENT.md` says to crop for ~360px,
+and the cap made that 272px.
+
+Then the same for **P-03**: `proj_pcb.jpg` was a raw KiCad canvas, and is now a photo of the
+two fabricated boards on a table. Source was 5712×4284; cropped to 5200×3250 at offset
+(100, 400) — again chosen rather than delegated, to drop the carpet and a dark object in the
+bottom-right instead of having `object-cover` trim the board edges. Downscaled to 1200×750.
+
+Quality 50 on that one, not the usual 80: the wood grain compresses badly and q80 came to
+266kB, the heaviest figure on the sheet by a wide margin. At q50 it is 148kB — in line with
+the others — with no artefacts visible on the boards at any size the page shows them.
+
+**Why:** Requested. Both previous figures were diagrams whose labels were illegible at the
+figure's real width, which is exactly what CONTENT.md warns about.
+
+**Open:**
+- **P-02 is still a diagram** — an annotated slide of the TurtleBot3. Last one; a photo of
+  the robot would finish the set.
+- The P-03 description says **"Three KiCad boards"** and the photo shows two. Nothing on the
+  page claims the figure is complete, so this is not a defect, but a reader may notice.
+  Worth either a third board in shot or leaving as is — the user's call.
+- The PCB photo is the warmest, most saturated thing on the sheet, and copper sits close to
+  the amber accent. It reads as copper rather than as branding, so it is left alone; worth
+  watching if more warm figures arrive.
+- The photo shows an internal lab setup and third-party hardware branding. Flagged to the
+  user; publishing it is their call, and they asked for it.
+- `public/og.png` does **not** need regenerating: the share card is built from the hero, not
+  from any project figure.
+
 ## 2026-08-11 — Design review: recruiter-facing gaps, and the mechanical half of the fixes
 
 **Did:** Reviewed the built site in a browser at 1440×900 rather than from the source, which
