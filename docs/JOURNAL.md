@@ -80,6 +80,58 @@ inaccurate the moment he said it.
 - Whether the static target is actually built and working — worth saying outright in the
   description if it is, since "we built and shot at it" is much stronger than a photo.
 
+## 2026-09-22 — Bench builds: two hardware rows with no repo
+
+**Did:** Added **P-06 Modular LED Wall Panels** and **P-07 Bluetooth Speaker** under a new
+`Bench builds` subhead, between the robotics run and Further work. Both are hardware the
+user designed and made himself; neither has a repository.
+
+Three things had to change to hold them:
+
+- **`reference` on `Project`.** A third link kind, ranked below `demo` and `github`: where
+  the work *came from* rather than where it lives. P-07 was built from a published YouTube
+  tutorial, and the only existing home for that URL was `github`, which would have made the
+  row's marker read `GITHUB ↗` about a page that is not a repo. `ProjectRow` now derives
+  its links from an ordered `LINK_KINDS` table, so each one is labelled by its own kind —
+  the second slot used to be github by construction and said so in the JSX.
+- **`GROUP_HEADINGS` replaces `FURTHER_WORK_FROM`.** Keyed by the id that starts each run.
+  A second constant would have worked for three runs and a third would not: the reader has
+  to hold the order of the constants and the order of the array in their head at once, and
+  nothing makes them agree. P-NN numbering is untouched — it still comes from the array
+  index, so the cuts are headings rather than a reordering.
+- **Check rule 12**, because none of the above throws. A `GROUP_HEADINGS` id that is not in
+  the registry silently doesn't cut, and the rows merge into the run above under the wrong
+  heading. It also fails on naming the first row and on a heading key with no translation.
+  Negative-tested all three.
+
+Also added `fabrication` as a tag, and two BOM rows — `3D Printing / Fabrication` and
+`Soldering / Wiring`. The table had a row for designing the thing and for programming it,
+and none for making it, on a page whose whole argument is that he builds.
+
+**Why the two sit together, in that order:** the panel (2023) failed at its electrical
+connections because he could not solder yet and bought connectors instead; the speaker
+(2024-11) is where he learned to. Read in that order they are one story about acquiring a
+skill. Split apart, or reversed, they are two hobby rows. The comment above them in the
+registry says so, because the order looks arbitrary otherwise and someone will tidy it.
+
+**Figures:** one per row. A sketch → CAD → as-built strip was the plan for P-06, which has
+all three, and measuring killed it: the column caps at `17rem`, so three panels get ~88px
+each and none of them reads. Recorded in `docs/CONTENT.md` so it isn't re-proposed. P-06's
+figure is a frame pulled from a phone video of the panels lit on the wall (640×400 native,
+upscaled — slightly soft, but it reads at the real 272px); P-07's is the finished unit.
+
+**Open:**
+- **P-06 has no date.** The user wrote "2023" and no month exists in any file or in the
+  image metadata, and `check.mjs` requires `YYYY-MM`. P-07's `2024-11` is measured from the
+  video files, not estimated. One month from him closes this.
+- **Did he cast anything?** His notes say the tutorial's use of 3D-printed parts as molds
+  for pouring is what drew him in, but the photo shows FDM layer lines on the shell, so the
+  description claims only printing. If he did pour parts, the description undersells it.
+- A landscape reshoot of the lit panels would beat the upscaled video frame.
+- The BOM still shows five dashes out of ten rows — FEA, Arduino/STM32, C/C++, MATLAB and
+  Git. The two new rows are cited, so the ratio improved rather than the problem going
+  away. Unchanged from the entry below; still needs his facts.
+
 ## 2026-09-22 — Remove the RoboMaster Engineer arm controller row
 
 **Did:** Removed `proj_controller` at the user's request — registry entry, both translation

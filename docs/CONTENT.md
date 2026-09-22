@@ -66,6 +66,7 @@ new Project({
   date: '2025-06 → 08',                          // optional; see below
   github: 'https://github.com/user/repo',        // optional
   demo: 'https://my-demo.example.com',           // optional
+  reference: 'https://example.com/the-build',    // optional; see below
   image: '/projects/my_new_project.jpg',         // optional; see below
 }),
 ```
@@ -111,29 +112,59 @@ where you can.** Undated, a reader can't tell a project from last term apart fro
 secondary school, and assumes the worse of the two. Never estimate one: an approximate date
 on a portfolio is a wrong date in an interview.
 
-### Further work
+### Groups
 
-`FURTHER_WORK_FROM` in `Projects.jsx` names the id where the robotics list stops and
-everything else begins. The rows below it get their own subhead, so a reader looking for
-robotics isn't weighing a side project against a competition robot on the way down.
-Reference numbers stay continuous across the split — they come from the array index, and
-the array is still one registry in one order.
+`GROUP_HEADINGS` in `Projects.jsx` maps a **project id to the subhead that starts there**.
+The list runs top down and a new run begins at each id named, so a reader looking for
+robotics isn't weighing a side project against a competition robot on the way down. The
+first run takes no heading — the section heading is its heading.
+
+```js
+const GROUP_HEADINGS = {
+  proj_lightpanel: 'projects_bench_heading',   // hardware built by hand
+  bloomcraft: 'projects_further_heading',      // everything else
+}
+```
+
+To move a boundary, change which id is the key — not the array order. Reference numbers
+stay continuous across every cut, because they come from the array index and the array is
+still one registry in one order.
+
+`npm run check` fails on an id that is not in the registry, on the first row being named
+(its heading would sit above rows it does not cover), and on a heading key with no
+translation. None of those throw at runtime — the cut silently doesn't happen and the rows
+merge into the run above, under the wrong heading.
+
+### The three kinds of link
+
+A row can carry a `demo`, a `github`, and a `reference`, and takes them in that order of
+precedence: the first one present becomes the row link and supplies the `↗` marker, and
+any others render as small links beside the tags.
+
+`reference` is **where the work came from, not where it lives** — the published build a
+project was made from, a datasheet, a paper. It exists because a bench build has neither a
+repo nor a demo, and a tutorial URL in `github` makes the row's marker read `GITHUB ↗`
+about a page that is not one. Each link carries its own label, so a kind is never
+described as another.
+
+Where a project was built from someone else's design, **say so in the description as
+well.** The link is the citation; the sentence is the disclosure. See P-07.
 
 ### Rows with no link
 
-`github` and `demo` are both optional, and a row may have neither — work under NDA, on an
-internal repository, or not yet public. The whole row is normally one stretched link, so a
-row with nowhere to go drops the things that advertise one: the title renders as plain
-text, the `↗` marker is omitted, and the hover wash and the `P-NN` nudge are suppressed.
-What lights up stays exactly what you can press.
+`github`, `demo`, and `reference` are all optional, and a row may have none — work under
+NDA, on an internal repository, or not yet public. The whole row is normally one stretched
+link, so a row with nowhere to go drops the things that advertise one: the title renders as
+plain text, the `↗` marker is omitted, and the hover wash and the `P-NN` nudge are
+suppressed. What lights up stays exactly what you can press.
 
 Such a row still carries its figure, tags, and description, so it reads as an entry rather
 than a broken link. Where the work is not public, say so in the description instead of
 linking somewhere that 404s.
 
-**No row exercises this path today.** P-01 was the only one, until the internship write-up
-was published. The handling is still there and still correct, but nothing on the page will
-catch you breaking it — check a link-less row by hand if you change how a row links.
+**P-06 exercises this path.** It was unexercised between the internship write-up being
+published and the bench builds landing; if P-06 ever gains a link, check a link-less row by
+hand when you change how a row links, because nothing on the page will catch you.
 
 ### Project images
 
@@ -149,6 +180,12 @@ not show a broken frame in the meantime. `npm run check` reports these as warnin
 Source images want to be ~960×600 or larger and are lazy-loaded. Anything with fine
 detail — an RViz map, a CAD screenshot, a scope trace — should be cropped tight enough to
 read at roughly 360px wide, which is the figure's real size on a laptop.
+
+**One figure per row, and it is the finished thing.** A strip showing a project's progress
+— sketch, then CAD, then the built object — was tried for P-06, which has all three. The
+column is capped at `17rem`, so three panels get ~88px each and none of them reads; on a
+phone the figure is wide enough and the order comes out backwards, big where it matters
+least. Process belongs in the description, which is read at the same size everywhere.
 
 The frame is `object-cover`, so an image that isn't 16:10 gets **cropped, not fitted** —
 which quietly eats the edges of a diagram. Pad it out to 16:10 first rather than letting
@@ -166,7 +203,7 @@ in keeping, but it is a second choice.
 
 ### Available tags
 
-`robotics`, `mechanical`, `electronics`, `software`, `firmware`
+`robotics`, `mechanical`, `electronics`, `software`, `firmware`, `fabrication`
 
 ### Adding a new tag
 

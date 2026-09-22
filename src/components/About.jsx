@@ -21,8 +21,8 @@ const SKILLS = [
   { name: 'SolidWorks / CAD', usedIn: ['proj_slam', 'proj_arm', 'proj_lightpanel'] },
   { name: 'FEA & Simulation', usedIn: [] },
   // The table had no row for making the thing, only for designing and
-  // programming it — so two printers, a laser cutter and a soldering iron were
-  // invisible on a page whose whole argument is that he builds. The bench rows
+  // programming it — so printing, laser cutting and soldering were invisible on
+  // a page whose whole argument is that he builds. The bench rows
   // are what it cites because they are what their descriptions state; P-02 and
   // P-04 are surely fabricated too, and stay uncited until he says so.
   { name: '3D Printing / Fabrication', usedIn: ['proj_lightpanel', 'proj_speaker'] },
