@@ -228,6 +228,33 @@ for (const { name, usedIn } of skills) {
   }
 }
 
+// ── 12. Every group heading starts a run that exists ─────────────────────────
+// `GROUP_HEADINGS` in Projects.jsx is keyed by the project id that starts each
+// run of the list. An id that is not in the registry — renamed, reordered into
+// the first run, or deleted — does not throw: the cut simply never happens and
+// the rows merge into the run above under the wrong heading. The page still
+// renders, so nothing but this catches it.
+const groupHeadings = [
+  ...(projectsSrc.match(/const GROUP_HEADINGS = \{([\s\S]*?)\n\}/)?.[1] ?? '').matchAll(
+    /^\s*(\w+):\s*'([^']+)'/gm,
+  ),
+].map(m => ({ id: m[1], key: m[2] }))
+
+if (!groupHeadings.length) fail('src/components/Projects.jsx', 'no GROUP_HEADINGS entries parsed')
+for (const { id, key } of groupHeadings) {
+  if (!ids.includes(id)) {
+    fail('src/components/Projects.jsx', `GROUP_HEADINGS starts a run at "${id}", which is not a project`)
+  }
+  // The first row can't start a run — its heading would sit above the whole
+  // list and read as the heading for rows it does not cover.
+  if (ids[0] === id) {
+    fail('src/components/Projects.jsx', `GROUP_HEADINGS starts a run at "${id}", the first row`)
+  }
+  if (!translations[key]) {
+    fail('src/components/Projects.jsx', `GROUP_HEADINGS uses "${key}", which has no translation`)
+  }
+}
+
 // ── Report ───────────────────────────────────────────────────────────────────
 const show = (list, label) => {
   if (!list.length) return

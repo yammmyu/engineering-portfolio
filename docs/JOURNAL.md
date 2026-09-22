@@ -44,10 +44,9 @@ comments, which are fuller than this entry; expand it if anything here is thin.
 
 **Open:**
 - `proj_arm` is now the only row still missing its image — the last `npm run check` warning.
-- Check rule 11 (added below) validates BOM citations, but nothing yet validates that a
-  `GROUP_HEADINGS` key names a row that exists. The code comment says `npm run check` fails
-  on that id; as of this entry it does not. Worth adding, since a stale key silently costs a
-  heading.
+- ~~Nothing validates that a `GROUP_HEADINGS` key names a row that exists.~~ Closed in the
+  same session by check rule 12, which also rejects a heading keyed to the *first* row — its
+  heading would sit above the whole list and cover rows it does not describe.
 
 ## 2026-09-22 — P-04: photograph, and the row is now honest about being a team project
 
