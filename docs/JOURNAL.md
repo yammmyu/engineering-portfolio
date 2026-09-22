@@ -18,6 +18,30 @@ Template:
 
 ---
 
+## 2026-09-22 — Registry reordered by hand; BOM references now sort
+
+**Did:** Reordered the robotics run to the sequence he asked for: internship, Engineer arm,
+YBot, aimbot target, delivery robot, slip-ring boards. Bench builds and further work are
+untouched below it. Nothing else had to change — reference numbers come from the array
+index, so the About BOM re-pointed itself.
+
+**The reorder exposed a real defect.** The BOM printed each cell in whatever order the
+`usedIn` array happened to be written, so `SolidWorks / CAD` came out as
+`P-02, P-05, P-03, P-07`. That is not a one-off: renumbering scrambles every array that
+cites more than one row, every time rows move, and it lands in a table whose whole job is to
+be checkable against the list above it. Now sorted at render time in `About.jsx` — the refs
+are zero-padded, so a plain `.sort()` is numeric — which means the order of the source array
+stops mattering and a future reorder cannot bring it back.
+
+**Why:** Requested.
+
+**Open:**
+- The registry comment still says the list is "ordered by how much robotics is in them".
+  That was the rule when the order was derived; this order was set by hand. The two happen
+  to agree today. If they ever disagree, the comment is the thing that is wrong.
+- `proj_speaker-demo.mp4` is ~3.9MB in the repo. It never reaches the page (`preload="none"`
+  behind a poster), but it is in git history now and will be in every clone.
+
 ## 2026-09-22 — A playable sound demo on P-08
 
 **Did:** Embedded the user's 12s clip of the speaker playing as the first cell of P-08's
