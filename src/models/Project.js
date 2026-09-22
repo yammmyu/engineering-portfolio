@@ -27,13 +27,6 @@ export class Project {
     // page that is not one — the row would be lying in the one place a reader
     // checks. Ranks below both: a row that has its own code links to that.
     this.reference = reference
-    // Somewhere the work came from rather than somewhere it lives: the
-    // published build a project was made from, a datasheet, a paper. It exists
-    // because a bench build has neither a repo nor a demo, and putting a
-    // tutorial URL in `github` makes the row's marker say GITHUB ↗ about a
-    // page that is not one — the row would be lying in the one place a reader
-    // checks. Ranks below both: a row that has its own code links to that.
-    this.reference = reference
     // Path under /public, e.g. '/projects/proj_humanoid.jpg'. A row without one
     // falls back to the text-only layout, and so does a row whose file is
     // missing — see the onError in ProjectFigure.
@@ -49,6 +42,6 @@ export class Project {
   }
 
   get hasLinks() {
-    return this.github !== null || this.demo !== null || this.reference !== null || this.reference !== null
+    return this.github !== null || this.demo !== null || this.reference !== null
   }
 }
