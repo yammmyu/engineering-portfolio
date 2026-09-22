@@ -191,10 +191,17 @@ function DetailPanel({ project, number, id, open }) {
 
   return (
     <div id={id} className={`disclosure ${open ? 'disclosure-open' : ''}`}>
-      <div>
-        {/* Indented to the row's text column so the panel reads as that row
-            opening up, not as a new full-width block between two rows. */}
-        <div className="grid grid-cols-12 px-2 pb-9 sm:px-4">
+      {/* The block is what separates an open panel from the rows above and
+          below it, so it runs the full width of the row rather than sitting
+          under the text column. `surface` is the sheet's existing inset colour
+          — the About sheet and every figure frame are already on it — and it is
+          lighter than `paper` on both sheets, so the panel reads the same way in
+          either theme without a single branch. */}
+      <div className="bg-surface">
+        {/* The content stays indented to the row's text column, so the panel
+            reads as that row opening up rather than as an unrelated block that
+            happens to sit between two rows. */}
+        <div className="grid grid-cols-12 px-2 pb-9 pt-8 sm:px-4">
           <div className="col-span-12 sm:col-span-10 sm:col-start-3">
             {t(project.detailKey)
               .split('\n')
@@ -214,7 +221,11 @@ function DetailPanel({ project, number, id, open }) {
               {project.figures.map((figure, i) => (
                 <li key={figure.src}>
                   <figure>
-                    <div className="overflow-hidden border border-rule-strong bg-surface">
+                    {/* `paper`, not `surface` like the row figure: the frame
+                        sits on the panel's own surface block, and backing it in
+                        the same colour would leave a figure that fails to load
+                        as an empty patch of background. */}
+                    <div className="overflow-hidden border border-rule-strong bg-paper">
                       <img
                         src={figure.src}
                         alt={t(figure.key)}

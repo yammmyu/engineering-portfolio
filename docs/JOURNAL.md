@@ -47,6 +47,15 @@ a stall. It is allowed because it is click-driven on two rows and never runs dur
 scroll or a hover, which is what that rule protects. The note is on `.disclosure` in
 `index.css`; **do not generalise from it.**
 
+**The open panel sits on a `surface` block** (added just after, at the user's request). It
+runs the full width of the row rather than under the text column, because the block is what
+separates an open panel from the rows either side of it; `surface` is the sheet's existing
+inset colour and is lighter than `paper` on both sheets, so it needs no theme branch. The
+figure frames inside it moved to `bg-paper` — backing them in `surface` on a `surface`
+block would leave a figure that fails to load as a plain patch of background. That is the
+opposite of the row figure, deliberately, and is commented as such so it does not get
+"corrected" back for consistency.
+
 **Collapsed panels are hidden, not just clipped.** `overflow: hidden` alone leaves the
 content tabbable and audible — the focus ring walks into a panel nobody can see. The inner
 wrapper takes `visibility: hidden`, delayed 300ms so it hides only once the row has shut.
