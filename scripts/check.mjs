@@ -59,6 +59,12 @@ const projects = [...projectsSrc.matchAll(/new Project\(\{([\s\S]*?)\}\)/g)].map
         /\{\s*src:\s*'([^']+)',\s*key:\s*'([^']+)'\s*\}/g,
       ),
     ].map(m => ({ src: m[1], key: m[2] })),
+    video: (() => {
+      const block = body.match(/video:\s*\{([\s\S]*?)\}/)?.[1]
+      if (!block) return null
+      const field = n => block.match(new RegExp(`${n}:\\s*'([^']+)'`))?.[1] ?? null
+      return { src: field('src'), poster: field('poster'), key: field('key') }
+    })(),
   }
 })
 
@@ -279,8 +285,8 @@ for (const { id, key } of groupHeadings) {
 // does not throw — it prints `proj_speaker_fig_parts` on the page, in the panel
 // a reader opened on purpose. The figure files are a warning rather than an
 // error, matching how a missing row image is treated.
-for (const { id, figures, link } of projects) {
-  if (!figures.length) continue
+for (const { id, figures, link, video } of projects) {
+  if (!figures.length && !video) continue
 
   // The row's stretched hit area can belong to a link or to the toggle, not
   // both, so `ProjectRow` prefers the link — and the figures then render
@@ -301,6 +307,26 @@ for (const { id, figures, link } of projects) {
     }
     if (!existsSync(join(ROOT, 'public', src))) {
       warn('public/projects', `"${id}" figure points at ${src}, which does not exist yet`)
+    }
+  }
+
+  // The video is held to a stricter standard than the stills. A figure that
+  // isn't there yet removes itself; a <video> with a missing src renders as an
+  // empty frame with a dead control bar, and a missing poster leaves that frame
+  // blank until someone presses play on nothing.
+  if (video) {
+    if (!translations[video.key]) {
+      fail('src/translations.json', `video on "${id}" maps to missing key "${video.key}"`)
+    }
+    for (const [field, path] of [
+      ['src', video.src],
+      ['poster', video.poster],
+    ]) {
+      if (!path) {
+        fail('src/components/Projects.jsx', `video on "${id}" has no ${field}`)
+      } else if (!existsSync(join(ROOT, 'public', path))) {
+        fail('public/projects', `"${id}" video ${field} points at ${path}, which does not exist`)
+      }
     }
   }
 }

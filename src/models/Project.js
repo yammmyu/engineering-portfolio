@@ -7,6 +7,7 @@ export class Project {
     demo = null,
     image = null,
     figures = [],
+    video = null,
   }) {
     this.id = id
     this.tags = tags
@@ -31,6 +32,12 @@ export class Project {
     // These are the frames that could not survive the row figure: it caps at
     // 17rem, and the panel gives them the full sheet width at three across.
     this.figures = figures
+    // `{ src, poster, key }`, shown as the last cell of the detail panel's
+    // figure row. It exists for a project whose evidence is not visual — the
+    // speaker's clip is twelve near-identical seconds of a shelf, and the sound
+    // is the whole point of it. Never autoplayed: it carries audio, and nothing
+    // on this page performs without being asked.
+    this.video = video
   }
 
   get titleKey() {
@@ -47,7 +54,7 @@ export class Project {
 
   /** A row opens a detail panel only if it has extra views to put in one. */
   get hasDetail() {
-    return this.figures.length > 0
+    return this.figures.length > 0 || this.video !== null
   }
 
   /** Longer account shown in the detail panel, above its figures. */

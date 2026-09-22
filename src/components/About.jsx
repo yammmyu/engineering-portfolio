@@ -85,8 +85,17 @@ export default function About() {
                       {/* An em dash rather than an empty cell: on a drawing a
                           blank field is an omission, a dash is a statement. */}
                       <td className="tnum py-3 text-right font-mono text-[11px] text-ink-2">
+                        {/* Sorted, not printed in the order the array happens to
+                            be written. Reordering the registry renumbers every
+                            row, and a cell that then reads "P-02, P-05, P-03"
+                            looks like a mistake in a table whose whole job is
+                            to be checkable. The refs are zero-padded, so a
+                            plain sort is numeric. */}
                         {skill.usedIn.length
-                          ? skill.usedIn.map(id => PROJECT_REFS[id]).join(', ')
+                          ? skill.usedIn
+                              .map(id => PROJECT_REFS[id])
+                              .sort()
+                              .join(', ')
                           : '—'}
                       </td>
                     </tr>

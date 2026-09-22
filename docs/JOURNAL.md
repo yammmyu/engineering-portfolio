@@ -18,6 +18,54 @@ Template:
 
 ---
 
+## 2026-09-22 — A playable sound demo on P-08
+
+**Did:** Embedded the user's 12s clip of the speaker playing as the first cell of P-08's
+detail panel, `Fig. 08.1 · Sound demo`, so a reader can hear the thing. New optional
+`video: { src, poster, key }` on `Project`.
+
+**Encoding.** The source is 1080×1920 H.264/AAC, 23MB. `avconvert` is the only transcoder
+on this machine — there is no ffmpeg — and its presets are all-or-nothing, so I measured
+rather than guessed. Decoding each candidate's audio in the browser and comparing band
+energies:
+
+| preset | size | video | high/mid energy |
+| --- | --- | --- | --- |
+| `PresetLowQuality` | 238kB | 128×224 | 0.032 |
+| `Preset640x480` | 3.9MB | 360×640 | 0.050 |
+| `Preset960x540` | 7.4MB | 540×960 | 0.050 |
+
+`PresetLowQuality` is 16× smaller and throws away about a third of the energy above 8kHz —
+on a clip whose entire purpose is how a speaker sounds, that is the one thing not to
+compress. `Preset640x480` is bit-identical in audio to the 540p version, so 3.9MB it is.
+**If this ever needs to be smaller, cut the duration, not the bitrate.**
+
+**It costs the page nothing until it is played.** `preload="none"` plus a poster JPEG: the
+browser fetches the 60kB still and nothing else. Verified — `networkState=1, readyState=0`
+on an opened panel. No `autoplay` and deliberately no `muted`; muting to slip past the
+autoplay policy would defeat the entire feature.
+
+**Cropped to 16:10 by CSS,** `object-position: 50% 36%`, so it lines up with the two stills
+as one row of detail views instead of one portrait block beside two landscape ones. The
+source is a static shot of a shelf, so `object-cover` is discarding dead space rather than
+content; 36% is derived from where the speaker actually sits in the frame (~40% of height,
+against a visible band of 35%).
+
+**Check rule 13 covers it**, and holds it to a stricter standard than a still: a missing
+figure removes itself, but a `<video>` with a dead `src` renders as an empty frame with a
+working control bar. Missing `src`, `poster` or caption key are all errors. Negative-tested.
+
+**Why:** Requested.
+
+**Open:**
+- **3.9MB now lives in git history permanently.** That is the real cost, not page weight.
+  Worth a decision before this pattern is used on another row.
+- The clip is framed on a pantry shelf between cooking oil and detergent. It is the sound
+  that matters, but a re-shoot on a plain surface would cost nothing and look far better.
+- Someone replaced both `_detail` strings with the raw notes from `description.txt` while
+  this was in flight. They are the user's own words so I left them, but they are first-draft
+  prose — "sounded great" is the kind of superlative `docs/PRODUCT.md` rules out.
+
 ## 2026-09-22 — Panel text is the user's own writing
 
 **Did:** Replaced both `_detail` entries with the text from `Portfolio_IMG/*/description.txt`

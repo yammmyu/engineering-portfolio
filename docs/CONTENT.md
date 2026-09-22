@@ -183,6 +183,28 @@ enough for a sketch or a CAD view to read. It is also the only animated layout c
 the site — see the note on `.disclosure` in `index.css` before reaching for the same
 technique elsewhere.
 
+A row may also carry a **`video`** — `{ src, poster, key }` — which renders as the first
+cell of that figure row, in the same 16:10 frame as the stills. It is for a project whose
+evidence is not visual: the speaker's clip is twelve near-identical seconds of a shelf and
+the sound is the whole point of it.
+
+```js
+video: {
+  src: '/projects/proj_speaker-demo.mp4',
+  poster: '/projects/proj_speaker-demo.jpg',
+  key: 'proj_speaker_fig_demo',
+},
+```
+
+Both files are **errors** if missing, not warnings like a still: a `<video>` with a dead
+`src` renders as an empty frame with a working control bar, which is worse than no figure
+at all. Encode H.264/AAC in an `.mp4`; a `.mov` off a phone is often HEVC, which most
+browsers will not play.
+
+It is **`preload="none"` with a poster**, so nothing but the poster image is fetched until
+a reader presses play — that is what keeps a multi-megabyte file off a 60kB page. Never add
+`autoplay`, and never `muted`: the audio is the point, and nothing here performs unasked.
+
 **Expandable and linked are mutually exclusive.** A row that has a `github` or a `demo`
 uses that as its stretched hit area and ignores its figures, because one click cannot mean
 both "go there" and "open this". If you need both, the panel needs its own control rather

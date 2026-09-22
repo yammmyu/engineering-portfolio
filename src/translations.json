@@ -66,6 +66,7 @@
   "projects_link_github":     { "en": "GitHub",      "zh": "GitHub" },
   "projects_link_demo":       { "en": "Demo",        "zh": "演示" },
   "projects_detail_show":     { "en": "Detail",      "zh": "详情" },
+  "projects_demo_aria":       { "en": "Video: the speaker playing, with sound", "zh": "视频：音箱播放实录，含声音" },
   "projects_detail_hide":     { "en": "Close",       "zh": "收起" },
   "projects_fig_label":       { "en": "Fig.",        "zh": "图" },
 
@@ -99,7 +100,7 @@
     "zh": "旋转靶架：以装甲板模拟机器人运动，并记录每发弹丸的落点，使自瞄测试不再占用第二台机器人和一名操作手，同时可拆装装箱、随队出行。两人项目，我负责全部机械设计。"
   },
 
-  "proj_arm_title": { "en": "YBot — Open-Source 6-DOF Arm", "zh": "YBot 开源六自由度机械臂" },
+  "proj_arm_title": { "en": "YBot — Custom Desktop 6-DOF Arm", "zh": "YBot 桌面级六自由度机械臂" },
   "proj_arm_desc": {
     "en": "A 6-DOF arm designed and built from scratch: 3D-printed PETG structure, closed-loop NEMA steppers through 50:1 harmonic drives, and a magnetic encoder on every output shaft. The machine is built; the ROS 2 motion stack on top of it is not finished.",
     "zh": "从零设计并制作的六自由度机械臂：PETG 3D 打印结构，闭环步进电机经 50:1 谐波减速器驱动，每个输出轴均装有磁编码器。机械部分已完成，其上的 ROS 2 运动控制尚未完成。"
@@ -129,8 +130,9 @@
     "en": "I followed an online tutorial for this project because I thought it was really cool how 3D printing was being used. It was my first time using 3D-printed parts as molds to pour other materials, and it got me excited to try it out myself. I ended up building a custom Bluetooth speaker from scratch, which was also my first big hands-on project with soldering, wiring, and electronics.\nThrough the process, I learned a lot about how speakers actually work—like how a voltage converter can cause electronic noise that affects sound quality. I also picked up a ton of practical skills in soldering, wire management, and troubleshooting (most of which I learned from failed attempts).\nThe end result was a compact Bluetooth speaker that worked and sounded great, and the whole experience gave me confidence with electronics while sparking my interest in audio engineering.",
     "zh": "这个项目我是照着网上的教程做的，因为我觉得 3D 打印被这样用实在太酷了。那也是我第一次接触拿 3D 打印件当模具、往里浇注其他材料，看完就特别想自己也试一试。最后我从零做出了一台自制蓝牙音箱，这同时也是我第一个真正动手的大项目，涉及焊接、走线和电子。\n做的过程中，我学到了很多音箱实际是怎么工作的——比如电压转换电路会产生电噪声，影响音质。我也积累了一堆实打实的技能，像焊接、理线和排查问题（其中大部分都是从失败里学来的）。\n最后的成品是一台小巧的蓝牙音箱，能用，声音也很好；整个过程让我对电子有了信心，也让我对音频工程产生了兴趣。"
   },
-  "proj_speaker_fig_internals": { "en": "Internals", "zh": "内部" },
-  "proj_speaker_fig_parts":     { "en": "Parts",     "zh": "元件" },
+  "proj_speaker_fig_demo":      { "en": "Sound demo", "zh": "试听" },
+  "proj_speaker_fig_internals": { "en": "Internals",  "zh": "内部" },
+  "proj_speaker_fig_parts":     { "en": "Parts",      "zh": "元件" },
 
   "bloomcraft_title": { "en": "Bloomcraft", "zh": "Bloomcraft" },
   "bloomcraft_desc": {

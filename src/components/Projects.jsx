@@ -26,14 +26,26 @@ const PROJECTS = [
     github: 'https://github.com/yammmyu/MUJIN_Internship_Summer2026',
     image: '/projects/proj_humanoid.jpg',
   }),
-  // Second on the robotics ordering, not fifth: a competition manipulator that
-  // shipped, was tested to destruction, redesigned, and placed — the strongest
-  // mechanical evidence on the sheet. Only the internship outranks it.
+  // A competition manipulator that shipped, was tested to destruction,
+  // redesigned, and placed — the strongest mechanical evidence on the sheet.
+  // Only the internship outranks it.
   new Project({
     id: 'proj_engineer_arm',
     tags: ['robotics', 'mechanical'],
     github: 'https://github.com/yammmyu/RM2026_Engineer_Arm',
     image: '/projects/proj_engineer_arm.jpg',
+  }),
+  new Project({
+    id: 'proj_arm',
+    tags: ['robotics', 'mechanical', 'firmware'],
+    github: 'https://github.com/yammmyu/Ybot',
+    image: '/projects/proj_arm.jpg',
+  }),
+  new Project({
+    id: 'proj_aimbot',
+    tags: ['robotics', 'mechanical', 'electronics'],
+    github: 'https://github.com/yammmyu/Moving_Aimbot_Target',
+    image: '/projects/proj_aimbot.jpg',
   }),
   new Project({
     id: 'proj_slam',
@@ -46,18 +58,6 @@ const PROJECTS = [
     tags: ['robotics', 'electronics'],
     github: 'https://github.com/nusrobomaster-comp/PCB27',
     image: '/projects/proj_pcb.jpg',
-  }),
-  new Project({
-    id: 'proj_aimbot',
-    tags: ['robotics', 'mechanical', 'electronics'],
-    github: 'https://github.com/yammmyu/Moving_Aimbot_Target',
-    image: '/projects/proj_aimbot.jpg',
-  }),
-  new Project({
-    id: 'proj_arm',
-    tags: ['robotics', 'mechanical', 'firmware'],
-    github: 'https://github.com/yammmyu/Ybot',
-    image: '/projects/proj_arm.jpg',
   }),
   // The two bench builds are in the order they were made, not by subject, and
   // that is the whole reason they sit together. The panel's wiring failed
@@ -77,6 +77,12 @@ const PROJECTS = [
     id: 'proj_speaker',
     tags: ['electronics', 'mechanical', 'fabrication'],
     image: '/projects/proj_speaker.jpg',
+    // The only row whose evidence is audible rather than visual.
+    video: {
+      src: '/projects/proj_speaker-demo.mp4',
+      poster: '/projects/proj_speaker-demo.jpg',
+      key: 'proj_speaker_fig_demo',
+    },
     figures: [
       { src: '/projects/proj_speaker-internals.jpg', key: 'proj_speaker_fig_internals' },
       { src: '/projects/proj_speaker-parts.jpg', key: 'proj_speaker_fig_parts' },
@@ -218,6 +224,35 @@ function DetailPanel({ project, number, id, open }) {
                 figure caps at 17rem, and a sketch or a CAD view is unreadable
                 at that size. Here each frame gets ~330px. */}
             <ul className="mt-7 grid gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+              {project.video && (
+                <li>
+                  <figure>
+                    {/* Same 16:10 frame as the stills, so the three cells line
+                        up as one row of detail views rather than one portrait
+                        block beside two landscape ones. The source is a 9:16
+                        phone clip of a static shelf, so `object-cover` is
+                        cropping dead space, not content — 36% puts the speaker
+                        in the middle of the band.
+
+                        `preload="none"` is what keeps a 3.9MB file off a 64kB
+                        page: nothing but the poster is fetched until a reader
+                        presses play. No autoplay, and no `muted` to sneak past
+                        the autoplay policy — the audio is the entire point. */}
+                    <video
+                      src={project.video.src}
+                      poster={project.video.poster}
+                      preload="none"
+                      controls
+                      playsInline
+                      aria-label={t('projects_demo_aria')}
+                      className="aspect-[16/10] w-full border border-rule-strong bg-paper object-cover [object-position:50%_36%]"
+                    />
+                    <figcaption className="label mt-2">
+                      {t('projects_fig_label')} {number}.1 · {t(project.video.key)}
+                    </figcaption>
+                  </figure>
+                </li>
+              )}
               {project.figures.map((figure, i) => (
                 <li key={figure.src}>
                   <figure>
@@ -235,7 +270,8 @@ function DetailPanel({ project, number, id, open }) {
                       />
                     </div>
                     <figcaption className="label mt-2">
-                      {t('projects_fig_label')} {number}.{i + 1} · {t(figure.key)}
+                      {t('projects_fig_label')} {number}.{i + (project.video ? 2 : 1)} ·{' '}
+                      {t(figure.key)}
                     </figcaption>
                   </figure>
                 </li>
