@@ -197,6 +197,46 @@
     }
   }
 
+  /* Detail panel. This is the one place on the sheet that animates layout: the
+     row pushes everything below it down instead of overlaying, and
+     `grid-template-rows` 0fr -> 1fr is the only way to ease to a height the
+     content decides. `max-height` with a guessed ceiling was the alternative —
+     it either clips a panel that outgrows the guess, or spends the tail of the
+     transition easing against nothing, which reads as a stall.
+     It is allowed here because it is gated on a click, on two rows. Nothing
+     about it runs during a scroll or a hover, which is what the transform-and-
+     opacity rule exists to protect. Do not reach for it elsewhere. */
+  .disclosure {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 300ms var(--ease-out);
+  }
+
+  .disclosure > * {
+    overflow: hidden;
+    /* A collapsed panel is still in the DOM, so without this its links and text
+       stay tabbable and still read out — the focus ring disappears into a panel
+       nobody can see. Delayed on close so it hides only once the row has shut. */
+    visibility: hidden;
+    transition: visibility 0s linear 300ms;
+  }
+
+  .disclosure-open {
+    grid-template-rows: 1fr;
+  }
+
+  .disclosure-open > * {
+    visibility: visible;
+    transition-delay: 0s;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .disclosure,
+    .disclosure > * {
+      transition: none;
+    }
+  }
+
   .btn-press {
     transition:
       transform 160ms var(--ease-out),

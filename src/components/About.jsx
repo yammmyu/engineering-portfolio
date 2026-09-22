@@ -18,20 +18,24 @@ import { PROJECT_REFS } from './Projects.jsx'
 // give, not one to infer from a tag. A dash is the honest entry until he says
 // otherwise, and it prompts the question instead of answering it wrongly.
 const SKILLS = [
-  { name: 'SolidWorks / CAD', usedIn: ['proj_slam', 'proj_arm', 'proj_lightpanel'] },
+  {
+    name: 'SolidWorks / CAD',
+    usedIn: ['proj_engineer_arm', 'proj_slam', 'proj_arm', 'proj_lightpanel'],
+  },
   { name: 'FEA & Simulation', usedIn: [] },
   // The table had no row for making the thing, only for designing and
   // programming it — so printing, laser cutting and soldering were invisible on
-  // a page whose whole argument is that he builds. The bench rows
-  // are what it cites because they are what their descriptions state; P-02 and
-  // P-04 are surely fabricated too, and stay uncited until he says so.
+  // a page whose whole argument is that he builds. It cites the bench rows
+  // because they are what their descriptions state. Others are surely fabricated
+  // too — the delivery robot and the moving target among them — and stay uncited
+  // until he says so. Named rather than numbered on purpose: P-NN comes from the
+  // registry order, so a comment citing one goes stale the next time a row moves.
   { name: '3D Printing / Fabrication', usedIn: ['proj_lightpanel', 'proj_speaker'] },
   { name: 'Soldering / Wiring', usedIn: ['proj_speaker'] },
-  { name: 'ROS / ROS2', usedIn: ['proj_slam'] },
+  { name: 'ROS / ROS2', usedIn: ['proj_slam', 'proj_arm'] },
   { name: 'Arduino / STM32', usedIn: [] },
-  { name: 'Python', usedIn: ['proj_arm'] },
+  { name: 'Python', usedIn: [] },
   { name: 'C / C++', usedIn: [] },
-  { name: 'MATLAB', usedIn: [] },
   { name: 'Git', usedIn: [] },
 ]
 

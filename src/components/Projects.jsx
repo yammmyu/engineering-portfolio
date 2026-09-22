@@ -26,6 +26,15 @@ const PROJECTS = [
     github: 'https://github.com/yammmyu/MUJIN_Internship_Summer2026',
     image: '/projects/proj_humanoid.jpg',
   }),
+  // Second on the robotics ordering, not fifth: a competition manipulator that
+  // shipped, was tested to destruction, redesigned, and placed — the strongest
+  // mechanical evidence on the sheet. Only the internship outranks it.
+  new Project({
+    id: 'proj_engineer_arm',
+    tags: ['robotics', 'mechanical'],
+    github: 'https://github.com/yammmyu/RM2026_Engineer_Arm',
+    image: '/projects/proj_engineer_arm.jpg',
+  }),
   new Project({
     id: 'proj_slam',
     tags: ['robotics', 'mechanical', 'software'],
@@ -47,7 +56,7 @@ const PROJECTS = [
   new Project({
     id: 'proj_arm',
     tags: ['robotics', 'mechanical', 'firmware'],
-    github: 'https://github.com/yanyuc/robotic-arm',
+    github: 'https://github.com/yammmyu/Ybot',
     image: '/projects/proj_arm.jpg',
   }),
   // The two bench builds are in the order they were made, not by subject, and
@@ -58,15 +67,20 @@ const PROJECTS = [
     id: 'proj_lightpanel',
     tags: ['mechanical', 'electronics', 'fabrication'],
     image: '/projects/proj_lightpanel.jpg',
+    figures: [
+      { src: '/projects/proj_lightpanel-sketch.jpg', key: 'proj_lightpanel_fig_sketch' },
+      { src: '/projects/proj_lightpanel-cad.jpg', key: 'proj_lightpanel_fig_cad' },
+      { src: '/projects/proj_lightpanel-printed.jpg', key: 'proj_lightpanel_fig_printed' },
+    ],
   }),
   new Project({
     id: 'proj_speaker',
     tags: ['electronics', 'mechanical', 'fabrication'],
-    date: '2024-11',
-    // Built from a published tutorial, so the row cites it. See `reference` in
-    // models/Project.js for why this is not `github`.
-    reference: 'https://www.youtube.com/watch?v=a43LXqRwQC8',
     image: '/projects/proj_speaker.jpg',
+    figures: [
+      { src: '/projects/proj_speaker-internals.jpg', key: 'proj_speaker_fig_internals' },
+      { src: '/projects/proj_speaker-parts.jpg', key: 'proj_speaker_fig_parts' },
+    ],
   }),
   new Project({
     id: 'bloomcraft',
@@ -105,12 +119,10 @@ const GROUP_HEADINGS = {
   bloomcraft: 'projects_further_heading',
 }
 
-// Ordered by precedence. A row's own demo outranks its own code, and both
-// outrank where the work came from — see `reference` in models/Project.js.
+// Ordered by precedence: a row's own demo outranks its own code.
 const LINK_KINDS = [
   { field: 'demo', labelKey: 'projects_link_demo' },
   { field: 'github', labelKey: 'projects_link_github' },
-  { field: 'reference', labelKey: 'projects_link_reference' },
 ]
 
 /**
@@ -165,6 +177,66 @@ function ProjectFigure({ src, alt, number, marker, onFail }) {
   )
 }
 
+/**
+ * The expanded half of a bench-build row: a longer account, then the views that
+ * could not fit the row's own figure.
+ *
+ * It stays mounted while collapsed rather than rendering null, because the
+ * height it animates to has to be measurable before it opens — and because a
+ * panel that unmounts loses the scroll position of whatever is under it the
+ * moment it shuts. `.disclosure` hides it from the tab order meanwhile.
+ */
+function DetailPanel({ project, number, id, open }) {
+  const t = useTranslation()
+
+  return (
+    <div id={id} className={`disclosure ${open ? 'disclosure-open' : ''}`}>
+      <div>
+        {/* Indented to the row's text column so the panel reads as that row
+            opening up, not as a new full-width block between two rows. */}
+        <div className="grid grid-cols-12 px-2 pb-9 sm:px-4">
+          <div className="col-span-12 sm:col-span-10 sm:col-start-3">
+            {t(project.detailKey)
+              .split('\n')
+              .map(paragraph => (
+                <p
+                  key={paragraph}
+                  className="mt-3 max-w-measure text-sm leading-relaxed text-ink-2 first:mt-0"
+                >
+                  {paragraph}
+                </p>
+              ))}
+
+            {/* Three across is the whole reason the panel exists: the row
+                figure caps at 17rem, and a sketch or a CAD view is unreadable
+                at that size. Here each frame gets ~330px. */}
+            <ul className="mt-7 grid gap-x-6 gap-y-5 sm:grid-cols-2 lg:grid-cols-3">
+              {project.figures.map((figure, i) => (
+                <li key={figure.src}>
+                  <figure>
+                    <div className="overflow-hidden border border-rule-strong bg-surface">
+                      <img
+                        src={figure.src}
+                        alt={t(figure.key)}
+                        loading="lazy"
+                        decoding="async"
+                        className="aspect-[16/10] w-full object-cover"
+                      />
+                    </div>
+                    <figcaption className="label mt-2">
+                      {t('projects_fig_label')} {number}.{i + 1} · {t(figure.key)}
+                    </figcaption>
+                  </figure>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 function ProjectRow({ project, index }) {
   const t = useTranslation()
   const number = String(index + 1).padStart(2, '0')
@@ -178,23 +250,43 @@ function ProjectRow({ project, index }) {
   // pseudo-element, so what lights up is what you can press. The title is the
   // anchor text, so the accessible name is the project — not "github".
   //
-  // Each link carries the marker naming what it is. The second slot used to be
-  // github by construction and said so in the JSX; with a third kind that was
-  // one row away from labelling a tutorial "GITHUB ↗".
+  // Each link carries the marker naming what it is, rather than the second slot
+  // being github by construction and saying so in the JSX.
   const links = LINK_KINDS.filter(kind => project[kind.field]).map(kind => ({
     href: project[kind.field],
     marker: `${t(kind.labelKey)} ↗`,
   }))
   const [primary, ...secondary] = links
 
+  // A row with extra views opens them in place instead of going anywhere. The
+  // two are mutually exclusive by construction today and the JSX below assumes
+  // it: the stretched hit area can only belong to one of them, and a row that
+  // both navigates away and expands would have to pick which one a click means.
+  const [open, setOpen] = React.useState(false)
+  const expandable = !primary && project.hasDetail
+  const panelId = `${project.id}-detail`
+  // What the row promises. A link goes somewhere and says so with an arrow; a
+  // panel opens here, and the sign is the affordance a reader already knows.
+  const marker = primary
+    ? primary.marker
+    : expandable
+      ? `${t(open ? 'projects_detail_hide' : 'projects_detail_show')} ${open ? '−' : '+'}`
+      : null
+  const pressable = Boolean(primary) || expandable
+
   return (
-    <li className="group relative border-b border-rule">
+    <li className="border-b border-rule">
+      {/* The group and the positioning stop at the row proper. Spanning the
+          whole <li>, the title's stretched hit area covered the open panel too,
+          so every click inside it shut the row — and hovering the panel washed
+          a row the pointer had left. */}
+      <div className="group relative">
       {/* A row with nowhere to go doesn't take the hover wash. Lighting up a
           row that can't be pressed is the same broken promise as the corner-only
           link above, in the other direction. */}
       <div
         className={`grid grid-cols-12 items-baseline gap-x-6 gap-y-4 px-2 py-6 transition-colors duration-200 sm:px-4 sm:py-7 ${
-          primary ? 'group-hover:bg-accent-wash' : ''
+          pressable ? 'group-hover:bg-accent-wash' : ''
         }`}
       >
         {/* Reference and date, stacked as a drawing's left rail. Inline on a
@@ -203,7 +295,7 @@ function ProjectRow({ project, index }) {
         <div className="col-span-12 flex items-baseline gap-3 sm:col-span-2 sm:block">
           <span
             className={`label inline-block transition-colors duration-200 ${
-              primary ? 'row-mark group-hover:text-accent-ink' : ''
+              pressable ? 'row-mark group-hover:text-accent-ink' : ''
             }`}
           >
             {ref}
@@ -225,6 +317,20 @@ function ProjectRow({ project, index }) {
               >
                 {t(project.titleKey)}
               </a>
+            ) : expandable ? (
+              // The title is the control, exactly as it is the anchor on a
+              // linked row, so the accessible name is the project rather than
+              // "detail" — and the whole row is the hit area, so what lights up
+              // on hover is still what you can press.
+              <button
+                type="button"
+                onClick={() => setOpen(wasOpen => !wasOpen)}
+                aria-expanded={open}
+                aria-controls={panelId}
+                className="text-left after:absolute after:inset-0 after:content-['']"
+              >
+                {t(project.titleKey)}
+              </button>
             ) : (
               t(project.titleKey)
             )}
@@ -254,7 +360,7 @@ function ProjectRow({ project, index }) {
             ))}
             {/* Without a hover state to reveal it, the row needs to say out
                 loud that it goes somewhere. */}
-            {primary && <span className="link-ink label text-ink lg:hidden">{primary.marker}</span>}
+            {marker && <span className="link-ink label text-ink lg:hidden">{marker}</span>}
           </div>
         </div>
 
@@ -274,23 +380,26 @@ function ProjectRow({ project, index }) {
               src={project.image}
               alt={t(project.titleKey)}
               number={number}
-              marker={primary ? primary.marker : null}
+              marker={marker}
               onFail={() => setFigureFailed(true)}
             />
           </div>
         ) : (
-          primary && (
+          marker && (
             <div className="col-span-12 hidden lg:col-span-4 lg:block lg:text-right">
               <span
                 aria-hidden="true"
                 className="arrow-slide label inline-block transition-colors duration-200 group-hover:text-accent-ink"
               >
-                {primary.marker}
+                {marker}
               </span>
             </div>
           )
         )}
+        </div>
       </div>
+
+      {expandable && <DetailPanel project={project} number={number} id={panelId} open={open} />}
     </li>
   )
 }

@@ -66,8 +66,8 @@ new Project({
   date: '2025-06 → 08',                          // optional; see below
   github: 'https://github.com/user/repo',        // optional
   demo: 'https://my-demo.example.com',           // optional
-  reference: 'https://example.com/the-build',    // optional; see below
   image: '/projects/my_new_project.jpg',         // optional; see below
+  figures: [],                                   // optional; see below
 }),
 ```
 
@@ -135,25 +135,20 @@ still one registry in one order.
 translation. None of those throw at runtime — the cut silently doesn't happen and the rows
 merge into the run above, under the wrong heading.
 
-### The three kinds of link
+### Links
 
-A row can carry a `demo`, a `github`, and a `reference`, and takes them in that order of
-precedence: the first one present becomes the row link and supplies the `↗` marker, and
-any others render as small links beside the tags.
+A row can carry a `demo` and a `github`, in that order of precedence: the first one present
+becomes the row link and supplies the `↗` marker, and the other renders as a small link
+beside the tags. Each carries its own label, so a kind is never described as another.
 
-`reference` is **where the work came from, not where it lives** — the published build a
-project was made from, a datasheet, a paper. It exists because a bench build has neither a
-repo nor a demo, and a tutorial URL in `github` makes the row's marker read `GITHUB ↗`
-about a page that is not one. Each link carries its own label, so a kind is never
-described as another.
-
-Where a project was built from someone else's design, **say so in the description as
-well.** The link is the citation; the sentence is the disclosure. See P-07.
+Where a project was built from someone else's design, **say so in the description.** There
+is no field for it: crediting a source in prose is a sentence a reader takes in, and a bare
+link in the corner is one they have to chase to learn the same thing. See P-08.
 
 ### Rows with no link
 
-`github`, `demo`, and `reference` are all optional, and a row may have none — work under
-NDA, on an internal repository, or not yet public. The whole row is normally one stretched
+`github` and `demo` are both optional, and a row may have neither — work under NDA, on an
+internal repository, or not yet public. The whole row is normally one stretched
 link, so a row with nowhere to go drops the things that advertise one: the title renders as
 plain text, the `↗` marker is omitted, and the hover wash and the `P-NN` nudge are
 suppressed. What lights up stays exactly what you can press.
@@ -162,9 +157,36 @@ Such a row still carries its figure, tags, and description, so it reads as an en
 than a broken link. Where the work is not public, say so in the description instead of
 linking somewhere that 404s.
 
-**P-06 exercises this path.** It was unexercised between the internship write-up being
-published and the bench builds landing; if P-06 ever gains a link, check a link-less row by
-hand when you change how a row links, because nothing on the page will catch you.
+**The bench rows exercise this path**, and they are also the only rows that are pressable
+without being links — see below. If they ever gain links, check a link-less row by hand
+when you change how a row links, because nothing on the page will catch you.
+
+### Detail panels
+
+A row with `figures` becomes expandable: the title turns into a toggle, the whole row is
+its hit area, and clicking opens a panel below that pushes the rest of the list down. The
+marker reads `DETAIL +` instead of a link's `↗`, and `CLOSE −` once open.
+
+```js
+figures: [
+  { src: '/projects/proj_lightpanel-sketch.jpg', key: 'proj_lightpanel_fig_sketch' },
+],
+```
+
+Each entry needs a `key` with a translation, and the row needs a **`<id>_detail`** entry
+holding the longer account — paragraphs separated by `\n`. `npm run check` fails on a
+missing caption key or a missing `_detail`, and warns on a figure file that isn't there
+yet. Captions render as `Fig. 07.1 · Sketch`, numbered from the row.
+
+The panel is where a project's process goes: three frames across at ~330px each, which is
+enough for a sketch or a CAD view to read. It is also the only animated layout change on
+the site — see the note on `.disclosure` in `index.css` before reaching for the same
+technique elsewhere.
+
+**Expandable and linked are mutually exclusive.** A row that has a `github` or a `demo`
+uses that as its stretched hit area and ignores its figures, because one click cannot mean
+both "go there" and "open this". If you need both, the panel needs its own control rather
+than the row.
 
 ### Project images
 

@@ -5,8 +5,8 @@ export class Project {
     date = null,
     github = null,
     demo = null,
-    reference = null,
     image = null,
+    figures = [],
   }) {
     this.id = id
     this.tags = tags
@@ -20,17 +20,17 @@ export class Project {
     this.date = date
     this.github = github
     this.demo = demo
-    // Somewhere the work came from rather than somewhere it lives: the
-    // published build a project was made from, a datasheet, a paper. It exists
-    // because a bench build has neither a repo nor a demo, and putting a
-    // tutorial URL in `github` makes the row's marker say GITHUB ↗ about a
-    // page that is not one — the row would be lying in the one place a reader
-    // checks. Ranks below both: a row that has its own code links to that.
-    this.reference = reference
     // Path under /public, e.g. '/projects/proj_humanoid.jpg'. A row without one
     // falls back to the text-only layout, and so does a row whose file is
     // missing — see the onError in ProjectFigure.
     this.image = image
+    // Extra views, shown only in the row's expanded detail panel —
+    // `[{ src, key }]`, where `key` is the translation key for the caption.
+    // A row with none is not expandable and renders exactly as it always did.
+    //
+    // These are the frames that could not survive the row figure: it caps at
+    // 17rem, and the panel gives them the full sheet width at three across.
+    this.figures = figures
   }
 
   get titleKey() {
@@ -42,6 +42,16 @@ export class Project {
   }
 
   get hasLinks() {
-    return this.github !== null || this.demo !== null || this.reference !== null
+    return this.github !== null || this.demo !== null
+  }
+
+  /** A row opens a detail panel only if it has extra views to put in one. */
+  get hasDetail() {
+    return this.figures.length > 0
+  }
+
+  /** Longer account shown in the detail panel, above its figures. */
+  get detailKey() {
+    return `${this.id}_detail`
   }
 }

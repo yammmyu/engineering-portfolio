@@ -53,6 +53,12 @@ const projects = [...projectsSrc.matchAll(/new Project\(\{([\s\S]*?)\}\)/g)].map
     tags,
     date: body.match(/date:\s*'([^']+)'/)?.[1] ?? null,
     image: body.match(/image:\s*'([^']+)'/)?.[1] ?? null,
+    link: body.match(/(?:github|demo):\s*'([^']+)'/)?.[1] ?? null,
+    figures: [
+      ...(body.match(/figures:\s*\[([\s\S]*?)\]/)?.[1] ?? '').matchAll(
+        /\{\s*src:\s*'([^']+)',\s*key:\s*'([^']+)'\s*\}/g,
+      ),
+    ].map(m => ({ src: m[1], key: m[2] })),
   }
 })
 
@@ -108,7 +114,16 @@ for (const { tag, key } of registeredTags) {
 // ── 4. No translation key left behind ────────────────────────────────────────
 // A key counts as referenced if it appears literally anywhere in src, or is
 // derived from a project id by the Project model's titleKey / descKey getters.
-const derived = new Set(projects.flatMap(p => [`${p.id}_title`, `${p.id}_desc`]))
+// `_detail` is derived too, but only for a row that has a panel to show it in.
+// Listing it unconditionally would hide a detail key left behind by a row whose
+// figures were removed.
+const derived = new Set(
+  projects.flatMap(p => [
+    `${p.id}_title`,
+    `${p.id}_desc`,
+    ...(p.figures.length ? [`${p.id}_detail`] : []),
+  ]),
+)
 for (const key of Object.keys(translations)) {
   if (derived.has(key)) continue
   if (!allSource.includes(`'${key}'`)) {
@@ -243,7 +258,10 @@ const groupHeadings = [
 if (!groupHeadings.length) fail('src/components/Projects.jsx', 'no GROUP_HEADINGS entries parsed')
 for (const { id, key } of groupHeadings) {
   if (!ids.includes(id)) {
-    fail('src/components/Projects.jsx', `GROUP_HEADINGS starts a run at "${id}", which is not a project`)
+    fail(
+      'src/components/Projects.jsx',
+      `GROUP_HEADINGS starts a run at "${id}", which is not a project`,
+    )
   }
   // The first row can't start a run — its heading would sit above the whole
   // list and read as the heading for rows it does not cover.
@@ -252,6 +270,38 @@ for (const { id, key } of groupHeadings) {
   }
   if (!translations[key]) {
     fail('src/components/Projects.jsx', `GROUP_HEADINGS uses "${key}", which has no translation`)
+  }
+}
+
+// ── 13. Detail panels are complete ───────────────────────────────────────────
+// A row with figures renders a panel, and every string in it resolves through
+// `t()`, which returns the key itself when it misses. So a forgotten caption
+// does not throw — it prints `proj_speaker_fig_parts` on the page, in the panel
+// a reader opened on purpose. The figure files are a warning rather than an
+// error, matching how a missing row image is treated.
+for (const { id, figures, link } of projects) {
+  if (!figures.length) continue
+
+  // The row's stretched hit area can belong to a link or to the toggle, not
+  // both, so `ProjectRow` prefers the link — and the figures then render
+  // nowhere at all. Nothing about that is visible on the page: the row looks
+  // exactly like any other linked row.
+  if (link) {
+    fail(
+      'src/components/Projects.jsx',
+      `project "${id}" has both figures and a link — the panel would never open`,
+    )
+  }
+  if (!translations[`${id}_detail`]) {
+    fail('src/translations.json', `project "${id}" has figures but no "${id}_detail" key`)
+  }
+  for (const { src, key } of figures) {
+    if (!translations[key]) {
+      fail('src/translations.json', `figure "${src}" maps to missing key "${key}"`)
+    }
+    if (!existsSync(join(ROOT, 'public', src))) {
+      warn('public/projects', `"${id}" figure points at ${src}, which does not exist yet`)
+    }
   }
 }
 

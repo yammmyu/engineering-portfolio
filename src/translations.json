@@ -65,13 +65,20 @@
   "projects_tag_fabrication": { "en": "Fabrication", "zh": "加工制作" },
   "projects_link_github":     { "en": "GitHub",      "zh": "GitHub" },
   "projects_link_demo":       { "en": "Demo",        "zh": "演示" },
-  "projects_link_reference":  { "en": "Reference",   "zh": "参考" },
+  "projects_detail_show":     { "en": "Detail",      "zh": "详情" },
+  "projects_detail_hide":     { "en": "Close",       "zh": "收起" },
   "projects_fig_label":       { "en": "Fig.",        "zh": "图" },
 
   "proj_humanoid_title": { "en": "Imitation-Learned Dual-Arm Parcel Handling", "zh": "模仿学习双臂包裹处理" },
   "proj_humanoid_desc": {
     "en": "A dual-arm humanoid that picks a parcel, judges whether its shipping label is showing, and flips it if not — learned from 200 VR demonstrations rather than programmed. I built the deployment side: policy output becomes motion only through a transparent IK solver and a physics check.",
     "zh": "双臂人形机器人从台面抓起包裹，判断快递单是否朝上，不朝上就将其翻转——这套动作由 200 组 VR 示教学习而来，而非编程写定。我负责 policy 之外的部署链路：自建 IK 求解器与下发前的仿真校验，是策略输出成为实际动作的唯一通路。"
+  },
+
+  "proj_engineer_arm_title": { "en": "RoboMaster Engineer Arm", "zh": "RoboMaster 工程机器人机械臂" },
+  "proj_engineer_arm_desc": {
+    "en": "The 6-DOF manipulator on NUS Calibur's RoboMaster Engineer, which I designed — carbon fibre and aluminium, holding a 500 g payload at full reach on motor torque alone. v1 shook because a single bearing carried a tipping moment into a plate bending the way a plate is weakest; supporting the shoulder on both sides fixed it, and v2 took First Prize at RMUL 2026.",
+    "zh": "我为 NUS Calibur 战队 RoboMaster 工程机器人设计的六自由度机械臂：碳纤维与铝结构，全伸展下仅靠电机扭矩托住 500 g 负载。v1 抖动的原因是单个轴承把倾覆力矩传入板件最不耐弯的方向；改为肩关节双侧支撑后解决，v2 在 RMUL 2026 获一等奖。"
   },
 
   "proj_slam_title": { "en": "Precision-Docking Delivery Robot", "zh": "精准对接货物运送机器人" },
@@ -92,10 +99,10 @@
     "zh": "旋转靶架：以装甲板模拟机器人运动，并记录每发弹丸的落点，使自瞄测试不再占用第二台机器人和一名操作手，同时可拆装装箱、随队出行。两人项目，我负责全部机械设计。"
   },
 
-  "proj_arm_title": { "en": "6-DOF Robotic Arm", "zh": "六自由度机械臂" },
+  "proj_arm_title": { "en": "YBot — Open-Source 6-DOF Arm", "zh": "YBot 开源六自由度机械臂" },
   "proj_arm_desc": {
-    "en": "A 6-DOF arm built from scratch: structure modeled in SolidWorks, driven by hobby servos, and controlled by a Python inverse-kinematics solver.",
-    "zh": "从零设计并制作的六自由度机械臂：SolidWorks 建模、舵机驱动，由自编 Python 逆运动学求解器控制。"
+    "en": "A 6-DOF arm designed and built from scratch: 3D-printed PETG structure, closed-loop NEMA steppers through 50:1 harmonic drives, and a magnetic encoder on every output shaft. The machine is built; the ROS 2 motion stack on top of it is not finished.",
+    "zh": "从零设计并制作的六自由度机械臂：PETG 3D 打印结构，闭环步进电机经 50:1 谐波减速器驱动，每个输出轴均装有磁编码器。机械部分已完成，其上的 ROS 2 运动控制尚未完成。"
   },
 
   "proj_lightpanel_title": { "en": "Modular LED Wall Panels", "zh": "模块化 LED 灯板" },
@@ -104,11 +111,26 @@
     "zh": "可任意拼接的三角形灯板：外壳 3D 打印，激光切割的亚克力扩散板仅靠凸缘摩擦卡住，两块之间以螺丝相连。配合公差前后改了好几版 CAD。接线是短板——当时还不会焊接，外购的连接件接触不良，常让灯板闪个不停。"
   },
 
+  "proj_lightpanel_detail": {
+    "en": "Commercial panels cost far more than the parts do, so I drew my own. The back plate carries the interlock: two panels bolt to a shared bracket, which is what makes the arrangement free rather than a fixed set of shapes.\nTolerance was the whole problem. A printed part seating inside another printed part has nowhere to absorb a tenth of a millimetre, and the early revisions either would not go together or would not stay together. The diffuser ended up needing no fastener at all — it sits on a lip and holds by friction against the walls.\nThe wiring is what I would do differently. I could not solder when I built this, so the panels are joined by connectors I bought, and those were the one part I did not control: intermittent contact, and a run of panels strobing off a single marginal joint.",
+    "zh": "市售灯板的价格远高于其物料成本，于是我自己画了一套。背板上做了互扣结构：两块灯板共用一个连接件并以螺丝固定，拼法因此是自由的，而不是几种固定造型。\n公差是整个项目的难点。打印件要嵌进另一个打印件，零点几毫米的误差无处吸收，早期几版不是装不进去，就是装上了固定不住。扩散板最后反而不需要任何紧固件——搁在一圈凸缘上，靠与侧壁的摩擦就位。\n要重做的是接线。做这套灯板时我还不会焊接，灯板之间用的是外购的连接件，而那恰恰是我唯一没能掌控的环节：接触时好时坏，一个接点不牢就能让一整串灯板狂闪。"
+  },
+  "proj_lightpanel_fig_sketch":  { "en": "Sketch",     "zh": "草图" },
+  "proj_lightpanel_fig_cad":     { "en": "CAD",        "zh": "建模" },
+  "proj_lightpanel_fig_printed": { "en": "As printed", "zh": "打印成品" },
+
   "proj_speaker_title": { "en": "Bluetooth Speaker", "zh": "蓝牙音箱" },
   "proj_speaker_desc": {
     "en": "A two-driver Bluetooth speaker built from a published tutorial, and my first electronics project: the printed enclosure, the wiring, and every solder joint in it are mine. Chasing down its noise is what taught me that a switching converter couples straight into the audio path.",
     "zh": "依照公开教程制作的双单元蓝牙音箱，也是我的第一个电子项目：外壳打印、走线和其中每一个焊点都由自己完成。排查底噪的过程让我明白，开关变换电路会直接串进音频回路。"
   },
+
+  "proj_speaker_detail": {
+    "en": "Built from a published tutorial rather than designed, and that was deliberate for a first electronics project: with a known-good circuit, anything wrong with it was something I had done.\nMost of what I learned came out of redoing joints and wire runs that did not work the first time — the practical half of electronics, which no course covers. The one real diagnosis was the noise: a hiss that changed with the volume setting, which turned out to be the voltage converter rather than anything in the audio stage.\nIt is the project that sent me looking for the next hardware problem instead of the next tutorial.",
+    "zh": "这台音箱是照着公开教程做的，而不是我自己设计的。作为第一个电子项目，这是有意为之：电路本身是验证过的，那么出问题就一定出在我的操作上。\n真正学到的东西，大多来自返工——焊点和走线第一次都做不对，而这恰恰是课堂不教的那一半。唯一称得上排查的是底噪：音量一变，嘶声也跟着变，最后查出来是电压变换电路，而不是音频级本身。\n正是这个项目让我开始去找下一个硬件问题，而不是下一个教程。"
+  },
+  "proj_speaker_fig_internals": { "en": "Internals", "zh": "内部" },
+  "proj_speaker_fig_parts":     { "en": "Parts",     "zh": "元件" },
 
   "bloomcraft_title": { "en": "Bloomcraft", "zh": "Bloomcraft" },
   "bloomcraft_desc": {

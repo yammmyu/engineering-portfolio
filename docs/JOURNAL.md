@@ -18,6 +18,115 @@ Template:
 
 ---
 
+## 2026-09-22 — Bench rows open a detail panel; `reference` removed
+
+**Did:** At the user's request, the two bench rows lost their date and their tutorial link
+and gained an expanding panel instead.
+
+- **Dates off P-08.** `2024-11` was measured, not estimated, but no other row on the sheet
+  carries one, so a single dated row read as an oddity rather than as information.
+- **`reference` is gone entirely** — field, `LINK_KINDS` entry, translation, docs. It had
+  exactly one user, the speaker's YouTube tutorial, and removing that link left an unused
+  link kind and an unreferenced translation key, which `npm run check` fails on. The
+  attribution did not go with it: "built from a published tutorial" is still the first
+  clause of the row's description, in both languages. A sentence a reader takes in beats a
+  link in the corner they have to chase to learn the same thing.
+- **`figures` on `Project`** — `[{ src, key }]`, rendered only inside the panel, plus a
+  derived `<id>_detail` for the longer account. The panel gives three frames across at
+  ~330px each, which is what makes the sketch and the CAD view readable at last. The
+  "Bench builds: two hardware rows" entry recorded the progression strip as impossible; it
+  was impossible *in the row figure*, which caps at 17rem. The panel is where it fits, and
+  that note in `docs/CONTENT.md` is about the row figure specifically.
+
+**The animation is a deliberate exception to the motion rule.** `AGENTS.md` says animate
+transform and opacity only, nothing that triggers layout, and this animates
+`grid-template-rows` from `0fr` to `1fr` — the only way to ease to a height the content
+decides. `max-height` with a guessed ceiling was the alternative: it clips a panel that
+outgrows the guess, or eases against nothing for the tail of the transition, which reads as
+a stall. It is allowed because it is click-driven on two rows and never runs during a
+scroll or a hover, which is what that rule protects. The note is on `.disclosure` in
+`index.css`; **do not generalise from it.**
+
+**Collapsed panels are hidden, not just clipped.** `overflow: hidden` alone leaves the
+content tabbable and audible — the focus ring walks into a panel nobody can see. The inner
+wrapper takes `visibility: hidden`, delayed 300ms so it hides only once the row has shut.
+
+**The group and the positioning moved off the `<li>` onto an inner wrapper.** Spanning the
+whole row, the title's stretched hit area covered the open panel, so every click inside it
+shut the row; and hovering the panel washed a row the pointer had left.
+
+**Checks.** Rule 13 covers the panel: a row with figures needs `<id>_detail` and a
+translation per caption (both errors — `t()` returns the key itself on a miss, so a
+forgotten caption prints `proj_speaker_fig_parts` on the page), figure files warn like row
+images, and **a row with figures and a link is an error** — `ProjectRow` prefers the link,
+so the panel would simply never open, and the row would look exactly like any other linked
+row. All branches negative-tested.
+
+**Verified** by driving the real toggles in headless Chrome: `aria-expanded`, the
+`disclosure-open` class, `visibility`, and the marker all flip both ways, and the panel
+measures 528px open against 0 closed. Worth knowing for the next agent: **Chrome's
+`--virtual-time-budget` does not advance the animation clock**, so anything mid- or
+post-transition screenshots as its start state — which is why the scroll reveals come out
+blank and the panel came out shut. Pin `.reveal` and `.disclosure` to their end state in
+the harness.
+
+**Why:** Requested.
+
+**Open:**
+- **The speaker's second figure is weak.** `proj_speaker-parts.jpg` is a cluttered
+  workbench still pulled from a phone video, and it is the only figure on the sheet that
+  does not earn its place. A photo of the finished internals from a second angle would
+  replace it.
+- **Did he cast anything?** Still unanswered from the entry below. His notes say printed
+  moulds for pouring are what drew him to the build; the photo shows FDM layer lines, so
+  both descriptions claim only printing. If he poured parts, both undersell him.
+- The panel is the obvious home for a longer form on any row, and the Engineer arm
+  write-up called out in the entry below is the strongest candidate — but that row has a
+  link, so the toggle would have to become its own control first.
+
+## 2026-09-22 — Engineer arm added; the YBot row described a different machine
+
+**Did:** Read `YBot_6DOF_Robot_Arm` and `Engineer_Arm` and worked from what is in them.
+
+**P-06 was wrong in three ways, not one.** It linked to
+`github.com/yanyuc/robotic-arm`, which **404s** — a dead page under the row's whole
+stretched hit area, live on the site. It is `yammmyu/Ybot`. Its description also did not
+describe this machine: "hobby servos" and "a Python inverse-kinematics solver", against a
+build running closed-loop NEMA steppers through 50:1 harmonic drives toward ROS 2 and
+MoveIt. Rewritten from `YBot_N1.md`, including the honest half — the arm is built, the
+motion stack is not. Retitled `YBot — Open-Source 6-DOF Arm`, because the new row below
+would otherwise have been the second "6-DOF arm" on the sheet.
+
+**P-02 is new:** the RoboMaster Engineer manipulator. Placed second rather than appended —
+a competition arm that shipped, shook on test, was root-caused to a single bearing feeding
+a tipping moment into a plate bending the way a plate is weakest, redesigned onto two-sided
+support, and then placed First Prize at RMUL 2026 is the strongest mechanical evidence
+here. Only the internship outranks it. **Placement is his call** and is easy to move.
+
+**Figures.** The Engineer arm crops from a 1800×1026 build photo, trimming width only
+(1642×1026 at x=80) so the bench clutter goes rather than the arm's base. YBot had no
+landscape source: the build photos are ~625×837 portrait and the only wide images are a BOM
+table and a mind map. Took a 560×350 band across the shoulder — stepper, closed-loop driver
+and printed joint — which is the part carrying the evidence. It is the smallest figure on
+the sheet at 560px, which is still 2× the 272px it renders at.
+
+**BOM followed the descriptions.** ROS/ROS2 gains P-06, which now states ROS 2 outright;
+SolidWorks/CAD gains P-02; and Python drops to `—`, because its only citation was the
+Python IK solver that this arm does not have. No row states Python now.
+
+**Why:** Requested.
+
+**Open:**
+- **The date on P-02 is unresolved.** He said he designed it "last year", but the repo is
+  `RM2026_Engineer_Arm` and the README dates the competition to 27 March 2026 — six months
+  ago, not last year. The design ran before that; the start is recorded nowhere. Left unset
+  rather than split the difference.
+- **Python now reads `—`, and so do five other rows.** The column is past the point where it
+  argues for him. Decide: cite more, cut the unsupported skills, or drop the column.
+- The Engineer arm write-up has far more in it than one row can hold — the UWB parallelogram
+  linkage, the Fin-Ray gripper, the v3 differential-wrist idea. If a row ever earns a longer
+  form, this is the one.
+
 ## 2026-09-22 — Bench builds, a third link kind, and grouped runs
 
 **Did:** Not my work — written by the user in parallel with the session below, and recorded
@@ -253,7 +362,7 @@ him:
   wait for the user. Wiring steps are in the file's own header comment, including the sheet
   renumber to evidence-first (experience 01, projects 02, about 03, contact 04), which the
   user has already approved.
-- **The title block still spends a cell on `LANGUAGES: EN · 中文`**, duplicating the toggle
+- **The title block still spends a cell on `LANGUAGES: EN · 中文 · DE`**, duplicating the toggle
   40px away in the nav, while institution, graduation year, location and an availability
   *window* appear nowhere on the site. Highest-value pixels on the page; blocked on facts.
 - **No project has a date yet.** The rail renders one the moment it exists. Until then it is
