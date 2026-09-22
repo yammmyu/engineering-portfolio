@@ -1,0 +1,85 @@
+<!doctype html>
+<!--
+  Generator for public/og.png — the 1200×630 card that link previews show.
+
+  It frames the real page in an iframe and hides everything that isn't the hero,
+  so the card is the site rather than a picture of it: same tokens, same fonts,
+  same title block, and it inherits any change to them for free. Hand-drawing a
+  card in a graphics editor was the alternative, and it would go stale the first
+  time the title block changed without anyone noticing.
+
+  Regenerate after any change to the hero or the title block:
+
+    npm run build
+    cp scripts/og.html dist/ && (cd dist && python3 -m http.server 8765 &)
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome" \
+      --headless --disable-gpu --hide-scrollbars --force-device-scale-factor=2 \
+      --virtual-time-budget=6000 --window-size=1200,630 \
+      --screenshot=og-2x.png http://localhost:8765/og.html
+    sips --resampleWidth 1200 og-2x.png --out public/og.png
+
+  Captured at 2× and downscaled, because the mono labels alias badly at 1×.
+
+  The arm is mid-cycle and lands in a different pose every run. Any pose is
+  fine — it is the same solver either way — but it is worth glancing at the
+  result rather than committing it blind: a folded-up arm makes a poor card.
+-->
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>OG card generator</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      iframe {
+        display: block;
+        width: 1200px;
+        height: 630px;
+        border: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <iframe id="frame" src="./index.html"></iframe>
+    <script>
+      // The page is a React app: the hero does not exist at iframe load, and
+      // one shot at `load` caught an empty root. Poll until it is there, then
+      // keep re-applying — a re-render would otherwise drop the injected style.
+      const frame = document.getElementById('frame')
+      let ticks = 0
+
+      const tick = setInterval(() => {
+        ticks += 1
+        try {
+          const doc = frame.contentDocument
+          if (doc.querySelector('#hero') && !doc.getElementById('og-style')) {
+            const style = doc.createElement('style')
+            style.id = 'og-style'
+            // The hero is min-h-[100svh] and vertically centred, which at 630px
+            // tall crops the title block — the one part of the card carrying
+            // the facts a reader is scanning for. Collapse it to its content.
+            style.textContent = `
+              header { display: none !important; }
+              #hero { min-height: 0 !important; padding: 44px 0 40px !important; }
+              #hero .max-w-sheet {
+                padding-left: 56px !important;
+                padding-right: 56px !important;
+              }
+              main > *:not(#hero), footer { display: none !important; }
+              .reveal { opacity: 1 !important; transform: none !important; }
+            `
+            doc.head.appendChild(style)
+          }
+          frame.contentWindow.scrollTo(0, 0)
+        } catch (err) {
+          // Same-origin only while served; ignore until the frame settles.
+        }
+        if (ticks > 60) clearInterval(tick)
+      }, 50)
+    </script>
+  </body>
+</html>

@@ -14,12 +14,15 @@ const TAG_LABEL_KEYS = {
 // Ordered by how much robotics is in them, not by date — the list is read top
 // down and the first two rows are what the section is about.
 const PROJECTS = [
-  // Internship work at MUJIN. The code is on an internal GitLab, so this row
-  // carries no link — the first one that doesn't. See ProjectRow for how a
-  // link-less row renders.
+  // Internship work at MUJIN. The deployed code is on an internal GitLab, so
+  // this was the one row with nowhere to go; it now points at the public
+  // write-up repository instead. Rows with no link are still supported and
+  // still render correctly — see ProjectRow — but no row exercises that path
+  // any more, so check it by hand if you change how a row links.
   new Project({
     id: 'proj_humanoid',
     tags: ['robotics', 'software'],
+    github: 'https://github.com/yammmyu/MUJIN_Internship_Summer2026',
     image: '/projects/proj_humanoid.jpg',
   }),
   new Project({

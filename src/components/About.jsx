@@ -11,12 +11,18 @@ import { PROJECT_REFS } from './Projects.jsx'
 //
 // `usedIn` holds project ids; the P-NN reference comes from the registry order
 // in Projects.jsx so it can never disagree with the list itself.
+//
+// Only cite what a project description actually states. Several of these are
+// surely used more widely — P-01 is a robotics deployment, P-04 a mechanical
+// build — but which tool did what on a given project is the author's fact to
+// give, not one to infer from a tag. A dash is the honest entry until he says
+// otherwise, and it prompts the question instead of answering it wrongly.
 const SKILLS = [
-  { name: 'SolidWorks / CAD', usedIn: ['proj_slam', 'proj_aimbot', 'proj_arm'] },
+  { name: 'SolidWorks / CAD', usedIn: ['proj_slam', 'proj_arm'] },
   { name: 'FEA & Simulation', usedIn: [] },
-  { name: 'ROS / ROS2', usedIn: ['proj_humanoid', 'proj_slam'] },
-  { name: 'Arduino / STM32', usedIn: ['proj_controller', 'proj_arm'] },
-  { name: 'Python', usedIn: ['proj_humanoid', 'proj_arm', 'bloomcraft'] },
+  { name: 'ROS / ROS2', usedIn: ['proj_slam'] },
+  { name: 'Arduino / STM32', usedIn: ['proj_controller'] },
+  { name: 'Python', usedIn: ['proj_arm'] },
   { name: 'C / C++', usedIn: ['proj_controller'] },
   { name: 'MATLAB', usedIn: [] },
   { name: 'Git', usedIn: [] },

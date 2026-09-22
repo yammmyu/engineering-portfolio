@@ -18,6 +18,71 @@ Template:
 
 ---
 
+## 2026-08-11 — Design review: recruiter-facing gaps, and the mechanical half of the fixes
+
+**Did:** Reviewed the built site in a browser at 1440×900 rather than from the source, which
+is how most of this was found. The craft was not the problem; what the page *answers* was. A
+recruiter could read the whole thing and not learn where he studies, when he graduates, when
+he is free, or that he has held an internship. Landed everything that needed no facts from
+him:
+
+- **Three rows were silently unlinked on desktop.** `aimbot`, `controller` and `arm` point
+  at screenshots that don't exist. `ProjectFigure` removed itself on `error` as designed —
+  but the `GITHUB ↗` marker lives in the *other* branch of `project.image ? … : …`, so a
+  declared-but-missing image ate the branch and those rows rendered with an empty right
+  third and nothing saying they went anywhere. The failure state now lives in `ProjectRow`.
+  Same broken promise the stretched row link fixed once, arriving by a new route.
+- **Share card.** There were no OG tags at all, so a link shared into a message previewed as
+  a bare URL. Added them plus `public/og.png`, generated from the real hero by
+  `scripts/og.html` — an iframe of the built page with everything but the hero hidden, so
+  the card cannot drift from the site. `check.mjs` now verifies the tags are absolute, agree
+  on origin, and point at a file that exists (negative-tested, not assumed).
+- **Tags stopped pretending to be controls** — boxed chips at the weight of the language
+  toggle, on a list with no filter. Now one line of mono marks.
+- **Skills BOM cites project rows** instead of repeating the tag vocabulary. `usedIn` holds
+  ids; the `P-NN` comes from `PROJECT_REFS` so it cannot drift when rows move. Only what the
+  descriptions actually state is cited — three rows read `—`, which is the honest entry and
+  a better prompt to the user than a guess would be.
+- **Density:** figure column capped at 17rem and pushed to the sheet edge, row padding down
+  a step. Given four full columns the figures grew to ~400px and set the height of every row
+  that had one. Split `Further work` off the bottom of the list.
+- **Hero caption** stopped truncating. It was the `truncate` element beside a `shrink-0`
+  hint, so the figure's own name was always what got thrown away — `3R PLANAR IK · PICK & …`
+  at every width, 1440px included. Label shortened, hint now yields first. This was on the
+  open list from the README entry below.
+- **Voice:** `about_body_1` said "with a passion for", which PRODUCT.md forbids by name.
+- Footer carries a `REV.` field; `Project` takes an optional `date`, format-checked.
+- **P-01 now links** to the public MUJIN write-up repo, at the user's request. It was the
+  only row with nowhere to go, so *no row exercises the link-less path any more* — the
+  support is still there and still correct, but nothing on the page will catch you breaking
+  it. Noted at the registry entry too.
+
+**Why:** Requested. The full ranked review is in the conversation; this is what landed.
+
+**Open:**
+- **`Experience.jsx` is written but not wired.** `ROLES` is empty, the component returns
+  null, nothing imports it. It needs employer, title, location and dates — facts, so they
+  wait for the user. Wiring steps are in the file's own header comment, including the sheet
+  renumber to evidence-first (experience 01, projects 02, about 03, contact 04), which the
+  user has already approved.
+- **The title block still spends a cell on `LANGUAGES: EN · 中文`**, duplicating the toggle
+  40px away in the nav, while institution, graduation year, location and an availability
+  *window* appear nowhere on the site. Highest-value pixels on the page; blocked on facts.
+- **No project has a date yet.** The rail renders one the moment it exists. Until then it is
+  a 2-column rail holding a 4-character label, which reads loose — that resolves with the
+  data rather than needing a layout change, so don't "fix" it by narrowing the rail.
+- **The figures undercut the work.** P-01 is a block diagram whose labels are unreadable at
+  270px, P-02 an annotated slide, P-03 a raw KiCad canvas — all three carrying white grounds
+  and foreign palettes onto the sheet. A photograph of the real hardware would land
+  instantly. `docs/CONTENT.md` already says a photo beats a diagram; this is that rule going
+  unenforced. Needs images from the user.
+- **`about_body_2` disagrees with itself across languages** — EN "photography and running",
+  ZH 摄影、徒步 (hiking). Left alone rather than guessed at. The EN also has no full stop.
+- **Joint-angle labels can still land on a limb.** The offset is along the bisector, so a
+  label only ever collides with a *different* joint's link; `drawAngles` tests candidates
+  against other labels but not against the segments. Not attempted — the file was being
+  edited concurrently (the two-mode work above), and a geometry change wanted a clean base.
+
 ## 2026-08-11 — Kinematic sketch: two modes with a handover between them
 
 **Did:** The figure was one continuous thing that blended the pick-and-place cycle and the

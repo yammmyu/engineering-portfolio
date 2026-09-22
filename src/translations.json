@@ -31,6 +31,9 @@
   "tb_lang":            { "en": "Languages", "zh": "语言" },
   "tb_lang_value":      { "en": "EN · 中文", "zh": "EN · 中文" },
 
+  "experience_heading":     { "en": "Experience", "zh": "经历" },
+  "experience_items_label": { "en": "Entries",    "zh": "条" },
+
   "about_heading":      { "en": "About Me", "zh": "关于我" },
   "about_body_1": {
     "en": "I'm a Robotics Engineering student. I design the mechanical system and write the software that runs it — CAD and fabrication at one end, embedded firmware and ROS nodes at the other, and the control loop in between.",

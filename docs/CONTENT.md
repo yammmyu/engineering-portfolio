@@ -17,9 +17,11 @@ portfolio/
 │   ├── JOURNAL.md                # running work log, newest first
 │   └── img/                      # README screenshots
 ├── scripts/
-│   └── check.mjs                 # `npm run check` — conventions the build can't catch
+│   ├── check.mjs                 # `npm run check` — conventions the build can't catch
+│   └── og.html                   # generator for the share card; see below
 ├── public/
 │   ├── projects/                 # project detail-view images, /projects/<id>.jpg
+│   ├── og.png                    # 1200×630 link-preview card, generated
 │   ├── resume-en.pdf
 │   └── resume-zh.pdf
 ├── src/
@@ -27,6 +29,7 @@ portfolio/
 │   │   ├── Navbar.jsx
 │   │   ├── Hero.jsx
 │   │   ├── KinematicSketch.jsx   # canvas + controls for the hero sketch
+│   │   ├── Experience.jsx        # revision-history table; empty until roles land
 │   │   ├── About.jsx
 │   │   ├── Projects.jsx
 │   │   ├── Contact.jsx
@@ -60,6 +63,7 @@ Each project needs an entry in two files.
 new Project({
   id: 'my_new_project',                          // unique; used as translation key stem
   tags: ['robotics', 'software'],                // see available tags below
+  date: '2025-06 → 08',                          // optional; see below
   github: 'https://github.com/user/repo',        // optional
   demo: 'https://my-demo.example.com',           // optional
   image: '/projects/my_new_project.jpg',         // optional; see below
@@ -87,6 +91,34 @@ project id with no matching keys, and on a key nothing references.
 Descriptions run about two sentences and stay concrete: what it is, and what you did on it
 if it was a team project. See [PRODUCT.md](PRODUCT.md#voice) for the voice.
 
+### Dates
+
+`date` renders verbatim in the row's left rail, under the `P-NN` reference. It is not a
+translation key: numerals and an arrow read the same in both languages.
+
+```
+'2025-06'            a single month
+'2025-06 → 08'       a range inside one year
+'2025-06 → 2026-02'  a range across years
+'2025-06 → now'      still going
+```
+
+`npm run check` fails on anything else, because the value goes straight to the page rather
+than through a formatter that would catch it.
+
+The field is optional and a row without one renders as it always did — but **fill it in
+where you can.** Undated, a reader can't tell a project from last term apart from one from
+secondary school, and assumes the worse of the two. Never estimate one: an approximate date
+on a portfolio is a wrong date in an interview.
+
+### Further work
+
+`FURTHER_WORK_FROM` in `Projects.jsx` names the id where the robotics list stops and
+everything else begins. The rows below it get their own subhead, so a reader looking for
+robotics isn't weighing a side project against a competition robot on the way down.
+Reference numbers stay continuous across the split — they come from the array index, and
+the array is still one registry in one order.
+
 ### Rows with no link
 
 `github` and `demo` are both optional, and a row may have neither — work under NDA, on an
@@ -98,6 +130,10 @@ What lights up stays exactly what you can press.
 Such a row still carries its figure, tags, and description, so it reads as an entry rather
 than a broken link. Where the work is not public, say so in the description instead of
 linking somewhere that 404s.
+
+**No row exercises this path today.** P-01 was the only one, until the internship write-up
+was published. The handling is still there and still correct, but nothing on the page will
+catch you breaking it — check a link-less row by hand if you change how a row links.
 
 ### Project images
 
@@ -134,23 +170,67 @@ in keeping, but it is a second choice.
 
 ### Adding a new tag
 
-Tags share one hairline chip style, so a new tag needs two additions:
+Tags set as one line of mono marks — `ROBOTICS · ELECTRONICS` — under the description. They
+were boxed once, which put them at the same visual weight as the language toggle and made
+them read as filter chips on a list that has no filter. They are annotation: the only thing
+pressable in a row is the row.
+
+A new tag needs two additions:
 
 - `TAG_LABEL_KEYS` in `src/components/Projects.jsx` — maps tag → translation key
 - `projects_tag_<name>` entry in `src/translations.json`
 
-The About table reuses these same `projects_tag_*` keys as BOM categories, so a new tag
-is available there too. `npm run check` fails on a tag used but not registered, and on a
-registered tag with no translation.
+`npm run check` fails on a tag used but not registered, and on a registered tag with no
+translation.
+
+## The skills BOM
+
+`SKILLS` in `About.jsx`. Each row carries a `usedIn` array of **project ids**, rendered as
+the row references that cite it — `P-02, P-06`. The reference numbers come from the
+registry order in `Projects.jsx`, so reordering the projects can never leave this table
+pointing at the wrong rows.
+
+The column used to repeat the project tags, which told a reader that MATLAB is "software"
+and nothing else. Citing rows makes it an index into the evidence instead, and a skill with
+no row against it renders `—` — a question worth being asked before an interviewer asks it.
+
+Only cite what a project description actually supports. Which tool did what on a given
+project is a fact from the author, not an inference from a tag.
+
+## The share card
+
+`public/og.png` is what a link preview shows in a message, a Slack channel, or a LinkedIn
+DM — for a lot of readers it is the first thing they see of the site. It is generated from
+the real hero by `scripts/og.html` rather than drawn by hand, so it inherits the tokens,
+the fonts, and the title block automatically. The regeneration command is in the comment at
+the top of that file.
+
+**Regenerate it whenever the hero or the title block changes**, or the card goes on
+advertising last month's facts. `npm run check` verifies the tags resolve and the file
+exists; it cannot tell you the picture is stale.
 
 ## Other content
 
 | What | Where |
 | --- | --- |
 | Name, tagline, title-block fields | `hero_*` and `tb_*` keys in `translations.json` |
+| Employers, roles, dates | `ROLES` in `Experience.jsx` — see below |
 | About text and the skills BOM | `about_*` keys, and the `SKILLS` array in `About.jsx` |
 | Contact links and résumés | `CONTACT_LINKS` in `Contact.jsx`; PDFs in `public/` |
 | Section names and sheet numbers | `NAV_LINKS` in `Navbar.jsx` + the `sheet` prop per section |
+| Content revision in the footer | `REVISION` in `App.jsx` — bump by hand, format `YYYY-MM` |
+
+### The experience sheet
+
+`Experience.jsx` is built and **renders nothing while its `ROLES` array is empty**, which is
+how it ships today: employers, titles, and dates are facts about the author and none were
+on record. The wiring steps are listed in the comment at the top of the file — fill `ROLES`,
+add the `exp_*` keys, mount it in `App.jsx`, add it to `NAV_LINKS`, and renumber the sheets.
+
+It exists because the strongest credential on the site was invisible: an internship
+appeared only as an unlinked project row, with no employer, no role, and no dates. Projects
+answer *can he build*; this sheet answers *has anyone paid him to*, and a recruiter screens
+on the second one first.
 
 Adding or reordering a section changes the sheet sequence, which is a structural decision —
 see [PRODUCT.md](PRODUCT.md#open-questions-for-the-user).

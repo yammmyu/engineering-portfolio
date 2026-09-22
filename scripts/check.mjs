@@ -48,7 +48,12 @@ const projects = [...projectsSrc.matchAll(/new Project\(\{([\s\S]*?)\}\)/g)].map
   const tags = [...(body.match(/tags:\s*\[([^\]]*)\]/)?.[1] ?? '').matchAll(/'([^']+)'/g)].map(
     t => t[1],
   )
-  return { id, tags, image: body.match(/image:\s*'([^']+)'/)?.[1] ?? null }
+  return {
+    id,
+    tags,
+    date: body.match(/date:\s*'([^']+)'/)?.[1] ?? null,
+    image: body.match(/image:\s*'([^']+)'/)?.[1] ?? null,
+  }
 })
 
 const registeredTags = [
@@ -148,6 +153,53 @@ for (const [file, text] of Object.entries(source)) {
 for (const { id, image } of projects) {
   if (image && !existsSync(join(ROOT, 'public', image))) {
     warn('public/projects', `"${id}" points at ${image}, which does not exist yet`)
+  }
+}
+
+// ── 9. The share card resolves ───────────────────────────────────────────────
+// A link preview is the first thing most readers see, and it is the one part of
+// the site nobody looks at while working on it: a card pointing at a file that
+// isn't there fails silently, in someone else's chat window, weeks later.
+const html = read('index.html')
+const meta = (prop, attr = 'property') =>
+  html.match(new RegExp(`<meta\\s+${attr}="${prop}"\\s+content="([^"]+)"`))?.[1] ?? null
+
+const ogImage = meta('og:image')
+const ogUrl = meta('og:url')
+const canonical = html.match(/<link\s+rel="canonical"\s+href="([^"]+)"/)?.[1] ?? null
+
+if (!ogImage) fail('index.html', 'no og:image — shared links preview without a card')
+if (!ogUrl) fail('index.html', 'no og:url')
+if (!canonical) fail('index.html', 'no canonical link')
+
+for (const [name, value] of Object.entries({ 'og:image': ogImage, 'og:url': ogUrl, canonical })) {
+  // Scrapers fetch these with no base document, so a relative path is dropped.
+  if (value && !/^https:\/\//.test(value)) {
+    fail('index.html', `${name} is "${value}" — must be an absolute https URL`)
+  }
+}
+
+if (ogImage && ogUrl) {
+  const origin = u => u.replace(/^(https:\/\/[^/]+).*$/, '$1')
+  if (origin(ogImage) !== origin(ogUrl)) {
+    fail('index.html', `og:image and og:url disagree on origin (${ogImage}, ${ogUrl})`)
+  }
+  const file = ogImage.replace(/^https:\/\/[^/]+/, '')
+  if (!existsSync(join(ROOT, 'public', file))) {
+    fail('index.html', `og:image points at ${file}, which is not in public/`)
+  }
+}
+
+// ── 10. Project dates are dates ──────────────────────────────────────────────
+// `date` renders verbatim in the row's left rail, so a stray format shows up on
+// the page rather than throwing. Optional — a row without one is fine.
+const DATE_SHAPE = /^\d{4}-\d{2}( → (\d{4}-)?(\d{2}|now))?$/
+for (const { id, date } of projects) {
+  if (date && !DATE_SHAPE.test(date)) {
+    fail(
+      'src/components/Projects.jsx',
+      `project "${id}" has date "${date}" — expected e.g. "2025-06", "2025-06 → 08", "2025-06 → now"`,
+    )
   }
 }
 
