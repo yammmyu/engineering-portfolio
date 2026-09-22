@@ -18,6 +18,39 @@ Template:
 
 ---
 
+## 2026-09-22 — Panel text is the user's own writing
+
+**Did:** Replaced both `_detail` entries with the text from `Portfolio_IMG/*/description.txt`
+verbatim, at his request, and matched the Chinese to it.
+
+**Two edits to the English, both typos, neither tonal:** `aestheic` -> `aesthetic`, and
+`So I decide I would try to make my own` -> `decided`, with the missing full stop. Flagged
+to him rather than done silently, because "do not change the use of language and tone" is
+close enough to "do not change it" that a silent fix would be a liberty.
+
+**The Chinese was rewritten, not adjusted.** It had been translated from my prose, which was
+clipped and third-person-ish; his is first person, conversational and a bit self-deprecating
+— "a huge pain", "a ton of practical skills", "zero experience". The Chinese now matches
+that register (`特别折腾`, `一窍不通`, `踩了很多坑`) rather than the site's usual voice.
+Per AGENTS.md it is written to read naturally in Chinese, not mapped sentence to sentence.
+
+**This is a deliberate break with `docs/PRODUCT.md`'s voice** — "understated, no
+superlatives, first person sparingly" — and it only applies inside the panels. The row
+summaries above them are unchanged and still in the site's voice, so the drawing list still
+scans the way it did and the informal register is something a reader opts into. If a future
+agent "fixes" the panel prose to match the rest of the sheet, they will be undoing an
+explicit instruction.
+
+**Also corrected a fact of mine:** the speaker's row summary said "a switching converter",
+which was my inference. He wrote "voltage converter"; both languages now say that.
+
+**Why:** Requested. It is his portfolio and his voice.
+
+**Open:**
+- The row summaries are still mine. He asked about the descriptions in the `.txt` files, and
+  those are long-form, so I read it as the panels — but if he wants the summaries in his
+  voice too, they need cutting to two sentences, which is a different job from pasting.
+
 ## 2026-09-22 — Bench rows open a detail panel; `reference` removed
 
 **Did:** At the user's request, the two bench rows lost their date and their tutorial link
@@ -86,9 +119,11 @@ the harness.
   workbench still pulled from a phone video, and it is the only figure on the sheet that
   does not earn its place. A photo of the finished internals from a second angle would
   replace it.
-- **Did he cast anything?** Still unanswered from the entry below. His notes say printed
-  moulds for pouring are what drew him to the build; the photo shows FDM layer lines, so
-  both descriptions claim only printing. If he poured parts, both undersell him.
+- ~~**Did he cast anything?**~~ Answered by his own text, now on the page: "It was my first
+  time using 3D-printed parts as molds to pour other materials." The panel says it; the row
+  summary still says only "the printed enclosure", which is not wrong — the shell in the
+  photo has FDM layer lines — but the moulding is the more unusual skill and the summary
+  does not mention it. Worth a sentence if he wants it there too.
 - The panel is the obvious home for a longer form on any row, and the Engineer arm
   write-up called out in the entry below is the strongest candidate — but that row has a
   link, so the toggle would have to become its own control first.
@@ -101,23 +136,41 @@ the harness.
 `github.com/yanyuc/robotic-arm`, which **404s** — a dead page under the row's whole
 stretched hit area, live on the site. It is `yammmyu/Ybot`. Its description also did not
 describe this machine: "hobby servos" and "a Python inverse-kinematics solver", against a
-build running closed-loop NEMA steppers through 50:1 harmonic drives toward ROS 2 and
-MoveIt. Rewritten from `YBot_N1.md`, including the honest half — the arm is built, the
-motion stack is not. Retitled `YBot — Open-Source 6-DOF Arm`, because the new row below
-would otherwise have been the second "6-DOF arm" on the sheet.
+build running closed-loop steppers through 50:1 harmonic drives toward ROS 2.
 
-**P-02 is new:** the RoboMaster Engineer manipulator. Placed second rather than appended —
+**Corrected twice.** The first pass replaced the whole description and the title, and he
+pushed back: use his originals, don't move the language and tone. He was right — the facts
+were wrong, the prose was not, and I had rewritten both. His sentence is
+`A 6-DOF arm built from scratch: A, B, and C.`; that shape is now kept exactly and only the
+three wrong nouns inside it are changed. The title went back to `6-DOF Robotic Arm`.
+
+**The standing rule this leaves:** when a description is factually wrong, change the facts
+inside his sentence. Do not rewrite the sentence. The voice on this site is his, and
+PRODUCT.md's voice section describes it rather than licensing a new one.
+
+**P-02 is new:** the RoboMaster Engineer manipulator, written to match the rows around it —
+noun-phrase opener, then `I designed…` for the part that was his, no semicolons and no
+stacked em-dash clauses. The first draft had all three and read as a different author. Placed second rather than appended —
 a competition arm that shipped, shook on test, was root-caused to a single bearing feeding
 a tipping moment into a plate bending the way a plate is weakest, redesigned onto two-sided
 support, and then placed First Prize at RMUL 2026 is the strongest mechanical evidence
 here. Only the internship outranks it. **Placement is his call** and is easy to move.
 
-**Figures.** The Engineer arm crops from a 1800×1026 build photo, trimming width only
-(1642×1026 at x=80) so the bench clutter goes rather than the arm's base. YBot had no
-landscape source: the build photos are ~625×837 portrait and the only wide images are a BOM
-table and a mind map. Took a 560×350 band across the shoulder — stepper, closed-loop driver
-and printed joint — which is the part carrying the evidence. It is the smallest figure on
-the sheet at 560px, which is still 2× the 272px it renders at.
+**Figures**, after a first pass he replaced. Both are now the images he chose.
+
+P-02 is the v2 SolidWorks render rather than the build photo. It is portrait, so
+`object-cover` would have cropped the arm — the case `docs/CONTENT.md` says to pad for.
+Padding the whole 762×834 frame left the arm small and showed seams, so it is cropped tight
+to the arm first (450×650 at (125,195)) and then padded to 1040×650 with `#F0F1F6`, a tone
+between the render background's own extremes (`#DDDFEB`..`#FEFEFE`, sampled). A flat pad
+under a gradient always seams somewhere; the test is whether it seams at the width the
+figure renders, and it does not. Incidentally the render is visibly SolidWorks, which is
+the first direct support on the sheet for that BOM row naming SolidWorks rather than CAD.
+
+P-06 is a 3840×2160 photo of the whole arm, from `Portfolio_IMG` rather than the repo —
+trimmed to 3360×2100 at (60,180), the tightest 16:10 that still holds the base and the Pi
+in it. The first pass had only the repo's portrait build shots to work with and took a band
+across the shoulder; this shows the machine.
 
 **BOM followed the descriptions.** ROS/ROS2 gains P-06, which now states ROS 2 outright;
 SolidWorks/CAD gains P-02; and Python drops to `—`, because its only citation was the
