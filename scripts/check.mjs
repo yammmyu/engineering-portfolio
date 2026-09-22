@@ -203,6 +203,31 @@ for (const { id, date } of projects) {
   }
 }
 
+// ── 11. The BOM cites rows that exist ────────────────────────────────────────
+// About.jsx renders `PROJECT_REFS[id]` directly. A `usedIn` id that is not in
+// the registry resolves to undefined and the table prints the literal word
+// "undefined" in that cell — silently, on the page a recruiter reads. Removing
+// a project is exactly when this happens, since the skills that cited it are
+// three files away from the row being deleted.
+const aboutSrc = source['src/components/About.jsx']
+const skills = [
+  ...(aboutSrc.match(/const SKILLS = \[([\s\S]*?)\n\]/)?.[1] ?? '').matchAll(
+    /\{\s*name:\s*'([^']+)',\s*usedIn:\s*\[([^\]]*)\]\s*\}/g,
+  ),
+].map(m => ({
+  name: m[1],
+  usedIn: [...m[2].matchAll(/'([^']+)'/g)].map(x => x[1]),
+}))
+
+if (!skills.length) fail('src/components/About.jsx', 'no SKILLS entries parsed')
+for (const { name, usedIn } of skills) {
+  for (const id of usedIn) {
+    if (!ids.includes(id)) {
+      fail('src/components/About.jsx', `skill "${name}" cites "${id}", which is not a project`)
+    }
+  }
+}
+
 // ── Report ───────────────────────────────────────────────────────────────────
 const show = (list, label) => {
   if (!list.length) return

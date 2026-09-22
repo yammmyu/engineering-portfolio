@@ -9,6 +9,7 @@ const TAG_LABEL_KEYS = {
   electronics: 'projects_tag_electronics',
   software: 'projects_tag_software',
   firmware: 'projects_tag_firmware',
+  fabrication: 'projects_tag_fabrication',
 }
 
 // Ordered by how much robotics is in them, not by date — the list is read top
@@ -44,16 +45,28 @@ const PROJECTS = [
     image: '/projects/proj_aimbot.jpg',
   }),
   new Project({
-    id: 'proj_controller',
-    tags: ['robotics', 'firmware'],
-    github: 'https://github.com/yammmyu/Engineer_Custom_Controller',
-    image: '/projects/proj_controller.jpg',
-  }),
-  new Project({
     id: 'proj_arm',
     tags: ['robotics', 'mechanical', 'firmware'],
     github: 'https://github.com/yanyuc/robotic-arm',
     image: '/projects/proj_arm.jpg',
+  }),
+  // The two bench builds are in the order they were made, not by subject, and
+  // that is the whole reason they sit together. The panel's wiring failed
+  // because he could not solder; the speaker is where he learned to. Read the
+  // other way round, or split apart, they are two hobby rows.
+  new Project({
+    id: 'proj_lightpanel',
+    tags: ['mechanical', 'electronics', 'fabrication'],
+    image: '/projects/proj_lightpanel.jpg',
+  }),
+  new Project({
+    id: 'proj_speaker',
+    tags: ['electronics', 'fabrication'],
+    date: '2024-11',
+    // Built from a published tutorial, so the row cites it. See `reference` in
+    // models/Project.js for why this is not `github`.
+    reference: 'https://www.youtube.com/watch?v=a43LXqRwQC8',
+    image: '/projects/proj_speaker.jpg',
   }),
   new Project({
     id: 'bloomcraft',
@@ -68,10 +81,37 @@ const PROJECTS = [
   }),
 ]
 
-// Where the robotics list stops arguing its case. The rows from here down are
-// real work, but a reader three rows deep shouldn't have to weigh a florist
-// assistant against a sentry's slip-ring boards to find the end of the list.
-const FURTHER_WORK_FROM = 'bloomcraft'
+// The registry is one list read top down, cut into runs by the row that starts
+// each one. The first run takes no heading — the section heading is its
+// heading.
+//
+// It was a single `FURTHER_WORK_FROM` constant when there were two runs. A
+// second constant would have worked and a third would not: the reader of the
+// code has to hold the order of the constants and the order of the array in
+// their head at once, and nothing makes them agree. Keyed by the id that starts
+// the run, the cut is stated in one place and the array stays the only thing
+// that decides sequence.
+//
+// Reference numbers are unaffected by any of this — they come from the registry
+// index, so they stay continuous across a cut and a row keeps its P-NN when a
+// group moves.
+const GROUP_HEADINGS = {
+  // Where the robotics list stops arguing its case: hardware he designed and
+  // made by hand, which is a different claim from the rows above and should not
+  // be read as a weaker version of them.
+  proj_lightpanel: 'projects_bench_heading',
+  // Real work, but a reader three rows deep shouldn't have to weigh a florist
+  // assistant against a sentry's slip-ring boards to find the end of the list.
+  bloomcraft: 'projects_further_heading',
+}
+
+// Ordered by precedence. A row's own demo outranks its own code, and both
+// outrank where the work came from — see `reference` in models/Project.js.
+const LINK_KINDS = [
+  { field: 'demo', labelKey: 'projects_link_demo' },
+  { field: 'github', labelKey: 'projects_link_github' },
+  { field: 'reference', labelKey: 'projects_link_reference' },
+]
 
 /**
  * Row reference for a project id — `P-03`. The BOM in About.jsx cites rows by
@@ -137,9 +177,15 @@ function ProjectRow({ project, index }) {
   // clickable. The primary link now owns the whole row via a stretched
   // pseudo-element, so what lights up is what you can press. The title is the
   // anchor text, so the accessible name is the project — not "github".
-  const primary = project.demo || project.github
-  const secondary = project.demo && project.github ? project.github : null
-  const marker = `${t(project.demo ? 'projects_link_demo' : 'projects_link_github')} ↗`
+  //
+  // Each link carries the marker naming what it is. The second slot used to be
+  // github by construction and said so in the JSX; with a third kind that was
+  // one row away from labelling a tutorial "GITHUB ↗".
+  const links = LINK_KINDS.filter(kind => project[kind.field]).map(kind => ({
+    href: project[kind.field],
+    marker: `${t(kind.labelKey)} ↗`,
+  }))
+  const [primary, ...secondary] = links
 
   return (
     <li className="group relative border-b border-rule">
@@ -172,7 +218,7 @@ function ProjectRow({ project, index }) {
           <h3 className="font-display font-wide text-lg font-semibold leading-snug text-ink sm:text-xl">
             {primary ? (
               <a
-                href={primary}
+                href={primary.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="after:absolute after:inset-0 after:content-['']"
@@ -195,19 +241,20 @@ function ProjectRow({ project, index }) {
             </span>
             {/* A second destination can't nest inside the row link, so it is
                 lifted above the stretched hit area. */}
-            {secondary && (
+            {secondary.map(link => (
               <a
-                href={secondary}
+                key={link.href}
+                href={link.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="link-ink relative z-10 font-mono text-[11px] font-medium uppercase tracking-label"
               >
-                {t('projects_link_github')} ↗
+                {link.marker}
               </a>
-            )}
+            ))}
             {/* Without a hover state to reveal it, the row needs to say out
                 loud that it goes somewhere. */}
-            {primary && <span className="link-ink label text-ink lg:hidden">{marker}</span>}
+            {primary && <span className="link-ink label text-ink lg:hidden">{primary.marker}</span>}
           </div>
         </div>
 
@@ -227,7 +274,7 @@ function ProjectRow({ project, index }) {
               src={project.image}
               alt={t(project.titleKey)}
               number={number}
-              marker={primary ? marker : null}
+              marker={primary ? primary.marker : null}
               onFail={() => setFigureFailed(true)}
             />
           </div>
@@ -238,7 +285,7 @@ function ProjectRow({ project, index }) {
                 aria-hidden="true"
                 className="arrow-slide label inline-block transition-colors duration-200 group-hover:text-accent-ink"
               >
-                {marker}
+                {primary.marker}
               </span>
             </div>
           )
@@ -248,14 +295,31 @@ function ProjectRow({ project, index }) {
   )
 }
 
+/**
+ * Cuts the registry into runs at the rows named in GROUP_HEADINGS, newest cut
+ * last. Each run carries the registry index of its first row so `ProjectRow`
+ * still numbers from the one array — the split is a heading, not a reordering.
+ *
+ * A run is dropped if it is empty, so naming a heading for a row that has since
+ * been deleted costs a stray heading over an empty list rather than a crash.
+ * `npm run check` fails on that id before it ever renders.
+ */
+function groupRows(projects) {
+  const runs = [{ headingKey: null, start: 0, items: [] }]
+
+  projects.forEach((project, i) => {
+    const headingKey = GROUP_HEADINGS[project.id]
+    if (headingKey) runs.push({ headingKey, start: i, items: [] })
+    runs[runs.length - 1].items.push(project)
+  })
+
+  return runs.filter(run => run.items.length)
+}
+
 export default function Projects() {
   const t = useTranslation()
   const count = String(PROJECTS.length).padStart(2, '0')
-  // One registry, two lists. The split is a heading, not a reordering — the
-  // reference numbers stay continuous because they come from the array index.
-  const split = PROJECTS.findIndex(project => project.id === FURTHER_WORK_FROM)
-  const robotics = split === -1 ? PROJECTS : PROJECTS.slice(0, split)
-  const further = split === -1 ? [] : PROJECTS.slice(split)
+  const groups = groupRows(PROJECTS)
 
   return (
     <section id="projects" className="py-20 sm:py-28">
@@ -271,22 +335,16 @@ export default function Projects() {
             {t('projects_subheading')}
           </p>
 
-          <ol className="border-t border-rule-strong">
-            {robotics.map((project, i) => (
-              <ProjectRow key={project.id} project={project} index={i} />
-            ))}
-          </ol>
-
-          {further.length > 0 && (
-            <>
-              <h3 className="label mb-3 mt-12">{t('projects_further_heading')}</h3>
+          {groups.map(run => (
+            <React.Fragment key={run.headingKey ?? 'lead'}>
+              {run.headingKey && <h3 className="label mb-3 mt-12">{t(run.headingKey)}</h3>}
               <ol className="border-t border-rule-strong">
-                {further.map((project, i) => (
-                  <ProjectRow key={project.id} project={project} index={split + i} />
+                {run.items.map((project, i) => (
+                  <ProjectRow key={project.id} project={project} index={run.start + i} />
                 ))}
               </ol>
-            </>
-          )}
+            </React.Fragment>
+          ))}
         </Reveal>
       </Sheet>
     </section>

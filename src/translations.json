@@ -55,14 +55,17 @@
     "zh": "自主导航、运动控制及其底层硬件，以及一些纯粹出于兴趣的项目。多数条目可跳转至代码仓库。"
   },
   "projects_items_label":     { "en": "Items",       "zh": "项" },
+  "projects_bench_heading":   { "en": "Bench builds", "zh": "自制硬件" },
   "projects_further_heading": { "en": "Further work", "zh": "其他项目" },
   "projects_tag_mechanical":  { "en": "Mechanical",  "zh": "机械" },
   "projects_tag_electronics": { "en": "Electronics", "zh": "电子" },
   "projects_tag_software":    { "en": "Software",    "zh": "软件" },
   "projects_tag_robotics":    { "en": "Robotics",    "zh": "机器人" },
   "projects_tag_firmware":    { "en": "Firmware",    "zh": "嵌入式" },
+  "projects_tag_fabrication": { "en": "Fabrication", "zh": "加工制作" },
   "projects_link_github":     { "en": "GitHub",      "zh": "GitHub" },
   "projects_link_demo":       { "en": "Demo",        "zh": "演示" },
+  "projects_link_reference":  { "en": "Reference",   "zh": "参考" },
   "projects_fig_label":       { "en": "Fig.",        "zh": "图" },
 
   "proj_humanoid_title": { "en": "Imitation-Learned Dual-Arm Parcel Handling", "zh": "模仿学习双臂包裹处理" },
@@ -85,20 +88,26 @@
 
   "proj_aimbot_title": { "en": "Portable Moving Target for Auto-Aim", "zh": "便携式自瞄测试移动靶" },
   "proj_aimbot_desc": {
-    "en": "In design — a self-driving target so auto-aim testing no longer ties up a second robot and a driver. Holds a commanded speed, and packs into one checked bag.",
-    "zh": "设计阶段——可自行移动的靶标，使自瞄测试不再占用第二台机器人和一名操作手。可保持指定速度，并能装进一件托运行李。"
-  },
-
-  "proj_controller_title": { "en": "RoboMaster Engineer Arm Controller", "zh": "RoboMaster 工程机械臂控制器" },
-  "proj_controller_desc": {
-    "en": "Bare-metal STM32F407 firmware driving a six-motor RoboMaster Engineer arm over CAN at 1 Mbit/s, closing a cascaded position-to-velocity PID loop around each joint.",
-    "zh": "裸机 STM32F407 固件，通过 1 Mbit/s CAN 总线驱动 RoboMaster 工程机械臂的六个电机，并对每个关节闭合「位置—速度」串级 PID 环。"
+    "en": "A spinning armour-plate rig that mimics robot movement and records where each projectile lands, so auto-aim testing no longer ties up a second robot and a driver — and packs down to travel to the competition. A two-person project; I own the mechanical design.",
+    "zh": "旋转靶架：以装甲板模拟机器人运动，并记录每发弹丸的落点，使自瞄测试不再占用第二台机器人和一名操作手，同时可拆装装箱、随队出行。两人项目，我负责全部机械设计。"
   },
 
   "proj_arm_title": { "en": "6-DOF Robotic Arm", "zh": "六自由度机械臂" },
   "proj_arm_desc": {
     "en": "A 6-DOF arm built from scratch: structure modeled in SolidWorks, driven by hobby servos, and controlled by a Python inverse-kinematics solver.",
     "zh": "从零设计并制作的六自由度机械臂：SolidWorks 建模、舵机驱动，由自编 Python 逆运动学求解器控制。"
+  },
+
+  "proj_lightpanel_title": { "en": "Modular LED Wall Panels", "zh": "模块化 LED 灯板" },
+  "proj_lightpanel_desc": {
+    "en": "Triangular panels that interlock in any arrangement: 3D-printed shells, laser-cut acrylic diffusers held on a lip by friction alone, screwed together in pairs. The mating tolerances took several CAD revisions. Wiring was the weak point — I could not solder yet, and the bought-in connectors dropped out and left panels flashing.",
+    "zh": "可任意拼接的三角形灯板：外壳 3D 打印，激光切割的亚克力扩散板仅靠凸缘摩擦卡住，两块之间以螺丝相连。配合公差前后改了好几版 CAD。接线是短板——当时还不会焊接，外购的连接件接触不良，常让灯板闪个不停。"
+  },
+
+  "proj_speaker_title": { "en": "Bluetooth Speaker", "zh": "蓝牙音箱" },
+  "proj_speaker_desc": {
+    "en": "A two-driver Bluetooth speaker built from a published tutorial, and my first electronics project: the printed enclosure, the wiring, and every solder joint in it are mine. Chasing down its noise is what taught me that a switching converter couples straight into the audio path.",
+    "zh": "依照公开教程制作的双单元蓝牙音箱，也是我的第一个电子项目：外壳打印、走线和其中每一个焊点都由自己完成。排查底噪的过程让我明白，开关变换电路会直接串进音频回路。"
   },
 
   "bloomcraft_title": { "en": "Bloomcraft", "zh": "Bloomcraft" },

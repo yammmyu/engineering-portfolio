@@ -18,6 +18,99 @@ Template:
 
 ---
 
+## 2026-09-22 — Bench builds, a third link kind, and grouped runs
+
+**Did:** Not my work — written by the user in parallel with the session below, and recorded
+here so the journal isn't silent about a structural change. The reasoning is in the code
+comments, which are fuller than this entry; expand it if anything here is thin.
+
+- **`reference` on `Project`** — a third link kind for where the work *came from* rather
+  than where it lives: a published build, a datasheet, a paper. It ranks below `demo` and
+  `github`, and exists so a tutorial URL isn't put in `github`, where the row's marker would
+  say `GITHUB ↗` about a page that is not one.
+- **`LINK_KINDS`** replaces the hand-written demo/github pair in `ProjectRow`. Each link now
+  carries the marker naming what it is; the old second slot was github by construction and
+  said so in the JSX, which was one row away from labelling a tutorial "GITHUB ↗".
+- **`GROUP_HEADINGS` replaces `FURTHER_WORK_FROM`**, keyed by the id that starts each run, so
+  a third run doesn't need the reader to hold two orderings in their head at once. `groupRows`
+  cuts the registry into runs and drops empty ones. Reference numbers still come from the
+  registry index, so they stay continuous across a cut.
+- **Two bench builds added** — `proj_lightpanel` and `proj_speaker`, under a new `Bench
+  builds` heading and a new `fabrication` tag. They are ordered as made rather than by
+  subject: the panel's wiring failed because he could not solder, and the speaker is where he
+  learned to.
+
+**Why:** See the code comments.
+
+**Open:**
+- `proj_arm` is now the only row still missing its image — the last `npm run check` warning.
+- Check rule 11 (added below) validates BOM citations, but nothing yet validates that a
+  `GROUP_HEADINGS` key names a row that exists. The code comment says `npm run check` fails
+  on that id; as of this entry it does not. Worth adding, since a stale key silently costs a
+  heading.
+
+## 2026-09-22 — P-04: photograph, and the row is now honest about being a team project
+
+**Did:** Two things, both from material in the `Moving_Aimbot_Target` repo.
+
+**Figure.** `proj_aimbot.jpg` now exists — a photo of the built rig, cropped 4200×2625 at
+offset (1047, 760) from a 5712×4284 source, down to 1200×750. Compressed at quality 40
+(119kB): the dark arena carpet and the netting compress badly, and q80 came to 305kB. Only
+`proj_arm` is still missing an image, so `npm run check` is down to one warning.
+
+**Description.** The user is now working on this with a teammate — teammate on software and
+PCB, him solely on mechanical. The row said "In design — a self-driving target…" with no
+statement of role, which in a list where every other team project names his part read as
+solo work. PRODUCT.md forbids inflating a team project into a solo one, so the description
+now says what the rig does and ends "A two-person project; I own the mechanical design."
+
+"In design" also went, because the photo is of a built rig. The new text deliberately makes
+**no claim about build state** — the photo shows hardware, but whether the static target has
+passed its milestone is not something to infer from one image.
+
+**Why:** Requested, and the team split is a fact from the user, so the old text became
+inaccurate the moment he said it.
+
+**Open:**
+- **The `electronics` tag on P-04 is now the teammate's discipline**, not his. Tags describe
+  what a project is made of rather than what he did, and the description now states his role
+  explicitly, so it was left — but it is worth a decision.
+- **No date on the row.** The presentation implies a September static-target milestone and an
+  April competition, but the start is not recorded anywhere and estimating one is exactly
+  what `docs/CONTENT.md` says not to do.
+- Whether the static target is actually built and working — worth saying outright in the
+  description if it is, since "we built and shot at it" is much stronger than a photo.
+
+## 2026-09-22 — Remove the RoboMaster Engineer arm controller row
+
+**Did:** Removed `proj_controller` at the user's request — registry entry, both translation
+keys, and its two citations in the About BOM. Seven projects now; `npm run check` is down to
+two image warnings, since the row also carried one of the three missing screenshots.
+
+Renumbering took care of itself: `PROJECT_REFS` derives from the array index, so `proj_arm`
+moved P-06 → P-05 and the BOM's SolidWorks and Python rows followed it without being
+touched. That was the point of deriving them, and it held.
+
+**Added check rule 11** for the part that did *not* take care of itself. `proj_controller`
+was the only citation for both `Arduino / STM32` and `C / C++`, and About.jsx renders
+`PROJECT_REFS[id]` straight into the cell — so leaving those arrays alone would have printed
+the literal word "undefined" twice on the live page, silently. The rule now fails on a
+`usedIn` id that is not in the registry. Negative-tested by reintroducing the dangling id
+and confirming it fires, then reverting.
+
+**Why:** Requested. Removal is the user's call; it is his page.
+
+**Open:**
+- **The BOM is now five dashes out of eight rows** — FEA, Arduino/STM32, C/C++, MATLAB, Git.
+  `Arduino / STM32` and `C / C++` lost their only evidence with this row, and they are
+  core robotics skills to have unsupported. A table where most entries cite nothing argues
+  the opposite of what it is there to argue. Three ways out, all needing the user: cite
+  other projects (is the aimbot STM32-based? what drives the 6-DOF arm's servos?), drop the
+  skills that have no project behind them, or drop the `Used in` column. Do not guess the
+  citations — that was the rule that created the column in the first place.
+- The repo `Engineer_Custom_Controller` still exists on GitHub; only the portfolio row is
+  gone. Worth knowing if it is meant to come back.
+
 ## 2026-09-22 — Project figures: photographs replace the diagrams
 
 **Did:** Swapped `public/projects/proj_humanoid.jpg` for a photo of the actual dual-arm
