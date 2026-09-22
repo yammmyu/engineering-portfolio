@@ -61,7 +61,7 @@ const PROJECTS = [
   }),
   new Project({
     id: 'proj_speaker',
-    tags: ['electronics', 'fabrication'],
+    tags: ['electronics', 'mechanical', 'fabrication'],
     date: '2024-11',
     // Built from a published tutorial, so the row cites it. See `reference` in
     // models/Project.js for why this is not `github`.
