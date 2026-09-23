@@ -32,11 +32,14 @@ export class Project {
     // These are the frames that could not survive the row figure: it caps at
     // 17rem, and the panel gives them the full sheet width at three across.
     this.figures = figures
-    // `{ src, poster, key }`, shown as the last cell of the detail panel's
-    // figure row. It exists for a project whose evidence is not visual — the
-    // speaker's clip is twelve near-identical seconds of a shelf, and the sound
-    // is the whole point of it. Never autoplayed: it carries audio, and nothing
-    // on this page performs without being asked.
+    // `{ src, poster, key, position }`, shown as the first cell of the detail
+    // panel's figure row. It is for the part of a project a still cannot carry:
+    // the speaker's sound, the panels lit in a dark room.
+    //
+    // `position` is the `object-position` for the 16:10 crop, because these are
+    // 9:16 phone clips and where the subject sits in the frame differs per clip
+    // — it is measured from the footage, not guessed. Never autoplayed, and
+    // never muted to get around that: nothing here performs without being asked.
     this.video = video
   }
 

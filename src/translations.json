@@ -66,7 +66,7 @@
   "projects_link_github":     { "en": "GitHub",      "zh": "GitHub" },
   "projects_link_demo":       { "en": "Demo",        "zh": "演示" },
   "projects_detail_show":     { "en": "Detail",      "zh": "详情" },
-  "projects_demo_aria":       { "en": "Video: the speaker playing, with sound", "zh": "视频：音箱播放实录，含声音" },
+  "projects_video_aria":      { "en": "Video: ",     "zh": "视频：" },
   "projects_detail_hide":     { "en": "Close",       "zh": "收起" },
   "projects_fig_label":       { "en": "Fig.",        "zh": "图" },
 
@@ -116,6 +116,7 @@
     "en": "I began this project first in 2023, as I wanted some aesthetic lighting in my room and the ones sold on the market are too expensive. So I decided I would try to make my own.\nThe design of the lights is modular, allowing two units to be attached together using screws. Back then, I wasn’t very experienced with CAD, and I ran into a lot of issues with tolerances since the pieces needed to fit perfectly into each other. This forced me to go through several iterations before I was satisfied with the result.\nThe casing was 3D printed, and the inner light diffuser piece was laser cut from acrylic. The diffuser sits on a small lip and stays in place through friction with the walls of the light. I attached a light strip along the side walls of the panels and connected them using special wires. At the time, I had zero experience with electronics and didn’t know how to solder, so I bought a connection cable from Amazon to link the modular pieces together. That turned out to be a huge pain—it caused constant connection issues and even made several panels flash rapidly because of the poor connectivity.",
     "zh": "这个项目最早是 2023 年开始的，当时我想在房间里弄点有氛围感的灯，但市面上卖的都太贵了，所以我就想，干脆自己做一个。\n灯的设计是模块化的，两块之间可以用螺丝拼接起来。那时候我 CAD 还不太熟，在公差上踩了很多坑——零件之间要严丝合缝地扣在一起，我来来回回改了好几版，才算满意。\n外壳是 3D 打印的，里面的扩散板是亚克力激光切割的。扩散板搁在一圈小凸缘上，靠与灯壁之间的摩擦固定住。我沿着灯板的侧壁贴了灯带，再用专门的线把它们连起来。当时我对电子一窍不通，也不会焊接，就在亚马逊上买了连接线来接这些模块件。结果这东西特别折腾——接触一直有问题，甚至因为接触不良，让好几块灯板疯狂闪烁。"
   },
+  "proj_lightpanel_fig_lit":     { "en": "Lit",        "zh": "点亮" },
   "proj_lightpanel_fig_sketch":  { "en": "Sketch",     "zh": "草图" },
   "proj_lightpanel_fig_cad":     { "en": "CAD",        "zh": "建模" },
   "proj_lightpanel_fig_printed": { "en": "As printed", "zh": "打印成品" },

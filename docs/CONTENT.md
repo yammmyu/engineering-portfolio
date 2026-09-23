@@ -193,8 +193,15 @@ video: {
   src: '/projects/proj_speaker-demo.mp4',
   poster: '/projects/proj_speaker-demo.jpg',
   key: 'proj_speaker_fig_demo',
+  position: '50% 36%',          // object-position for the 16:10 crop
 },
 ```
+
+`position` exists because these are 9:16 phone clips shown in a 16:10 frame, and only
+about 35% of the height survives the crop. **Measure it from the footage** — find where the
+subject sits as a fraction of frame height, then `(subject − 0.176) / 0.648`. A wrong value
+does not look broken, it just crops the subject out of shot. `npm run check` rejects
+anything that isn't two percentages.
 
 Both files are **errors** if missing, not warnings like a still: a `<video>` with a dead
 `src` renders as an empty frame with a working control bar, which is worse than no figure
@@ -203,7 +210,12 @@ browsers will not play.
 
 It is **`preload="none"` with a poster**, so nothing but the poster image is fetched until
 a reader presses play — that is what keeps a multi-megabyte file off a 60kB page. Never add
-`autoplay`, and never `muted`: the audio is the point, and nothing here performs unasked.
+`autoplay`, and never `muted` to get around the autoplay policy: nothing here performs
+unasked, and on the speaker the audio is the entire point.
+
+**Only add one where a still genuinely cannot do the job**, because the file lives in git
+history for good. Sound qualifies. So does a dark room. A clip of a static subject does
+not — check what actually changes across it before spending the megabytes.
 
 **Expandable and linked are mutually exclusive.** A row that has a `github` or a `demo`
 uses that as its stretched hit area and ignores its figures, because one click cannot mean

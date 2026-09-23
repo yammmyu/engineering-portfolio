@@ -63,7 +63,12 @@ const projects = [...projectsSrc.matchAll(/new Project\(\{([\s\S]*?)\}\)/g)].map
       const block = body.match(/video:\s*\{([\s\S]*?)\}/)?.[1]
       if (!block) return null
       const field = n => block.match(new RegExp(`${n}:\\s*'([^']+)'`))?.[1] ?? null
-      return { src: field('src'), poster: field('poster'), key: field('key') }
+      return {
+        src: field('src'),
+        poster: field('poster'),
+        key: field('key'),
+        position: field('position'),
+      }
     })(),
   }
 })
@@ -317,6 +322,15 @@ for (const { id, figures, link, video } of projects) {
   if (video) {
     if (!translations[video.key]) {
       fail('src/translations.json', `video on "${id}" maps to missing key "${video.key}"`)
+    }
+    // A malformed `object-position` is not an error to the browser — it drops
+    // the declaration and silently falls back to centring, which on a 9:16 clip
+    // in a 16:10 frame crops the subject out rather than looking broken.
+    if (video.position && !/^\d{1,3}% \d{1,3}%$/.test(video.position)) {
+      fail(
+        'src/components/Projects.jsx',
+        `video on "${id}" has position "${video.position}" — expected e.g. "50% 36%"`,
+      )
     }
     for (const [field, path] of [
       ['src', video.src],

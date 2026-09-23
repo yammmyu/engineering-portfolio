@@ -67,6 +67,16 @@ const PROJECTS = [
     id: 'proj_lightpanel',
     tags: ['mechanical', 'electronics', 'fabrication'],
     image: '/projects/proj_lightpanel.jpg',
+    // The panels lit, in the dark, which is the one thing the drawings and the
+    // bare printed parts cannot show.
+    video: {
+      src: '/projects/proj_lightpanel-lit.mp4',
+      poster: '/projects/proj_lightpanel-lit.jpg',
+      key: 'proj_lightpanel_fig_lit',
+      // The cluster sits lower in this frame than the speaker does in its own,
+      // at ~53% of the height.
+      position: '50% 54%',
+    },
     figures: [
       { src: '/projects/proj_lightpanel-sketch.jpg', key: 'proj_lightpanel_fig_sketch' },
       { src: '/projects/proj_lightpanel-cad.jpg', key: 'proj_lightpanel_fig_cad' },
@@ -82,6 +92,9 @@ const PROJECTS = [
       src: '/projects/proj_speaker-demo.mp4',
       poster: '/projects/proj_speaker-demo.jpg',
       key: 'proj_speaker_fig_demo',
+      // The speaker sits at ~40% of the frame height; this centres the 16:10
+      // band on it. See `position` in models/Project.js.
+      position: '50% 36%',
     },
     figures: [
       { src: '/projects/proj_speaker-internals.jpg', key: 'proj_speaker_fig_internals' },
@@ -244,8 +257,11 @@ function DetailPanel({ project, number, id, open }) {
                       preload="none"
                       controls
                       playsInline
-                      aria-label={t('projects_demo_aria')}
-                      className="aspect-[16/10] w-full border border-rule-strong bg-paper object-cover [object-position:50%_36%]"
+                      // The separator lives in the string, not here: Chinese
+                      // wants a full-width colon and no space after it.
+                      aria-label={`${t('projects_video_aria')}${t(project.video.key)}`}
+                      style={{ objectPosition: project.video.position }}
+                      className="aspect-[16/10] w-full border border-rule-strong bg-paper object-cover"
                     />
                     <figcaption className="label mt-2">
                       {t('projects_fig_label')} {number}.1 · {t(project.video.key)}

@@ -18,6 +18,43 @@ Template:
 
 ---
 
+## 2026-09-23 — The panels lit, as a second video; `position` moved into the data
+
+**Did:** Same treatment as P-08's sound demo, now on P-07: `Fig. 07.1 · Lit`, the clip of
+the panels lit on the wall. `Preset640x480`, 360×640, **2.4MB**.
+
+`PresetLowQuality` is 147kB and unusable here — at 128×224 the individual LEDs smear into
+one glow and the panel edges disappear, which is the entire content of the shot.
+`Preset960x540` is 4.4MB and indistinguishable from 640×480 at the 330px the cell renders
+at. Compared all three side by side at display size rather than guessing.
+
+**`object-position` is now a `position` field on the video**, not a Tailwind arbitrary
+class. The speaker sits at ~40% of its frame height and the panel cluster at ~53% of its
+own, so a single hardcoded value was already wrong for the second clip. Only ~35% of a 9:16
+frame survives a 16:10 crop, so a wrong value silently crops the subject out rather than
+looking broken — hence the new check that it is two percentages.
+
+**The aria-label is composed now** — `projects_video_aria` + the caption key — so a new
+video needs one key, not two. The separator lives in the string because Chinese wants a
+full-width colon and no space after it; `视频：点亮`, not `视频: 点亮`.
+
+**Why:** Requested.
+
+**Open — worth reading before this ships:**
+- **The clip does not show the panels animating.** Nine frames sampled across the eight
+  seconds all carry the same purple/blue/cyan pattern; the movement in it is the camera
+  drifting, not the lights. So unlike the speaker — where sound is something no still can
+  carry — this video is close to a duplicate of `proj_lightpanel.jpg`, **which is itself a
+  frame from this same clip**. The row figure and the panel's first cell are the same scene.
+  If there is footage of the colours cycling, that is the clip that earns 2.4MB; this one is
+  the user's call.
+- Headless Chrome will not reliably seek or play a video under `--virtual-time-budget`:
+  frame-accurate sampling silently returns frame 0, and three of four playback screenshots
+  came back byte-identical. Two separate canvas methods agreed on a wrong answer before I
+  caught it by parsing per-frame sizes out of the MP4 `stsz` box instead. **Do not trust a
+  headless measurement of video content without a cross-check.**
+- Two videos now put ~6.3MB of binaries in git history permanently.
+
 ## 2026-09-22 — Registry reordered by hand; BOM references now sort
 
 **Did:** Reordered the robotics run to the sequence he asked for: internship, Engineer arm,
