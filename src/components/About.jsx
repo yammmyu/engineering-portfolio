@@ -12,31 +12,39 @@ import { PROJECT_REFS } from './Projects.jsx'
 // `usedIn` holds project ids; the P-NN reference comes from the registry order
 // in Projects.jsx so it can never disagree with the list itself.
 //
-// Only cite what a project description actually states. Several of these are
-// surely used more widely — P-01 is a robotics deployment, P-04 a mechanical
-// build — but which tool did what on a given project is the author's fact to
-// give, not one to infer from a tag. A dash is the honest entry until he says
-// otherwise, and it prompts the question instead of answering it wrongly.
+// Which tool did what on a given project is the author's fact to give, never
+// one to infer from a tag or a description. Most of these rows were a dash
+// until he named the projects himself; the render still falls back to a dash
+// rather than an empty cell, so a new skill can be added before he has said
+// where it was used, and the gap reads as a question rather than an omission.
 const SKILLS = [
   {
     name: 'SolidWorks / CAD',
     usedIn: ['proj_engineer_arm', 'proj_slam', 'proj_arm', 'proj_lightpanel'],
   },
-  { name: 'FEA & Simulation', usedIn: [] },
+  { name: 'FEA & Simulation', usedIn: ['proj_engineer_arm', 'proj_arm'] },
   // The table had no row for making the thing, only for designing and
   // programming it — so printing, laser cutting and soldering were invisible on
-  // a page whose whole argument is that he builds. It cites the bench rows
-  // because they are what their descriptions state. Others are surely fabricated
-  // too — the delivery robot and the moving target among them — and stay uncited
-  // until he says so. Named rather than numbered on purpose: P-NN comes from the
-  // registry order, so a comment citing one goes stale the next time a row moves.
-  { name: '3D Printing / Fabrication', usedIn: ['proj_lightpanel', 'proj_speaker'] },
+  // a page whose whole argument is that he builds. Printing now cites the
+  // competition and lab builds as well as the bench ones, on the author's say —
+  // the bench rows are the only ones whose descriptions state it outright.
+  {
+    name: '3D Printing / Fabrication',
+    usedIn: [
+      'proj_engineer_arm',
+      'proj_arm',
+      'proj_aimbot',
+      'proj_slam',
+      'proj_lightpanel',
+      'proj_speaker',
+    ],
+  },
   { name: 'Soldering / Wiring', usedIn: ['proj_speaker'] },
   { name: 'ROS / ROS2', usedIn: ['proj_slam', 'proj_arm'] },
-  { name: 'Arduino / STM32', usedIn: [] },
-  { name: 'Python', usedIn: [] },
-  { name: 'C / C++', usedIn: [] },
-  { name: 'Git', usedIn: [] },
+  { name: 'Arduino / STM32', usedIn: ['proj_engineer_arm', 'proj_arm', 'proj_aimbot'] },
+  { name: 'Python', usedIn: ['proj_arm', 'proj_slam'] },
+  { name: 'C / C++', usedIn: ['proj_humanoid', 'proj_arm'] },
+  { name: 'Git', usedIn: ['proj_humanoid', 'proj_slam'] },
 ]
 
 export default function About() {

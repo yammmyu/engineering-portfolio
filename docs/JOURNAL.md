@@ -18,6 +18,22 @@ Template:
 
 ---
 
+## 2026-09-23 — The BOM's "used in" column filled in
+
+**Did:** The author named the projects behind six skills, so `SKILLS` in `About.jsx` now
+cites them: FEA P-02/03, 3D printing P-02/03/04 plus the two bench rows it already had,
+Arduino/STM32 P-02/03/04, Python P-03/05, C/C++ P-01/03, Git P-01/05. Every row in the
+table is now cited and no cell renders a dash.
+
+**Why:** The column existed to turn claims into an index into the evidence, and half of it
+was dashes because no project description states which tool did what. That is his fact to
+give, and he gave it. Printing kept P-07/P-08 as well as the four he named — those two are
+stated outright in their descriptions, so dropping them would have lost real citations.
+
+**Open:** The dash fallback in the render is now unexercised — keep it, it is the path a
+newly added skill takes before he says where it was used. Git and Python are surely used
+more widely than two rows each; that is still his call, not ours.
+
 ## 2026-09-23 — Résumé links hidden on the contact sheet
 
 **Did:** Added a `hidden` flag to the `CONTACT_LINKS` rows in `Contact.jsx` and filtered
