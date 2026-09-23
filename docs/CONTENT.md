@@ -161,6 +161,29 @@ linking somewhere that 404s.
 without being links — see below. If they ever gain links, check a link-less row by hand
 when you change how a row links, because nothing on the page will catch you.
 
+### Hiding a row
+
+`hidden: true` on a `Project` parks it: it stays in the registry — id, tags, links,
+translations, images all intact — but nothing renders it and it does not take a `P-NN`.
+Use it when the author wants a row off the page for now. Deleting the row instead means
+re-deriving the entry from nothing later, and it strands its translation keys.
+
+The numbering comes from the *visible* rows, so hiding a row in the middle of the list
+renumbers everything below it. That is correct — a gap would read as a missing row — but
+it means the `P-NN` in any prose you have written about the list moves. Hiding the last
+row costs nothing.
+
+`npm run check` still holds a hidden row to every rule: its keys are still required, its
+figure files still verified. A parked row cannot quietly rot while it is out of sight. Two
+things it additionally catches, both of which are silent on the page:
+
+- a skills BOM entry citing a hidden row — `PROJECT_REFS` has no entry for one, so the
+  cell would print `undefined`;
+- a `GROUP_HEADINGS` run starting at a hidden row — the cut never happens and the run
+  merges into the one above it, under a heading that does not describe it.
+
+To bring a row back, delete the one line.
+
 ### Detail panels
 
 A row with `figures` becomes expandable: the title turns into a toggle, the whole row is

@@ -2,6 +2,11 @@ import React from 'react'
 import { useTranslation } from '../context/LanguageContext.jsx'
 import { SectionHeader, Reveal, Sheet } from './Section.jsx'
 
+// `hidden` takes a row out of the rendered list without deleting it. The two
+// résumé rows are parked this way at the author's request, temporarily — the
+// keys, hrefs, and translations stay intact, so bringing them back is deleting
+// one flag per row. Cutting the rows outright was the first instinct, but that
+// also stranded contact_resume_*_label in translations.json and lost the hrefs.
 const CONTACT_LINKS = [
   {
     labelKey: 'contact_email_label',
@@ -22,11 +27,13 @@ const CONTACT_LINKS = [
     labelKey: 'contact_resume_en_label',
     href: '/resume-en.pdf',
     display: 'resume-en.pdf',
+    hidden: true,
   },
   {
     labelKey: 'contact_resume_zh_label',
     href: '/resume-zh.pdf',
     display: 'resume-zh.pdf',
+    hidden: true,
   },
 ]
 
@@ -47,7 +54,7 @@ export default function Contact() {
 
           <Reveal delay={80} className="lg:col-span-7">
             <ul className="border-t border-rule">
-              {CONTACT_LINKS.map(link => {
+              {CONTACT_LINKS.filter(link => !link.hidden).map(link => {
                 const external = link.href.startsWith('http')
                 return (
                   <li

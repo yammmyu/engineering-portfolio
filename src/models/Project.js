@@ -8,6 +8,7 @@ export class Project {
     image = null,
     figures = [],
     video = null,
+    hidden = false,
   }) {
     this.id = id
     this.tags = tags
@@ -41,6 +42,16 @@ export class Project {
     // — it is measured from the footage, not guessed. Never autoplayed, and
     // never muted to get around that: nothing here performs without being asked.
     this.video = video
+    // Parks a row: it stays in the registry — id, tags, links, translations all
+    // intact — but nothing renders it and it does not take a P-NN. For a row
+    // the author wants off the page for now, where deleting it would mean
+    // re-deriving the entry later from nothing.
+    //
+    // `npm run check` still sees a hidden row, on purpose: its keys stay
+    // required and its files stay verified, so a parked row can't rot while
+    // it's out of sight. What check does enforce is that nothing visible cites
+    // one — a hidden row has no reference number for the BOM to print.
+    this.hidden = hidden
   }
 
   get titleKey() {

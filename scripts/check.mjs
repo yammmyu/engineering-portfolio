@@ -52,6 +52,9 @@ const projects = [...projectsSrc.matchAll(/new Project\(\{([\s\S]*?)\}\)/g)].map
     id,
     tags,
     date: body.match(/date:\s*'([^']+)'/)?.[1] ?? null,
+    // A parked row — still in the registry, not on the page. Everything below
+    // still holds it to the same standard; only what cites it changes.
+    hidden: /hidden:\s*true/.test(body),
     image: body.match(/image:\s*'([^']+)'/)?.[1] ?? null,
     link: body.match(/(?:github|demo):\s*'([^']+)'/)?.[1] ?? null,
     figures: [
@@ -103,6 +106,7 @@ for (const { id } of projects) {
 }
 
 const ids = projects.map(p => p.id)
+const visibleIds = projects.filter(p => !p.hidden).map(p => p.id)
 const duplicates = ids.filter((id, i) => ids.indexOf(id) !== i)
 for (const id of new Set(duplicates)) {
   fail('src/components/Projects.jsx', `duplicate project id "${id}"`)
@@ -250,6 +254,11 @@ for (const { name, usedIn } of skills) {
   for (const id of usedIn) {
     if (!ids.includes(id)) {
       fail('src/components/About.jsx', `skill "${name}" cites "${id}", which is not a project`)
+    } else if (!visibleIds.includes(id)) {
+      // Hiding a row is the other way to print "undefined" in that cell: the
+      // id is still in the registry, so the check above passes, but PROJECT_REFS
+      // is built from the visible rows and has no entry for it.
+      fail('src/components/About.jsx', `skill "${name}" cites "${id}", which is a hidden project`)
     }
   }
 }
@@ -274,9 +283,15 @@ for (const { id, key } of groupHeadings) {
       `GROUP_HEADINGS starts a run at "${id}", which is not a project`,
     )
   }
+  // A hidden row never reaches groupRows, so the cut it was supposed to start
+  // silently doesn't happen and its run merges into the one above it, under a
+  // heading that does not describe it.
+  if (ids.includes(id) && !visibleIds.includes(id)) {
+    fail('src/components/Projects.jsx', `GROUP_HEADINGS starts a run at "${id}", a hidden project`)
+  }
   // The first row can't start a run — its heading would sit above the whole
   // list and read as the heading for rows it does not cover.
-  if (ids[0] === id) {
+  if (visibleIds[0] === id) {
     fail('src/components/Projects.jsx', `GROUP_HEADINGS starts a run at "${id}", the first row`)
   }
   if (!translations[key]) {
@@ -359,8 +374,14 @@ if (errors.length) {
   console.log(`\n✗ check failed — ${errors.length} error(s)\n`)
   process.exit(1)
 }
+// The count is of the registry, not the page: a hidden row is still checked, so
+// saying "10 projects" while the section header reads 09 items is the honest
+// report. It is called out so the two numbers disagreeing doesn't read as a bug.
+const parked = projects.length - visibleIds.length
 console.log(
-  `\n✓ check passed — ${projects.length} projects, ${Object.keys(translations).length} translation keys` +
+  `\n✓ check passed — ${projects.length} projects` +
+    (parked ? ` (${parked} hidden)` : '') +
+    `, ${Object.keys(translations).length} translation keys` +
     (warnings.length ? `, ${warnings.length} warning(s)` : '') +
     '\n',
 )

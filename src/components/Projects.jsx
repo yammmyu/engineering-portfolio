@@ -107,12 +107,21 @@ const PROJECTS = [
     github: 'https://github.com/yammmyu/bloomcraft',
     image: '/projects/bloomcraft.jpg',
   }),
+  // Parked at the author's request, temporarily. It is the last row, so nothing
+  // above it shifts reference number while it is out — see `hidden` on Project.
   new Project({
     id: 'proj_portfolio',
     tags: ['software'],
     github: 'https://github.com/yammmyu/engineering-portfolio',
+    hidden: true,
   }),
 ]
+
+// What the page actually renders. Everything downstream — the reference
+// numbers, the count in the section header, the group cuts — reads this, not
+// PROJECTS, so a parked row leaves no gap in the numbering and is not counted
+// among the items the heading promises.
+const VISIBLE_PROJECTS = PROJECTS.filter(project => !project.hidden)
 
 // The registry is one list read top down, cut into runs by the row that starts
 // each one. The first run takes no heading — the section heading is its
@@ -146,11 +155,13 @@ const LINK_KINDS = [
 
 /**
  * Row reference for a project id — `P-03`. The BOM in About.jsx cites rows by
- * these, and the numbering comes from this array's order, so it is derived here
- * rather than written out twice and left to drift the next time a row moves.
+ * these, and the numbering comes from the visible list's order, so it is derived
+ * here rather than written out twice and left to drift the next time a row
+ * moves. A hidden row is absent from this map, so a citation to one resolves to
+ * undefined — `npm run check` fails on that before it can print on the page.
  */
 export const PROJECT_REFS = Object.fromEntries(
-  PROJECTS.map((project, i) => [project.id, `P-${String(i + 1).padStart(2, '0')}`]),
+  VISIBLE_PROJECTS.map((project, i) => [project.id, `P-${String(i + 1).padStart(2, '0')}`]),
 )
 
 /**
@@ -490,8 +501,8 @@ function groupRows(projects) {
 
 export default function Projects() {
   const t = useTranslation()
-  const count = String(PROJECTS.length).padStart(2, '0')
-  const groups = groupRows(PROJECTS)
+  const count = String(VISIBLE_PROJECTS.length).padStart(2, '0')
+  const groups = groupRows(VISIBLE_PROJECTS)
 
   return (
     <section id="projects" className="py-20 sm:py-28">

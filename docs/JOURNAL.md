@@ -18,6 +18,22 @@ Template:
 
 ---
 
+## 2026-09-23 — Résumé links hidden on the contact sheet
+
+**Did:** Added a `hidden` flag to the `CONTACT_LINKS` rows in `Contact.jsx` and filtered
+on it at render. The two résumé rows carry it, so the contact list now shows email,
+LinkedIn, and GitHub only.
+
+**Why:** The author asked for the résumé links to be hidden temporarily. Deleting the rows
+would have stranded `contact_resume_en_label` / `contact_resume_zh_label` in
+`translations.json` and lost the hrefs; the flag keeps the whole row intact so restoring
+it is deleting one line.
+
+**Open:** `public/resume-en.pdf` and `public/resume-zh.pdf` are untouched and still ship
+in the build — anyone with the URL can fetch them. If the intent was to make the PDFs
+unreachable rather than just unlisted, they need to come out of `public/` too. Remove the
+two `hidden: true` lines to bring the rows back.
+
 ## 2026-09-23 — The panels lit, as a second video; `position` moved into the data
 
 **Did:** Same treatment as P-08's sound demo, now on P-07: `Fig. 07.1 · Lit`, the clip of
