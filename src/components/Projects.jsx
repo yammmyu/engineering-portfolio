@@ -12,6 +12,15 @@ const TAG_LABEL_KEYS = {
   fabrication: 'projects_tag_fabrication',
 }
 
+// When the work was done, in terms of where the author was at the time. Two
+// values only, and deliberately not a year: a reader scanning the sheet wants
+// to know whether a row is student work or schoolboy work, and a date makes
+// them do that arithmetic themselves against a CV they may not have read.
+const PERIOD_LABEL_KEYS = {
+  university: 'projects_period_university',
+  highschool: 'projects_period_highschool',
+}
+
 // Ordered by how much robotics is in them, not by date — the list is read top
 // down and the first two rows are what the section is about.
 const PROJECTS = [
@@ -23,6 +32,7 @@ const PROJECTS = [
   new Project({
     id: 'proj_humanoid',
     tags: ['robotics', 'software'],
+    period: 'university',
     github: 'https://github.com/yammmyu/MUJIN_Internship_Summer2026',
     image: '/projects/proj_humanoid.jpg',
   }),
@@ -32,30 +42,35 @@ const PROJECTS = [
   new Project({
     id: 'proj_engineer_arm',
     tags: ['robotics', 'mechanical'],
+    period: 'university',
     github: 'https://github.com/yammmyu/RM2026_Engineer_Arm',
     image: '/projects/proj_engineer_arm.jpg',
   }),
   new Project({
     id: 'proj_arm',
     tags: ['robotics', 'mechanical', 'firmware'],
+    period: 'highschool',
     github: 'https://github.com/yammmyu/Ybot',
     image: '/projects/proj_arm.jpg',
   }),
   new Project({
     id: 'proj_aimbot',
     tags: ['robotics', 'mechanical', 'electronics'],
+    period: 'university',
     github: 'https://github.com/yammmyu/Moving_Aimbot_Target',
     image: '/projects/proj_aimbot.jpg',
   }),
   new Project({
     id: 'proj_slam',
     tags: ['robotics', 'mechanical', 'software'],
+    period: 'university',
     github: 'https://github.com/yammmyu/YanyuChen_CDE2310_Project',
     image: '/projects/proj_slam.jpg',
   }),
   new Project({
     id: 'proj_pcb',
     tags: ['robotics', 'electronics'],
+    period: 'university',
     github: 'https://github.com/nusrobomaster-comp/PCB27',
     image: '/projects/proj_pcb.jpg',
   }),
@@ -66,6 +81,7 @@ const PROJECTS = [
   new Project({
     id: 'proj_lightpanel',
     tags: ['mechanical', 'electronics', 'fabrication'],
+    period: 'highschool',
     image: '/projects/proj_lightpanel.jpg',
     // The panels lit, in the dark, which is the one thing the drawings and the
     // bare printed parts cannot show.
@@ -86,6 +102,7 @@ const PROJECTS = [
   new Project({
     id: 'proj_speaker',
     tags: ['electronics', 'mechanical', 'fabrication'],
+    period: 'highschool',
     image: '/projects/proj_speaker.jpg',
     // The only row whose evidence is audible rather than visual.
     video: {
@@ -104,6 +121,7 @@ const PROJECTS = [
   new Project({
     id: 'bloomcraft',
     tags: ['software'],
+    period: 'highschool',
     github: 'https://github.com/yammmyu/bloomcraft',
     image: '/projects/bloomcraft.jpg',
   }),
@@ -112,6 +130,7 @@ const PROJECTS = [
   new Project({
     id: 'proj_portfolio',
     tags: ['software'],
+    period: 'university',
     github: 'https://github.com/yammmyu/engineering-portfolio',
     hidden: true,
   }),
@@ -375,6 +394,20 @@ function ProjectRow({ project, index }) {
             {ref}
           </span>
           {project.date && <span className="label sm:mt-1.5 sm:block">{project.date}</span>}
+          {/* The period sits in the rail rather than on the tag line, in the
+              same `.label` treatment as the date. It is a property of the row,
+              like the P-NN and the date, not a property of the work like the
+              tags — and the tag line is the row's one piece of running text, so
+              a fourth mark on it made "Mechanical · Electronics · Fabrication ·
+              High school" read as though he had built a school.
+
+              It does not take the hover wash. Two of the three marks in this
+              rail lighting up and the third staying put looked like a bug, so
+              only the reference — the one that means "this row is a thing you
+              can press" — responds. */}
+          {project.period && (
+            <span className="label sm:mt-1.5 sm:block">{t(PERIOD_LABEL_KEYS[project.period])}</span>
+          )}
         </div>
 
         {/* Everything about the project sits in one column at a readable

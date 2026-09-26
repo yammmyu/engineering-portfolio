@@ -18,6 +18,56 @@ Template:
 
 ---
 
+## 2026-09-27 — Every project row says when it was done
+
+**Did:** New required `period` field on `Project` — `'university'` or `'highschool'`, keyed
+through `PERIOD_LABEL_KEYS` in `Projects.jsx` the way tags are. High school: P-03 YBot,
+P-07 panels, P-08 speaker, P-09 BloomCraft. University: everything else, including the
+parked portfolio row. It renders in the row's left rail under the P-NN, in the same
+`.label` as `date`, and `npm run check` now fails on a row without one or with a value
+that isn't registered (rule 10b).
+
+**Why:** The rail already existed for exactly this kind of datum and was carrying one mark
+on every row, because no row sets `date`. Two rejected alternatives: appending it to the
+tag line, where "Mechanical · Electronics · Fabrication · High school" reads as a fourth
+material; and a year, which makes the reader do arithmetic against a CV they may not have
+read to answer the question they actually have, which is whether a row is student work or
+schoolboy work. The period does not take the hover wash — only the reference does, since
+it is the mark that means the row is pressable, and two of three rail marks lighting up
+looked like a bug.
+
+**Open:** `date` is still unused by every row and still optional. If dates are ever filled
+in, the rail becomes three lines on desktop and inline-wraps on a phone — check that before
+adding them rather than after.
+
+## 2026-09-26 — Project descriptions rewritten from the repo READMEs
+
+**Did:** Rewrote all eight visible `proj_*_desc` / `bloomcraft_desc` entries (EN and ZH)
+against the README of each linked repository, at roughly their previous length. Every
+description now follows one shape, set by the author: state objectively what the thing is
+and what it does, then name the main technology that makes it work. Formal register, no
+second person, no rhetorical framing. Each one still opens with the artefact rather than
+with a term of art, so a reader outside robotics knows what they are looking at by the end
+of the first clause. Facts pulled from the READMEs: the S$610 BOM on P-03, the nine-ball
+gravity magazine and cam launcher on P-05, piezo TDOA impact location on P-06, the
+fine-tuned SD 2.1 renderer and the cultural-meaning field on P-09.
+
+**Why:** The descriptions were written for someone who already knew the domain. A first
+pass fixed that but drifted into a conversational second person ("say what the occasion
+is, and it chooses the flowers"), which reads as marketing copy on a page whose whole
+argument is engineering judgement. The author corrected it; the form above is his.
+
+**Open:** Two rows had no README to read. `nusrobomaster-comp/PCB27` is private (404
+unauthenticated), so P-06 was reworded from its existing copy only — check it against the
+repo if you get access. P-07 and P-08 have no repo; their `_detail` text was the source.
+One thing to confirm with the author: the aimbot README (`Moving_Aimbot_Target`) is a PRD
+and a roadmap with decisions D1–D6 still open, i.e. the machine is not built, while the
+copy on the page reads as existing equipment. I kept the existing framing rather than
+silently downgrade his claim, but it should be his call. Also note P-09: the author's
+example sentence said the diffusion model was trained from scratch, and the BloomCraft
+README says it is Stable Diffusion 2.1 fine-tuned with DreamBooth. The description says
+fine-tuned.
+
 ## 2026-09-23 — The BOM's "used in" column filled in
 
 **Did:** The author named the projects behind six skills, so `SKILLS` in `About.jsx` now

@@ -51,6 +51,7 @@ const projects = [...projectsSrc.matchAll(/new Project\(\{([\s\S]*?)\}\)/g)].map
   return {
     id,
     tags,
+    period: body.match(/period:\s*'([^']+)'/)?.[1] ?? null,
     date: body.match(/date:\s*'([^']+)'/)?.[1] ?? null,
     // A parked row — still in the registry, not on the page. Everything below
     // still holds it to the same standard; only what cites it changes.
@@ -75,6 +76,12 @@ const projects = [...projectsSrc.matchAll(/new Project\(\{([\s\S]*?)\}\)/g)].map
     })(),
   }
 })
+
+const registeredPeriods = [
+  ...(projectsSrc.match(/const PERIOD_LABEL_KEYS = \{([\s\S]*?)\}/)?.[1] ?? '').matchAll(
+    /(\w+):\s*'([^']+)'/g,
+  ),
+].map(m => ({ period: m[1], key: m[2] }))
 
 const registeredTags = [
   ...(projectsSrc.match(/const TAG_LABEL_KEYS = \{([\s\S]*?)\}/)?.[1] ?? '').matchAll(
@@ -230,6 +237,24 @@ for (const { id, date } of projects) {
       'src/components/Projects.jsx',
       `project "${id}" has date "${date}" — expected e.g. "2025-06", "2025-06 → 08", "2025-06 → now"`,
     )
+  }
+}
+
+// ── 10b. Every row says when it was done ─────────────────────────────────────
+// Unlike `date`, `period` is required: the rail prints it on every other row,
+// and one row silently missing it reads as a row the author is being vague
+// about rather than as a field nobody filled in. An unregistered value renders
+// as an empty span, which is the same silence with more steps.
+for (const { id, period } of projects) {
+  if (!period) {
+    fail('src/components/Projects.jsx', `project "${id}" has no period`)
+  } else if (!registeredPeriods.some(r => r.period === period)) {
+    fail('src/components/Projects.jsx', `project "${id}" has unregistered period "${period}"`)
+  }
+}
+for (const { period, key } of registeredPeriods) {
+  if (!translations[key]) {
+    fail('src/translations.json', `period "${period}" has no "${key}" key`)
   }
 }
 

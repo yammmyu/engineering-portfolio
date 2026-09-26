@@ -4,13 +4,13 @@
   "nav_contact":        { "en": "Contact",  "zh": "联系方式" },
   "nav_lang_aria":      { "en": "Switch language", "zh": "切换语言" },
 
-  "sheet_label":        { "en": "Sheet", "zh": "图纸" },
+  "sheet_label":        { "en": "Sheet", "zh": "章节" },
 
   "hero_greeting": { "en": "Hi, I'm",    "zh": "你好，我是" },
   "hero_name":     { "en": "Yanyu Chen", "zh": "陈彦宇" },
   "hero_tagline": {
     "en": "Robotics, Machines and Intelligence",
-    "zh": "机器人及机器学习，机甲大师（Robomaster）"
+    "zh": "机器人，具身智能，机甲大师（Robomaster）"
   },
   "hero_cta_projects":   { "en": "View Projects",                         "zh": "了解更多" },
   "hero_cta_contact":    { "en": "Get in Touch",                          "zh": "联系我" },
@@ -22,14 +22,14 @@
   "hero_fig_mode_manual": { "en": "Manual",                               "zh": "手动" },
   "hero_fig_collision":  { "en": "Self-collision",                        "zh": "自碰撞" },
 
-  "tb_role":            { "en": "Role", "zh": "身份" },
-  "tb_role_value":      { "en": "Robotics Engineering Student", "zh": "机器人工程在读" },
+  "tb_role":            { "en": "Role", "zh": "专业" },
+  "tb_role_value":      { "en": "Robotics Engineering Student", "zh": "机器人工程大二" },
   "tb_focus":           { "en": "Focus", "zh": "方向" },
   "tb_focus_value":     { "en": "Mechanical · Firmware · Software", "zh": "机械 · 嵌入式 · 软件" },
-  "tb_status":          { "en": "Status", "zh": "状态" },
-  "tb_status_value":    { "en": "Open to internships", "zh": "开放实习机会" },
-  "tb_lang":            { "en": "Languages", "zh": "语言" },
-  "tb_lang_value":      { "en": "EN · 中文", "zh": "EN · 中文" },
+  "tb_status":          { "en": "Status", "zh": "工作状态" },
+  "tb_status_value":    { "en": "Open to internships", "zh": "实习求职中" },
+  "tb_lang":            { "en": "Languages", "zh": "沟通语言" },
+  "tb_lang_value":      { "en": "EN · 中文 · DE", "zh": "EN · 中文 · DE" },
 
   "experience_heading":     { "en": "Experience", "zh": "经历" },
   "experience_items_label": { "en": "Entries",    "zh": "条" },
@@ -47,12 +47,12 @@
   "about_skills_heading": { "en": "Tech Stack", "zh": "技能栈" },
   "bom_col_item":         { "en": "Item", "zh": "编号" },
   "bom_col_designation":  { "en": "Designation", "zh": "名称" },
-  "bom_col_used_in":      { "en": "Used in", "zh": "应用于" },
+  "bom_col_used_in":      { "en": "Used in Project #", "zh": "应用于" },
 
   "projects_heading": { "en": "Projects", "zh": "项目" },
   "projects_subheading": {
     "en": "Autonomy, control, and the hardware underneath — plus a few things built for their own sake. Most rows link to the repository.",
-    "zh": "自主导航、运动控制及其底层硬件，以及一些纯粹出于兴趣的项目。多数条目可跳转至代码仓库。"
+    "zh": "自主导航、运动控制及其底层硬件，以及一些纯粹出于兴趣的项目。点击查看详情或跳转代码仓库。"
   },
   "projects_items_label":     { "en": "Items",       "zh": "项" },
   "projects_bench_heading":   { "en": "Bench builds", "zh": "自制硬件" },
@@ -63,6 +63,8 @@
   "projects_tag_robotics":    { "en": "Robotics",    "zh": "机器人" },
   "projects_tag_firmware":    { "en": "Firmware",    "zh": "嵌入式" },
   "projects_tag_fabrication": { "en": "Fabrication", "zh": "加工制作" },
+  "projects_period_university": { "en": "University",  "zh": "大学" },
+  "projects_period_highschool": { "en": "High school", "zh": "高中" },
   "projects_link_github":     { "en": "GitHub",      "zh": "GitHub" },
   "projects_link_demo":       { "en": "Demo",        "zh": "演示" },
   "projects_detail_show":     { "en": "Detail",      "zh": "详情" },
@@ -72,44 +74,44 @@
 
   "proj_humanoid_title": { "en": "Imitation-Learned Dual-Arm Parcel Handling", "zh": "模仿学习双臂包裹处理" },
   "proj_humanoid_desc": {
-    "en": "A dual-arm humanoid that picks a parcel, judges whether its shipping label is showing, and flips it if not — learned from 200 VR demonstrations rather than programmed. I built the deployment side: policy output becomes motion only through a transparent IK solver and a physics check.",
-    "zh": "双臂人形机器人从台面抓起包裹，判断快递单是否朝上，不朝上就将其翻转——这套动作由 200 组 VR 示教学习而来，而非编程写定。我负责 policy 之外的部署链路：自建 IK 求解器与下发前的仿真校验，是策略输出成为实际动作的唯一通路。"
+    "en": "A dual-arm humanoid that picks up a parcel, determines whether its shipping label faces upward, and flips the parcel when it does not. The behaviour is learned by imitation from 200 VR teleoperation demonstrations rather than programmed. My contribution is the deployment stack between the trained model and the robot: an inverse-kinematics solver that converts the model's requested hand poses into joint motion, and a physics simulation that validates every trajectory before the arms execute it.",
+    "zh": "双臂人形机器人抓取包裹、判断快递单是否朝上，并在不朝上时将其翻转。该动作并非编程写定，而是由 200 组 VR 遥操作示教通过模仿学习得到。我负责模型与真机之间的部署链路：将模型输出的手部位姿解算为关节运动的逆运动学求解器，以及在真机执行前校验每一段轨迹的物理仿真。"
   },
 
   "proj_engineer_arm_title": { "en": "RoboMaster Engineer Arm", "zh": "RoboMaster 工程机器人机械臂" },
   "proj_engineer_arm_desc": {
-    "en": "The 6-DOF manipulator on NUS Calibur's RoboMaster Engineer, which I designed — carbon fibre and aluminium, holding a 500 g payload at full reach on motor torque alone. v1 shook because a single bearing carried a tipping moment into a plate bending the way a plate is weakest; supporting the shoulder on both sides fixed it, and v2 took First Prize at RMUL 2026.",
-    "zh": "我为 NUS Calibur 战队 RoboMaster 工程机器人设计的六自由度机械臂：碳纤维与铝结构，全伸展下仅靠电机扭矩托住 500 g 负载。v1 抖动的原因是单个轴承把倾覆力矩传入板件最不耐弯的方向；改为肩关节双侧支撑后解决，v2 在 RMUL 2026 获一等奖。"
+    "en": "A six-joint manipulator for the RoboMaster Engineer robot of NUS Calibur, designed by me: a carbon-fibre and aluminium structure holding a 500 g payload at full extension on motor torque alone, with no springs or counterweights. The first version oscillated because each joint was supported on one side only, so a lateral load at the gripper bent its mounting plate and the deflection was amplified along the arm. The second version supports the shoulder on both sides, and took First Prize at RMUL 2026.",
+    "zh": "为 NUS Calibur 战队 RoboMaster 工程机器人设计的六关节机械臂：碳纤维与铝结构，在无弹簧、无配重的条件下仅靠电机扭矩于完全伸展时托住 500 g 负载。第一版存在振动，原因是各关节仅单侧支撑，夹爪处的侧向载荷会使安装板弯曲，形变沿臂长被放大。第二版改为肩关节双侧支撑，并在 RMUL 2026 获一等奖。"
   },
 
   "proj_slam_title": { "en": "Precision-Docking Delivery Robot", "zh": "精准对接货物运送机器人" },
   "proj_slam_desc": {
-    "en": "A TurtleBot3 that explores a maze, finds ArUco markers, and launches balls into a receptacle unaided. I built the mechanics and the docking that squares it to the marker's normal.",
-    "zh": "自主探索迷宫、识别 ArUco 标记并将球射入接收装置的 TurtleBot3。我负责全部机械设计，以及使车身对正标记法线的精准对接。"
+    "en": "An autonomous TurtleBot3 that explores an unmapped maze, detects printed ArUco markers on its walls, docks square to one, and launches ping-pong balls into a receptacle without an operator. My contribution is the complete mechanical design — a nine-ball gravity-fed magazine and a cam-and-spring launcher — and the docking controller, which estimates the marker's pose from the camera image and aligns the robot to the marker's normal.",
+    "zh": "自主运行的 TurtleBot3：在未知迷宫中自主探索，识别墙面上的 ArUco 标记，正对标记停靠，并将乒乓球射入接收装置，全程无需操作手。我负责全部机械设计——九发重力供弹弹仓与凸轮弹片发射机构——以及停靠控制器：由相机图像估计标记位姿，并使车身对正标记法线。"
   },
 
   "proj_pcb_title": { "en": "Slip-Ring Interconnect Boards", "zh": "滑环互连电路板" },
   "proj_pcb_desc": {
-    "en": "Three KiCad boards carrying two CAN buses and three power rails across the rotating yaw joint of a RoboMaster sentry, each rail paralleled over several slip-ring channels in poured copper.",
-    "zh": "三块 KiCad 电路板，在 RoboMaster 哨兵持续旋转的 yaw 关节两侧传递两路 CAN 总线与三路电源；每路电源以敷铜并联分摊到多个滑环通道。"
+    "en": "Three KiCad boards that transfer power and control signals across the continuously rotating turret joint of a RoboMaster sentry through a slip ring, so the turret can rotate without limit and without twisting its cable harness. Two CAN buses and three power rails cross the interface, each rail paralleled over several slip-ring channels in poured copper so that no single channel carries the full current.",
+    "zh": "三块 KiCad 电路板，经滑环在 RoboMaster 哨兵持续旋转的云台关节两侧传递电源与控制信号，使云台可无限位旋转而不绞线。跨接口传输两路 CAN 总线与三路电源，每路电源以敷铜并联分摊到多个滑环通道，避免单一通道承担全部电流。"
   },
 
   "proj_aimbot_title": { "en": "Portable Moving Target for Auto-Aim", "zh": "便携式自瞄测试移动靶" },
   "proj_aimbot_desc": {
-    "en": "A spinning armour-plate rig that mimics robot movement and records where each projectile lands, so auto-aim testing no longer ties up a second robot and a driver — and packs down to travel to the competition. A two-person project; I own the mechanical design.",
-    "zh": "旋转靶架：以装甲板模拟机器人运动，并记录每发弹丸的落点，使自瞄测试不再占用第二台机器人和一名操作手，同时可拆装装箱、随队出行。两人项目，我负责全部机械设计。"
+    "en": "Test equipment for auto-aim development: a rig that drives an armour plate at a commanded speed and records the impact position of each projectile, so that testing no longer occupies a second robot and a driver, and sessions run weeks apart remain comparable. Impact position is located by timing the arrival of the shock at piezo sensors around the plate. It disassembles into a single checked bag for travel to competitions. A two-person project; the mechanical design is mine.",
+    "zh": "为自瞄开发提供的测试设备：靶架以设定速度驱动装甲板运动，并记录每发弹丸的落点，使测试不再占用第二台机器人和一名操作手，相隔数周的多次测试亦可横向比较。落点由板周压电传感器接收冲击的时间差定位。整机可拆装收入一只托运行李箱，随队参赛。两人项目，我负责全部机械设计。"
   },
 
   "proj_arm_title": { "en": "YBot — Custom Desktop 6-DOF Arm", "zh": "YBot 桌面级六自由度机械臂" },
   "proj_arm_desc": {
-    "en": "A 6-DOF arm designed and built from scratch: 3D-printed PETG structure, closed-loop NEMA steppers through 50:1 harmonic drives, and a magnetic encoder on every output shaft. The machine is built; the ROS 2 motion stack on top of it is not finished.",
-    "zh": "从零设计并制作的六自由度机械臂：PETG 3D 打印结构，闭环步进电机经 50:1 谐波减速器驱动，每个输出轴均装有磁编码器。机械部分已完成，其上的 ROS 2 运动控制尚未完成。"
+    "en": "A desktop six-joint robot arm designed and built from scratch for approximately S$610 in parts: a 3D-printed PETG structure, closed-loop NEMA stepper motors driving 50:1 harmonic-drive reducers, and a magnetic encoder on every output shaft for absolute joint feedback. The mechanical build is complete; the ROS 2 motion-planning software on top of it is not.",
+    "zh": "从零设计并制作的桌面级六关节机械臂，整机物料约 610 新元：PETG 3D 打印结构，闭环 NEMA 步进电机经 50:1 谐波减速器驱动，每个输出轴均配磁编码器提供绝对关节反馈。机械部分已完成，其上的 ROS 2 运动规划软件尚未完成。"
   },
 
   "proj_lightpanel_title": { "en": "Modular LED Wall Panels", "zh": "模块化 LED 灯板" },
   "proj_lightpanel_desc": {
-    "en": "Triangular panels that interlock in any arrangement: 3D-printed shells, laser-cut acrylic diffusers held on a lip by friction alone, screwed together in pairs. The mating tolerances took several CAD revisions. Wiring was the weak point — I could not solder yet, and the bought-in connectors dropped out and left panels flashing.",
-    "zh": "可任意拼接的三角形灯板：外壳 3D 打印，激光切割的亚克力扩散板仅靠凸缘摩擦卡住，两块之间以螺丝相连。配合公差前后改了好几版 CAD。接线是短板——当时还不会焊接，外购的连接件接触不良，常让灯板闪个不停。"
+    "en": "Modular triangular wall lighting, screwed together in arbitrary arrangements: 3D-printed shells with laser-cut acrylic diffusers retained on an internal lip by friction alone. The mating tolerances required several CAD iterations. The electrical side was the weak point — soldering was beyond me at the time, so the panels were linked with commercial connectors, which worked loose and caused intermittent flashing.",
+    "zh": "模块化三角形墙面灯板，可用螺丝任意拼接：外壳 3D 打印，激光切割的亚克力扩散板仅靠内侧凸缘的摩擦固定。配合公差经过数轮 CAD 迭代。电气部分是短板——当时尚不会焊接，灯板之间以外购连接件相连，接触松脱导致灯板间歇闪烁。"
   },
 
   "proj_lightpanel_detail": {
@@ -123,8 +125,8 @@
 
   "proj_speaker_title": { "en": "Bluetooth Speaker", "zh": "蓝牙音箱" },
   "proj_speaker_desc": {
-    "en": "A two-driver Bluetooth speaker built from a published tutorial, and my first electronics project: the printed enclosure, the wiring, and every solder joint in it are mine. Chasing down its noise is what taught me that a voltage converter couples straight into the audio path.",
-    "zh": "依照公开教程制作的双单元蓝牙音箱，也是我的第一个电子项目：外壳打印、走线和其中每一个焊点都由自己完成。排查底噪的过程让我明白，电压转换电路会直接串进音频回路。"
+    "en": "A two-driver Bluetooth speaker built from a published tutorial, and my first electronics project: the printed enclosure, the wiring and every solder joint in it are my own work, and it is where I learned to solder. Diagnosing audible background noise in the output identified the DC-DC voltage converter as its source, coupling switching noise directly into the audio path.",
+    "zh": "依照公开教程制作的双单元蓝牙音箱，也是我的第一个电子项目：外壳打印、走线与其中每一个焊点均由本人完成，焊接技能亦始于此。排查输出中的可闻底噪后定位到 DC-DC 电压转换电路，其开关噪声直接耦合进了音频回路。"
   },
 
   "proj_speaker_detail": {
@@ -137,8 +139,8 @@
 
   "bloomcraft_title": { "en": "Bloomcraft", "zh": "Bloomcraft" },
   "bloomcraft_desc": {
-    "en": "A florist assistant that turns an occasion into a costed bouquet. An LLM constrained to structured JSON picks from a priced catalogue, so the total is arithmetic rather than a guess.",
-    "zh": "将场合需求转化为带报价花束方案的花艺助手。LLM 的输出被约束为结构化 JSON，并从带价目的花材库中选配，使总价来自计算而非估测。"
+    "en": "A web application that generates costed floral arrangements from a natural-language brief. An LLM converts the brief — occasion, recipient, style and budget — into structured JSON selected from a priced flower catalogue, so the quoted total is computed rather than estimated, and a Stable Diffusion 2.1 model fine-tuned on bouquet imagery renders the result. Each flower carries its meaning in the recipient's region, which differs across cultures.",
+    "zh": "从自然语言需求生成带报价花束方案的网页应用。LLM 将需求——场合、赠予对象、风格与预算——转换为结构化 JSON，并从带价目的花材库中选配，使总价来自计算而非估测；再由针对花束图像微调的 Stable Diffusion 2.1 模型渲染成品。每种花材均附有其在收花地区的寓意，同一花材在不同文化中含义可能相反。"
   },
 
   "proj_portfolio_title": { "en": "This Portfolio", "zh": "本作品集网站" },

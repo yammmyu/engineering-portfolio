@@ -2,6 +2,7 @@ export class Project {
   constructor({
     id,
     tags = [],
+    period = null,
     date = null,
     github = null,
     demo = null,
@@ -12,6 +13,13 @@ export class Project {
   }) {
     this.id = id
     this.tags = tags
+    // Which part of the author's education the work belongs to —
+    // `'highschool'` or `'university'`, keyed through PERIOD_LABEL_KEYS in
+    // Projects.jsx because the two words translate. It is not a date: it is the
+    // standing the reader should judge the row by, which is why the bench
+    // builds and the arm that stalled at the software are not held to the same
+    // bar as the internship. `npm run check` requires one on every row.
+    this.period = period
     // When it was built, as it would appear in a drawing's date field —
     // `'2025-06 → 08'`, or `'2025-06 → now'` for something still open. Numerals
     // and an arrow read the same in both languages, so this is not a
