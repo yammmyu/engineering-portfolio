@@ -258,6 +258,28 @@ for (const { period, key } of registeredPeriods) {
   }
 }
 
+// ── 10c. A visible contact row points at a file that exists ─────────────────
+// The résumé rows carry a path into public/ rather than a URL, so a renamed or
+// missing PDF is a 404 on the one link a recruiter is most likely to press,
+// and nothing else on the page notices. A parked row is exempt: its file is
+// allowed to be stale or absent, which is part of why it is parked.
+const contactSrc = source['src/components/Contact.jsx']
+const contactRows = [
+  ...(contactSrc.match(/const CONTACT_LINKS = \[([\s\S]*?)\n\]/)?.[1] ?? '').matchAll(
+    /\{([\s\S]*?)\}/g,
+  ),
+].map(m => ({
+  href: m[1].match(/href:\s*'([^']+)'/)?.[1] ?? null,
+  hidden: /hidden:\s*true/.test(m[1]),
+}))
+if (!contactRows.length) fail('src/components/Contact.jsx', 'no CONTACT_LINKS entries parsed')
+for (const { href, hidden } of contactRows) {
+  if (hidden || !href?.startsWith('/')) continue
+  if (!existsSync(join(ROOT, 'public', href))) {
+    fail('src/components/Contact.jsx', `contact link ${href} is not in public/`)
+  }
+}
+
 // ── 11. The BOM cites rows that exist ────────────────────────────────────────
 // About.jsx renders `PROJECT_REFS[id]` directly. A `usedIn` id that is not in
 // the registry resolves to undefined and the table prints the literal word

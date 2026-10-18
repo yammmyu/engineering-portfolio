@@ -18,6 +18,26 @@ Template:
 
 ---
 
+## 2026-10-18 — English résumé back on the page
+
+**Did:** Un-parked the `contact_resume_en_label` row in `Contact.jsx` and replaced
+`public/resume-en.pdf` with the author's current CV (2 pages, from his NOC application).
+The Chinese row stays parked: `public/resume-zh.pdf` is the old document and there is no
+translation of the current one. A local PDF now opens in a new tab like an external link
+does — same-origin, so no `rel`, but navigating the reader away from the page to render a
+CV inline is the same loss either way. New check rule 10c: a *visible* contact row whose
+href points into `public/` must resolve to a file that exists. Parked rows are exempt, by
+design — a stale file is part of why a row is parked.
+
+**Why:** The résumé is the link a recruiter is most likely to press, and it was the one
+link on the page that could 404 without anything noticing — `check` validated project
+images, og:image and videos, but never the contact column.
+
+**Open:** The ZH résumé. Un-parking it is deleting one `hidden: true` once a translated
+PDF is in `public/`, and rule 10c will then hold it to the same standard. The EN PDF's
+text layer extracts as mojibake (subset font with a custom encoding), so it is readable on
+screen but may not be greppable by an ATS — worth checking against whatever generated it.
+
 ## 2026-09-27 — Every project row says when it was done
 
 **Did:** New required `period` field on `Project` — `'university'` or `'highschool'`, keyed

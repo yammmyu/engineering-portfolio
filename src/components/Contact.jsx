@@ -2,11 +2,14 @@ import React from 'react'
 import { useTranslation } from '../context/LanguageContext.jsx'
 import { SectionHeader, Reveal, Sheet } from './Section.jsx'
 
-// `hidden` takes a row out of the rendered list without deleting it. The two
-// résumé rows are parked this way at the author's request, temporarily — the
-// keys, hrefs, and translations stay intact, so bringing them back is deleting
-// one flag per row. Cutting the rows outright was the first instinct, but that
-// also stranded contact_resume_*_label in translations.json and lost the hrefs.
+// `hidden` takes a row out of the rendered list without deleting it. Parking
+// beat cutting the rows outright, which was the first instinct: that stranded
+// contact_resume_*_label in translations.json and lost the hrefs, and bringing
+// the English one back was then deleting one flag.
+//
+// The Chinese résumé is still parked — the file in public/ is the old one and
+// there is no new translation of the current CV yet. Un-park it when there is;
+// a row whose PDF contradicts the page is worse than a row that isn't there.
 const CONTACT_LINKS = [
   {
     labelKey: 'contact_email_label',
@@ -27,7 +30,6 @@ const CONTACT_LINKS = [
     labelKey: 'contact_resume_en_label',
     href: '/resume-en.pdf',
     display: 'resume-en.pdf',
-    hidden: true,
   },
   {
     labelKey: 'contact_resume_zh_label',
@@ -56,6 +58,12 @@ export default function Contact() {
             <ul className="border-t border-rule">
               {CONTACT_LINKS.filter(link => !link.hidden).map(link => {
                 const external = link.href.startsWith('http')
+                // A PDF opens in a new tab too, though it is same-origin. The
+                // browser renders it in place otherwise, and the reader who
+                // wanted a glance at the CV has lost the page they were
+                // reading and has to come back through history. `rel` stays
+                // for cross-origin only, where it has something to protect.
+                const newTab = external || link.href.endsWith('.pdf')
                 return (
                   <li
                     key={link.labelKey}
@@ -68,7 +76,7 @@ export default function Contact() {
                     />
                     <a
                       href={link.href}
-                      target={external ? '_blank' : undefined}
+                      target={newTab ? '_blank' : undefined}
                       rel={external ? 'noopener noreferrer' : undefined}
                       className="link-ink font-mono text-[13px]"
                     >
