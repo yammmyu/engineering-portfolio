@@ -33,10 +33,16 @@ design — a stale file is part of why a row is parked.
 link on the page that could 404 without anything noticing — `check` validated project
 images, og:image and videos, but never the contact column.
 
+**Then:** the author swapped the source PDF to `Documents/NUS/Resume/Resume_Yanyu_Chen.pdf`
+— 2 pages, 69 KB, the general CV rather than the NOC-specific one. That is what is in
+`public/resume-en.pdf` now.
+
 **Open:** The ZH résumé. Un-parking it is deleting one `hidden: true` once a translated
 PDF is in `public/`, and rule 10c will then hold it to the same standard. The EN PDF's
-text layer extracts as mojibake (subset font with a custom encoding), so it is readable on
-screen but may not be greppable by an ATS — worth checking against whatever generated it.
+text layer extracts as mojibake (subset font, custom CID encoding) — readable on screen,
+possibly not to an ATS. It also prints two personal phone numbers, which is a different
+exposure on a public URL than it is in an emailed attachment; the author's call, noted
+here so nobody assumes it was overlooked.
 
 ## 2026-09-27 — Every project row says when it was done
 
