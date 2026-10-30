@@ -36,8 +36,8 @@
 
   "about_heading":      { "en": "About Me", "zh": "关于我" },
   "about_body_1": {
-    "en": "I'm a Robotics Engineering student. I design the mechanical system and write the software that runs it — CAD and fabrication at one end, embedded firmware and ROS nodes at the other, and the control loop in between.",
-    "zh": "我是机器人工程专业的学生。机械结构和驱动它的软件都由我做——一端是 CAD 与加工，另一端是嵌入式固件与 ROS 节点，中间是控制环路。"
+    "en": "Year 2 NUS Robotics and Machine Intelligence undergraduate. As sole engineer at MUJIN, built and deployed an end-to-end dual-arm system based on a diffusion policy on a humanoid robot, covering teleoperation, data collection, real-time control and safety. Member of the Mechanical Team of the NUS DJI RoboMaster team and Captain of the RMUL division this year. Working proficiency in English (Fluent), Chinese (Native) and German (TELC C1).",
+    "zh": "新加坡国立大学机器人与机器智能专业大二在读。在牧今科技（MUJIN）作为唯一工程师，于人形机器人上构建并部署了基于扩散策略（diffusion policy）的端到端双臂运行系统，涵盖遥操作、数据采集、实时控制与安全防护。现为新加坡国立大学 DJI 机甲大师（RoboMaster）战队机械组成员，并于本年度担任 RMUL 分队队长。具备英语（流利）、中文（母语）与德语（TELC C1）工作能力。"
   },
   "about_body_2": {
     "en": "Outside of engineering, I enjoy photography and running",

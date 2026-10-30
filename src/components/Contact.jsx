@@ -2,14 +2,15 @@ import React from 'react'
 import { useTranslation } from '../context/LanguageContext.jsx'
 import { SectionHeader, Reveal, Sheet } from './Section.jsx'
 
-// `hidden` takes a row out of the rendered list without deleting it. Parking
-// beat cutting the rows outright, which was the first instinct: that stranded
-// contact_resume_*_label in translations.json and lost the hrefs, and bringing
-// the English one back was then deleting one flag.
+// `hidden` takes a row out of the rendered list without deleting it. Both
+// résumé rows were parked this way for a while and both are back; parking beat
+// cutting them outright, which was the first instinct, because that stranded
+// contact_resume_*_label in translations.json and lost the hrefs. Restoring
+// each one was deleting a flag.
 //
-// The Chinese résumé is still parked — the file in public/ is the old one and
-// there is no new translation of the current CV yet. Un-park it when there is;
-// a row whose PDF contradicts the page is worse than a row that isn't there.
+// Nothing is parked at the moment. The mechanism stays for the next time a
+// link outlives its file: a row pointing at a stale PDF is worse than a row
+// that isn't there, and check rule 10c only vouches for the visible ones.
 const CONTACT_LINKS = [
   {
     labelKey: 'contact_email_label',
@@ -35,7 +36,6 @@ const CONTACT_LINKS = [
     labelKey: 'contact_resume_zh_label',
     href: '/resume-zh.pdf',
     display: 'resume-zh.pdf',
-    hidden: true,
   },
 ]
 

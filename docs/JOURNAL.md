@@ -18,6 +18,22 @@ Template:
 
 ---
 
+## 2026-10-30 — Both résumés current, Chinese row un-parked
+
+**Did:** `public/resume-en.pdf` ← `Resume_Yanyu_Chen_v2.pdf`, `public/resume-zh.pdf` ←
+`简历_陈彦宇_v2.pdf`, and the `contact_resume_zh_label` row lost its `hidden: true`. Both
+rows now render on the contact sheet. Nothing in `CONTACT_LINKS` is parked any more; the
+flag and its comment stay, because rule 10c only vouches for visible rows and the next
+stale file will want the same escape hatch.
+
+**Why:** The v2 pair is the first time the Chinese CV has matched the English one, which
+was the condition the last entry set for un-parking it. Both were rendered and read before
+publishing — same person, same content, both dated this month.
+
+**Open:** The résumés now cite `https://yanyu-chen.com/` as the portfolio URL, so the page
+and the PDF point at each other. Worth remembering when either moves. The phone-number
+note from the last entry still stands, and now applies to two files.
+
 ## 2026-10-18 — English résumé back on the page
 
 **Did:** Un-parked the `contact_resume_en_label` row in `Contact.jsx` and replaced
